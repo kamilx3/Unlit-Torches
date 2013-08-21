@@ -1,0 +1,16 @@
+item.ut_torchLit.name=Torch
+item.ut_torchUnlit.name=Unlit Torch
+
+item.ut_lanternLit.name=Lantern
+item.ut_lanternLitHandle.name=Lantern with Handle
+item.ut_lanternUnlit.name=Unlit Lantern
+item.ut_lanternUnlitHandle.name=Unlit Lantern with Handle
+tile.ut_hook.name=Lantern Hook
+
+item.ut_fat.name=Animal Fat
+item.ut_fatBottled.name=Bottled Fat
+item.ut_lanternOil.name=Lantern Oil
+item.ut_lanternHandle.name=Lantern Handle
+item.ut_tinderbox.name=Tinderbox
+item.ut_tinderboxEmpty.name=Empty Tinderbox
+item.ut_tinderboxFS.name=Tinderbox and Firesteel
