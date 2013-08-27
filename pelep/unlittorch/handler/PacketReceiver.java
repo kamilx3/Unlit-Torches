@@ -52,10 +52,10 @@ public class PacketReceiver implements IPacketHandler
                 case 5:
                     this.handleAgePacket(data.readInt(), data.readInt(), data.readInt(), data.readInt(), data.readInt());
                     return;
-                case 6:
-                    this.handleEntityTorchPacket(data.readInt(), data.readInt());
+                case 6: case 7:
+                    this.handleEntityPacket(type, data.readInt(), data.readInt());
                     return;
-                case 7:
+                case 8:
                     this.handleInvUpdatePacket(data.readByte(), data.readByte());
                     return;
                 default:
@@ -120,7 +120,7 @@ public class PacketReceiver implements IPacketHandler
         }
     }
 
-    private void handleEntityTorchPacket(int id, int dim)
+    private void handleEntityPacket(byte type, int id, int dim)
     {
         World world = Minecraft.getMinecraft().theWorld;
         
@@ -131,10 +131,14 @@ public class PacketReceiver implements IPacketHandler
             if (e != null && e instanceof EntityItem)
             {
                 EntityItem ei = (EntityItem) e;
-                
-                if (ei.getEntityItem().itemID == 50)
+
+                if (type == 6 && ei.getEntityItem().itemID == 50)
                 {
                     ei.getEntityItem().setItemDamage(0);
+                }
+                else if (type == 7 && ei.getEntityItem().itemID == ConfigCommon.blockIdLanternLit)
+                {
+                    ei.getEntityItem().itemID = ConfigCommon.blockIdLanternUnlit;
                 }
             }
         }

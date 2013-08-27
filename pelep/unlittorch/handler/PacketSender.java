@@ -14,17 +14,12 @@ import net.minecraft.network.packet.Packet250CustomPayload;
 
 public class PacketSender
 {
-    private static Packet250CustomPayload getPacket(byte type, Object... objs)
+    private static Packet250CustomPayload getPacket(byte type, boolean chunk, Object... objs)
     {
-        if (type < 0 || type > 7)
-        {
-            return null;
-        }
-        
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         DataOutputStream dos = new DataOutputStream(bos);
         Packet250CustomPayload pkt = new Packet250CustomPayload();
-        
+
         try
         {
             dos.writeByte(type);
@@ -62,7 +57,7 @@ public class PacketSender
         pkt.channel = MOD_ID;
         pkt.data = bos.toByteArray();
         pkt.length = bos.size();
-        pkt.isChunkDataPacket = true;
+        pkt.isChunkDataPacket = chunk;
         
         return pkt;
     }
@@ -87,7 +82,7 @@ public class PacketSender
                 b
                 };
 
-        Packet250CustomPayload pkt = getPacket((byte)0, o);
+        Packet250CustomPayload pkt = getPacket((byte)0, true, o);
         
         if (pkt != null)
         {
@@ -100,7 +95,7 @@ public class PacketSender
     {
         if (!igniters.equals(""))
         {
-            Packet250CustomPayload pkt = getPacket(type, (short)igniters.length(), igniters);
+            Packet250CustomPayload pkt = getPacket(type, true, (short)igniters.length(), igniters);
             
             if (pkt != null)
             {
@@ -112,7 +107,7 @@ public class PacketSender
     
     public static void sendAgePacket(int age, int x, int y, int z, int dim)
     {
-        Packet250CustomPayload pkt = getPacket((byte) 5, age, x, y, z, dim);
+        Packet250CustomPayload pkt = getPacket((byte) 5, true, age, x, y, z, dim);
         
         if (pkt != null)
         {
@@ -120,10 +115,10 @@ public class PacketSender
         }
     }
 
-    public static void sendEntityTorchPacket(EntityItem ei)
+    public static void sendEntityPacket(EntityItem ei, byte type)
     {
-        Packet250CustomPayload pkt = getPacket((byte)6, ei.entityId, ei.worldObj.provider.dimensionId);
-        
+        Packet250CustomPayload pkt = getPacket(type, false, ei.entityId, ei.worldObj.provider.dimensionId);
+
         if (pkt != null)
         {
             PacketDispatcher.sendPacketToAllInDimension(pkt, ei.worldObj.provider.dimensionId);
@@ -132,7 +127,7 @@ public class PacketSender
 
     public static void sendInventoryPacket(EntityPlayer p, byte item, byte slot)
     {
-        Packet250CustomPayload pkt = getPacket((byte) 7, item, slot);
+        Packet250CustomPayload pkt = getPacket((byte) 8, false, item, slot);
         
         if (pkt != null)
         {

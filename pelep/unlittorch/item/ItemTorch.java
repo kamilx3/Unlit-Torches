@@ -1067,7 +1067,7 @@ public class ItemTorch extends ItemBlock
     {
         ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, sound, 0.6F, 1F);
         ei.getEntityItem().setItemDamage(0);
-        PacketSender.sendEntityTorchPacket(ei);
+        PacketSender.sendEntityPacket(ei, (byte)6);
     }
     
     private int getMaxLifespan()

@@ -1,4 +1,4 @@
 Manifest-Version: 1.0
 FMLCorePlugin: pelep.unlittorch.UnlitTorchPlugin
-FMLCorePluginContainsFMLMod: 
+FMLCorePluginContainsFMLMod: true
 

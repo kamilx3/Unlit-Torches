@@ -3,6 +3,7 @@ package pelep.unlittorch.item;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.handler.PacketSender;
 import pelep.unlittorch.handler.TickHandler;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
@@ -123,5 +124,6 @@ public class ItemLanternLit extends ItemLantern
         ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, "fire.fire", 1F, ei.worldObj.rand.nextFloat() * 0.4F + 1.5F);
         ei.getEntityItem().setItemDamage(this.getMaxDamage());
         ei.getEntityItem().itemID = ConfigCommon.blockIdLanternUnlit;
+        PacketSender.sendEntityPacket(ei, (byte) 7);
     }
 }
