@@ -39,21 +39,21 @@ public class RecipeHandler
     public static void replaceRecipeIngredient(ItemStack ui, ItemStack replace)
     {
         ArrayList rl = (ArrayList) CraftingManager.getInstance().getRecipeList();
-        
-        for (int i = 0; i < rl.size(); i++)
+
+        for (Object o : rl)
         {
-            replaceRecipeIngredient((IRecipe) rl.get(i), ui, replace);
+            replaceRecipeIngredient((IRecipe) o, ui, replace);
         }
     }
     
     public static void replaceRecipeIngredient(ItemStack result, ItemStack ui, ItemStack replace)
     {
         ArrayList rl = (ArrayList) CraftingManager.getInstance().getRecipeList();
-        
-        for (int i = 0; i < rl.size(); i++)
+
+        for (Object o : rl)
         {
-            IRecipe ir = (IRecipe) rl.get(i);
-            
+            IRecipe ir = (IRecipe) o;
+
             if (ItemStack.areItemStacksEqual(result, ir.getRecipeOutput()))
             {
                 replaceRecipeIngredient(ir, ui, replace);
@@ -172,7 +172,11 @@ public class RecipeHandler
 
     private static boolean areStacksEqual(ItemStack target, ItemStack input)
     {
-        if (input == null ^ target == null)
+        if (input == null && target == null)
+        {
+            return true;
+        }
+        else if (input == null ^ target == null)
         {
             return false;
         }

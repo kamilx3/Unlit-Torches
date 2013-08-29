@@ -168,11 +168,11 @@ public class ProxyCommon
         GameRegistry.addRecipe(new RecipeTinderboxEmpty());
         GameRegistry.addRecipe(new RecipeTinderboxFS());
         
-        GameRegistry.addRecipe(new ItemStack(ConfigCommon.blockIdLanternHook, 4, 0), new Object[] {"sp", 's', Item.stick, 'p', Block.planks});
-        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), new Object[] {"m", 'm', Item.porkRaw});
-        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), new Object[] {"m", 'm', Item.porkCooked});
-        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), new Object[] {"m", 'm', Item.beefRaw});
-        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), new Object[] {"m", 'm', Item.beefCooked});
+        GameRegistry.addRecipe(new ItemStack(ConfigCommon.blockIdLanternHook, 4, 0), "sp", 's', Item.stick, 'p', Block.planks);
+        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), "m", 'm', Item.porkRaw);
+        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), "m", 'm', Item.porkCooked);
+        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), "m", 'm', Item.beefRaw);
+        GameRegistry.addRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), "m", 'm', Item.beefCooked);
         GameRegistry.addShapelessRecipe(new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 1), new ItemStack(Item.glassBottle, 1), new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0), new ItemStack(ConfigCommon.itemIdLanternFuel, 1, 0));
         GameRegistry.addShapelessRecipe(new ItemStack(Item.stick, 1, 0), new ItemStack(50, 1, 0), new ItemStack(50, 1, 0), new ItemStack(50, 1, 0), new ItemStack(50, 1, 0));
         
@@ -197,16 +197,14 @@ public class ProxyCommon
         {
             LogHandler.severe("Block %d is either still vanilla torches or has been changed by a mod other than Unlit Torch....probably Fancy Fences. *rolls eyes*", 50);
             LogHandler.severe("Rectifying. This could result in bugs. Best to single out what mod causes this and take it out");
-            @SuppressWarnings("unused")
-            Block block = new BlockTorch();
+            new BlockTorch();
         }
         
         if (!(Item.itemsList[50] instanceof ItemTorch))
         {
             LogHandler.severe("Item %d is either still vanilla torches or has been changed by a mod other than Unlit Torch", 50);
             LogHandler.severe("Rectifying. This could result in bugs. Best to single out what mod causes this and take it out");
-            @SuppressWarnings("unused")
-            Item item = new ItemTorch(50 - 256);
+            new ItemTorch(50 - 256);
         }
     }
 }

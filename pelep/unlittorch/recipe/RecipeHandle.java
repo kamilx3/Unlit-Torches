@@ -35,7 +35,6 @@ public class RecipeHandle implements IRecipe
                 else if (i == 1 || i == 3 || i == 5)
                 {
                     match = ++iron == 3;
-                    continue;
                 }
             }
             else if (i == 1 || i == 3 || i == 5)
@@ -61,7 +60,6 @@ public class RecipeHandle implements IRecipe
                     else if (i == 4 || i == 6 || i == 8)
                     {
                         match = ++iron == 3;
-                        continue;
                     }
                 }
                 else if (i == 4 || i == 6 || i == 8)

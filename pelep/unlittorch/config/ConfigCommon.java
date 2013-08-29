@@ -5,7 +5,6 @@ import java.util.HashMap;
 import pelep.unlittorch.handler.IgnitersHandler;
 import pelep.unlittorch.handler.LogHandler;
 import net.minecraft.block.Block;
-import net.minecraft.entity.EntityList;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
@@ -46,7 +45,6 @@ public class ConfigCommon
     public static int mobSkeletonTorch;
     public static boolean mobVillagerTorch;
     public static boolean mobVillagerLantern;
-    private static String mobDropsFatString;
     public static HashMap<String, Integer> mobDropsFat;
 
     public static void loadConfig(Configuration config)
@@ -54,7 +52,7 @@ public class ConfigCommon
         blockIdLanternHook = config.getBlock("LANTERN", "IdBlockLanternHook", 500, "Block and item IDs for the lantern-related stuff").getInt();
         blockIdLanternLit = config.getBlock("LANTERN", "IdBlockLanternLit", 501).getInt();
         blockIdLanternUnlit = config.getBlock("LANTERN", "IdBlockLanternUnlit", 502).getInt();
-        
+
         itemIdLanternFuel = config.get("LANTERN", "IdItemLanternFuel", 4100).getInt();
         itemIdTinderbox = config.get("LANTERN", "IdItemTinderbox", 4101).getInt();
         itemIdTinderboxFS = config.get("LANTERN", "IdItemTinderboxFS", 4102).getInt();
@@ -85,8 +83,8 @@ public class ConfigCommon
         mobVillagerLantern = config.get("MODIFY MOBS", "VillagerLantern", true, "True if villager priests and librarians should spawn with lanterns").getBoolean(true);
         mobZombieTorch = config.get("MODIFY MOBS", "Zombie", 5, "1 in x zombies will kill torches when close. Set to 0 to disable").getInt();
         mobSkeletonTorch = config.get("MODIFY MOBS", "Skeleton", 8, "1 in x skeletons will kill torches when in range. Set to 0 to disable").getInt();
-        mobDropsFatString = config.get("MODIFY MOBS", "FatMobs", "Pig:35,Cow:20", "List of mobs that can drop animal fat and x/100 CHANCE the mob will drop animal fat on death. CAPITALIZATION is important. Leave empty to disable mobs dropping fat").getString();
 
+        setFatMobs(config.get("MODIFY MOBS", "FatMobs", "Pig:35,Cow:20", "List of mobs that can drop animal fat and x/100 CHANCE the mob will drop animal fat on death. CAPITALIZATION is important. Leave empty to disable mobs dropping fat").getString());
         setChance();
     }
     
@@ -115,29 +113,25 @@ public class ConfigCommon
         {
             double dif = torchLifespanMax - torchLifespanMin;
             double prcnt = torchKillChance / 100D;
-            int chance = (int)(dif - (dif * prcnt));
-            torchKillChance = chance;
+            torchKillChance = (int)(dif - (dif * prcnt));
         }
     }
     
     public static void postInit()
     {
-        setFatMobs();
         IgnitersHandler.setSetTorchIgniters();
         IgnitersHandler.setHeldTorchIgniters();
         IgnitersHandler.setLanternIgniters();
         IgnitersHandler.setLanternTinder();
     }
 
-    private static void setFatMobs()
+    private static void setFatMobs(String maps)
     {
         mobDropsFat = new HashMap();
         
-        if (mobDropsFatString != null && mobDropsFatString.length() > 0)
+        if (maps != null && maps.length() > 0)
         {
-            mobDropsFatString = mobDropsFatString.replace(" ", "");
-            
-            for (String map : mobDropsFatString.split(","))
+            for (String map : maps.split(","))
             {
                 if (map != null && map.length() > 0)
                 {
@@ -151,9 +145,9 @@ public class ConfigCommon
                             
                             if (mobDropsFat.containsKey(mob))
                             {
-                                LogHandler.info("Ignoring duplicate mapping %s", map);
+                                LogHandler.info("Ignoring duplicate mapping for %s", mob);
                             }
-                            else if (EntityList.stringToClassMapping.containsKey(mob))
+                            else
                             {
                                 int chance = Integer.parseInt(kv[1]);
                                 if (chance < 1) chance = 1;
