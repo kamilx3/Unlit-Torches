@@ -2,14 +2,10 @@ package pelep.unlittorch;
 
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import pelep.unlittorch.config.ConfigCommon;
 import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.crash.CrashReport;
 import net.minecraft.crash.CrashReportCategory;
-import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Slot;
@@ -21,6 +17,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class UnlitTorchInjected
 {
+    @SideOnly(Side.CLIENT)
+    public static boolean sameItemHeld(boolean b, ItemStack ist1, ItemStack ist2)
+    {
+        return (ist1.itemID != 50 || ist2.itemID != 50) ? b : !(ist1.getItemDamage() == 0 ^ ist2.getItemDamage() == 0);
+    }
+
     @SideOnly(Side.CLIENT)
     public static boolean cancelRenderUpdate(int slot, ItemStack ist2, EntityClientPlayerMP p)
     {
@@ -38,33 +40,9 @@ public class UnlitTorchInjected
         {
             return true;
         }
-        else if (ist1.itemID == ConfigCommon.blockIdLanternLit && ist2.itemID == ConfigCommon.blockIdLanternUnlit)
-        {
-            return true;
-        }
         else
         {
-            return false;
-        }
-    }
-    
-    @SideOnly(Side.CLIENT)
-    public static void renderVillagerLantern(EntityVillager ev, ItemRenderer ir)
-    {
-        ItemStack ist = ev.getHeldItem();
-        
-        if (!ev.isChild() && ist != null && (ist.itemID == ConfigCommon.blockIdLanternLit || ist.itemID == ConfigCommon.blockIdLanternUnlit))
-        {
-            GL11.glColor3f(1F, 1F, 1F);
-            GL11.glPushMatrix();
-            GL11.glTranslatef(-0.0625F, 0.625F, -0.25F);
-            GL11.glRotatef(20F, 1F, 0F, 0F);
-            GL11.glRotatef(45F, 0F, 1F, 0F);
-            GL11.glScalef(-0.375F, -0.375F, 0.375F);
-            
-            ir.renderItem(ev, ist, 0);
-            
-            GL11.glPopMatrix();
+            return ist1.itemID == ConfigCommon.blockIdLanternLit && ist2.itemID == ConfigCommon.blockIdLanternUnlit;
         }
     }
     

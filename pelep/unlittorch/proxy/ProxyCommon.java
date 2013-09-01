@@ -197,6 +197,7 @@ public class ProxyCommon
         {
             LogHandler.severe("Block %d is either still vanilla torches or has been changed by a mod other than Unlit Torch....probably Fancy Fences. *rolls eyes*", 50);
             LogHandler.severe("Rectifying. This could result in bugs. Best to single out what mod causes this and take it out");
+            Block.blocksList[50] = null;
             new BlockTorch();
         }
         
@@ -204,6 +205,7 @@ public class ProxyCommon
         {
             LogHandler.severe("Item %d is either still vanilla torches or has been changed by a mod other than Unlit Torch", 50);
             LogHandler.severe("Rectifying. This could result in bugs. Best to single out what mod causes this and take it out");
+            Item.itemsList[50] = null;
             new ItemTorch(50 - 256);
         }
     }

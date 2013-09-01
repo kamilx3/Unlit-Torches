@@ -15,7 +15,7 @@ public class UnlitTorchPlugin implements IFMLLoadingPlugin
     public static final String MOD_ID = "UnlitTorch";
     public static final String MOD_VERSION = "1.29.29";
     public static final String MOD_MCVERSION = "1.6.2";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.10.0.804,);before:Bushwhacker";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.10.0.837,);before:Bushwhacker";
     
     public UnlitTorchPlugin()
     {
