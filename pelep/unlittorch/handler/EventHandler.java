@@ -11,6 +11,8 @@ import pelep.unlittorch.ai.EntityAIShootTorches;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.render.RenderItemLantern;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
@@ -98,10 +100,11 @@ public class EventHandler
         }
     }
 
+    @SideOnly(Side.CLIENT)
     @ForgeSubscribe
-    public void renderVillagerLantern(RenderLivingEvent.Post e)
+    public void renderVillagerLantern(RenderLivingEvent.Pre e)
     {
-        if (e.entity instanceof EntityVillager)
+        if (!e.isCanceled() && e.entity instanceof EntityVillager)
         {
             EntityVillager ev = (EntityVillager) e.entity;
             ItemStack ist = ev.getHeldItem();
@@ -158,6 +161,7 @@ public class EventHandler
         }
     }
 
+    @SideOnly(Side.CLIENT)
     private static float interpolateYaw(float pYaw, float cYaw, float ptick)
     {
         float yaw = cYaw - pYaw;
@@ -175,6 +179,7 @@ public class EventHandler
         return pYaw + ptick * yaw;
     }
 
+    @SideOnly(Side.CLIENT)
     private static void rotateEntity(EntityLivingBase el, float yaw, float ptick)
     {
         GL11.glRotatef(180F - yaw, 0F, 1F, 0F);
