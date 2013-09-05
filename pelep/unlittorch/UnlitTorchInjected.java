@@ -51,7 +51,7 @@ public class UnlitTorchInjected
         if (ist1 == null || ist1.itemID != 50)
         {
             return false;
-		}
+        }
         
         boolean change = false;
         int i = fromInv ? (size - 1) : start;
@@ -74,7 +74,7 @@ public class UnlitTorchInjected
                     ist2.stackSize = nsize;
                     slot.onSlotChanged();
                     change = true;
-				}
+                }
                 else if (ist2.stackSize < ist1.getMaxStackSize())
                 {
                     ist1.stackSize -= ist1.getMaxStackSize() - ist2.stackSize;

@@ -1,9 +1,9 @@
 package pelep.unlittorch.render;
 
+import net.minecraft.block.Block;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import pelep.unlittorch.block.BlockLanternLit;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.entity.TileEntityLantern;
 import cpw.mods.fml.relauncher.Side;
@@ -29,7 +29,8 @@ public class RenderBlockLantern extends TileEntitySpecialRenderer
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float ptick)
     {
-        ResourceLocation rl = te.getBlockType() instanceof BlockLanternLit ? TEXTURE_LANTERN_ON : TEXTURE_LANTERN_OFF;
+        Block block = te.getBlockType();
+        ResourceLocation rl = block != null && block.blockID == ConfigCommon.blockIdLanternLit ? TEXTURE_LANTERN_ON : TEXTURE_LANTERN_OFF;
         this.func_110628_a(rl);
         
         GL11.glPushMatrix();

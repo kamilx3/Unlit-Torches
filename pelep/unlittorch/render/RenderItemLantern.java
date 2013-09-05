@@ -82,10 +82,6 @@ public class RenderItemLantern implements IItemRenderer
                 
                 GL11.glTranslatef(-0.5F, -0.1F, -0.1F);
                 GL11.glRotatef(60F, 0F, 0F, -1F);
-                GL11.glScalef(1F, 1F, 1F);
-                
-                rb.minecraftRB.renderEngine.func_110577_a(p.func_110306_p());
-                rp.renderFirstPersonArm(p);
             }
             else
             {
@@ -98,11 +94,11 @@ public class RenderItemLantern implements IItemRenderer
                 GL11.glTranslatef(-0.75F, -0.3F, 0F);
                 GL11.glRotatef(60F, 0F, 0F, -1F);
                 GL11.glRotatef(20F, 0F, 0F, -1F);
-                GL11.glScalef(1F, 1F, 1F);
-                
-                rb.minecraftRB.renderEngine.func_110577_a(p.func_110306_p());
-                rp.renderFirstPersonArm(p);
             }
+
+            GL11.glScalef(1F, 1F, 1F);
+            rb.minecraftRB.renderEngine.func_110577_a(p.func_110306_p());
+            rp.renderFirstPersonArm(p);
         }
         else if (type == ItemRenderType.EQUIPPED)
         {
