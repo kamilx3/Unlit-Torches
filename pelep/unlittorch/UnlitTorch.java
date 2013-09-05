@@ -32,7 +32,7 @@ public class UnlitTorch
     @Instance(MOD_ID)
     public static UnlitTorch instance;
     
-    @SidedProxy(clientSide = "pelep.unlittorch.proxy.ProxyClient", serverSide = "pelep.unlittorch.proxy.ProxyCommon")
+    @SidedProxy(clientSide = "pelep.unlittorch.proxy.ProxyClient", serverSide = "pelep.unlittorch.proxy.ProxyServer")
     public static ProxyCommon proxy;
     
     @EventHandler

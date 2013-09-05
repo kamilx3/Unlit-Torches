@@ -3,7 +3,10 @@ package pelep.unlittorch.proxy;
 import static pelep.unlittorch.handler.VillagerHandler.VILLAGER_ID;
 
 import java.io.File;
+import java.util.EnumSet;
 
+import cpw.mods.fml.common.TickType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.Configuration;
@@ -13,6 +16,7 @@ import pelep.unlittorch.entity.TileEntityLantern;
 import pelep.unlittorch.entity.TileEntityTorch;
 import pelep.unlittorch.handler.LightingHandler;
 import pelep.unlittorch.handler.LogHandler;
+import pelep.unlittorch.handler.TickHandler;
 import pelep.unlittorch.render.RenderBlockHook;
 import pelep.unlittorch.render.RenderBlockLantern;
 import pelep.unlittorch.render.RenderBlockTorch;
@@ -69,6 +73,34 @@ public class ProxyClient extends ProxyCommon
     public void registerTrackers()
     {
         super.registerTrackers();
+
+        TickHandler th = new TickHandler()
+        {
+            @Override
+            public void tickStart(EnumSet<TickType> type, Object... tickData)
+            {
+                if (Minecraft.getMinecraft().thePlayer == tickData[0])
+                {
+                    if (updateAge++ >= 2)
+                    {
+                        updateAge = 0;
+                    }
+
+                    if (updateBurn++ >= ConfigCommon.lanternBurnDamageInterval)
+                    {
+                        updateBurn = 0;
+                    }
+                }
+            }
+
+            @Override
+            public EnumSet<TickType> ticks()
+            {
+                return EnumSet.of(TickType.PLAYER);
+            }
+        };
+
+        TickRegistry.registerTickHandler(th, Side.CLIENT);
         
         if (ConfigClient.lightsIntervalPlayer < 0)
         {

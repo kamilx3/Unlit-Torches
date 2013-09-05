@@ -188,7 +188,6 @@ public class ProxyCommon
     {
         LogHandler.info("Registering event handler");
         MinecraftForge.EVENT_BUS.register(new EventHandler());
-        TickRegistry.registerTickHandler(new TickHandler(), Side.SERVER);
     }
     
     public void checkTorches()

@@ -8,21 +8,12 @@ import cpw.mods.fml.common.TickType;
 
 public class TickHandler implements ITickHandler
 {
-    public static byte updateAge = 3;
+    public static byte updateAge = 2;
     public static long updateBurn = ConfigCommon.lanternBurnDamageInterval;
     
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
-        if (updateAge++ >= 3)
-        {
-            updateAge = 0;
-        }
-        
-        if (updateBurn++ >= ConfigCommon.lanternBurnDamageInterval)
-        {
-            updateBurn = 0;
-        }
     }
 
     @Override
@@ -33,7 +24,7 @@ public class TickHandler implements ITickHandler
     @Override
     public EnumSet<TickType> ticks()
     {
-        return EnumSet.of(TickType.WORLD);
+        return null;
     }
 
     @Override
