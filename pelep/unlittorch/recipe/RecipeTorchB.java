@@ -68,14 +68,14 @@ public class RecipeTorchB implements IRecipe, ICraftingHandler
 
             if (d1 != d2)
             {
-                this.torch = new ItemStack(50, 2, Math.min(d1, d2));
+                this.torch = new ItemStack(50, 1, Math.min(d1, d2));
                 return true;
             }
 
             return false;
         }
 
-        this.torch = new ItemStack(50, 2, ist1.getItemDamage());
+        this.torch = new ItemStack(50, 1, ist1.getItemDamage());
         return true;
     }
 

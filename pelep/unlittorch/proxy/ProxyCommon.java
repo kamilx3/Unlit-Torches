@@ -89,15 +89,17 @@ public class ProxyCommon
 
         LogHandler.info("Registering new crafting recipes");
 
+        RecipeTorchB recipeTorchB = new RecipeTorchB();
         RecipeTorchC recipeTorchC = new RecipeTorchC();
         GameRegistry.addRecipe(new RecipeTorchA());
-        GameRegistry.addRecipe(new RecipeTorchB());
+        GameRegistry.addRecipe(recipeTorchB);
         GameRegistry.addRecipe(recipeTorchC);
 
         ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0);
         GameRegistry.addShapelessRecipe(new ItemStack(Item.stick, 1, 0), torch.copy(), torch.copy(), torch.copy(), torch);
 
         LogHandler.info("Registering crafting handlers");
+        GameRegistry.registerCraftingHandler(recipeTorchB);
         GameRegistry.registerCraftingHandler(recipeTorchC);
     }
 

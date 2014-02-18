@@ -32,6 +32,7 @@ public class ItemTorchLit extends ItemBlock implements IUpdatingItem
         super(id);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHasSubtypes(true);
+        this.setMaxStackSize(1);
         this.setNoRepair();
         this.setUnlocalizedName("unlittorch:torch_lit");
         this.setTextureName("torch_on");
@@ -51,6 +52,7 @@ public class ItemTorchLit extends ItemBlock implements IUpdatingItem
 
 
     //---------------------------------itemuse---------------------------------//
+
 
     @Override
     public boolean onItemUse(ItemStack ist, EntityPlayer p, World world, int x, int y, int z, int side, float i, float j, float k)
