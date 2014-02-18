@@ -1,29 +1,35 @@
 package pelep.unlittorch.handler;
 
-import pelep.unlittorch.config.ConfigClient;
-import pelep.unlittorch.config.ConfigCommon;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.network.IConnectionHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.NetLoginHandler;
 import net.minecraft.network.packet.NetHandler;
 import net.minecraft.network.packet.Packet1Login;
 import net.minecraft.server.MinecraftServer;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.network.IConnectionHandler;
-import cpw.mods.fml.common.network.Player;
+import pelep.unlittorch.config.ConfigClient;
+import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.packet.Packet00Config;
+import pelep.unlittorch.packet.Packet01Igniters;
 
+/**
+ * @author pelep
+ */
 public class ConnectionHandler implements IConnectionHandler
 {
     @Override
     public void playerLoggedIn(Player p, NetHandler nh, INetworkManager nm)
     {
-        PacketSender.sendConfigPacket(p);
-        PacketSender.sendIgniterOrTinderPacket((byte)1, p, ConfigCommon.torchIgniterIdsSet);
-        PacketSender.sendIgniterOrTinderPacket((byte)2, p, ConfigCommon.torchIgniterIdsHeld);
-        PacketSender.sendIgniterOrTinderPacket((byte)3, p, ConfigCommon.lanternIgniterIds);
-        PacketSender.sendIgniterOrTinderPacket((byte)4, p, ConfigCommon.lanternTinderIds);
+        LogHandler.fine("Sending config packets to player %s", ((EntityPlayer)p).getEntityName());
+        PacketDispatcher.sendPacketToPlayer(new Packet00Config().create(), p);
+        PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)0, ConfigCommon.torchIgniterIdsSet).create(), p);
+        PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)1, ConfigCommon.torchIgniterIdsHeld).create(), p);
     }
-    
+
     @Override
     public void connectionClosed(INetworkManager nm)
     {
@@ -31,6 +37,7 @@ public class ConnectionHandler implements IConnectionHandler
         {
             LogHandler.info("Unsyncing with server");
             ConfigClient.unsync();
+            IgnitersHandler.unsync();
         }
     }
 
@@ -49,9 +56,9 @@ public class ConnectionHandler implements IConnectionHandler
     public void connectionOpened(NetHandler nh, MinecraftServer server, INetworkManager nm)
     {
     }
-    
+
     @Override
-    public void clientLoggedIn(NetHandler nh, INetworkManager nm, Packet1Login login)
+    public void clientLoggedIn(NetHandler nh, INetworkManager nm, Packet1Login pkt)
     {
     }
 }

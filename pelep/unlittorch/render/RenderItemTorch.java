@@ -1,22 +1,24 @@
 package pelep.unlittorch.render;
 
-import org.lwjgl.opengl.GL11;
-
-import pelep.unlittorch.config.ConfigCommon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.client.IItemRenderer;
+import org.lwjgl.opengl.GL11;
+import pelep.unlittorch.config.ConfigCommon;
 
+/**
+ * @author pelep
+ */
 @SideOnly(Side.CLIENT)
 public class RenderItemTorch implements IItemRenderer
 {
     @Override
     public boolean handleRenderType(ItemStack ist, ItemRenderType type)
     {
-        return ist.itemID == 50 && type == ItemRenderType.INVENTORY;
+        return type == ItemRenderType.INVENTORY && (ist.itemID == 50 || ist.itemID == ConfigCommon.blockIdTorchUnlit);
     }
 
     @Override
@@ -45,7 +47,7 @@ public class RenderItemTorch implements IItemRenderer
         t.addVertexWithUV(0, 0, 0, minU, minV);
         t.draw();
 
-        if (d > 1)
+        if (d > 0)
         {
             int max = ConfigCommon.torchLifespanMax;
             d = Math.min(d, max);

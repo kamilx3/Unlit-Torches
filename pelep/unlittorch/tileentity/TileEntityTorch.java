@@ -1,31 +1,26 @@
-package pelep.unlittorch.entity;
+package pelep.unlittorch.tileentity;
 
-import pelep.unlittorch.block.BlockTorch;
-import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.handler.TickHandler;
+import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.EnumSkyBlock;
+import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.packet.Packet04BurnFX;
 
+/**
+ * @author pelep
+ */
 public class TileEntityTorch extends TileEntity
 {
-    private int age = 1;
-    
-    public TileEntityTorch() {}
-    
-    public TileEntityTorch(int age)
-    {
-        this.age = age;
-    }
-    
+    private int age = 0;
+
     public void setAge(int age)
     {
         this.age = age;
     }
-    
+
     public int getAge()
     {
         return this.age;
@@ -34,9 +29,9 @@ public class TileEntityTorch extends TileEntity
     @Override
     public boolean canUpdate()
     {
-        return !ConfigCommon.torchIsSimple;
+        return ConfigCommon.torchUpdates;
     }
-    
+
     @Override
     public void updateEntity()
     {
@@ -50,10 +45,10 @@ public class TileEntityTorch extends TileEntity
             {
                 this.killTorch("fire.fire");
             }
-            
+
             return;
         }
-        
+
         if (!this.worldObj.isRemote)
         {
             if (this.worldObj.canLightningStrikeAt(this.xCoord, this.yCoord, this.zCoord) && this.worldObj.rand.nextInt(40) == 0)
@@ -61,10 +56,10 @@ public class TileEntityTorch extends TileEntity
                 this.killTorch("random.fizz");
                 return;
             }
-            
-            if (this.age > ConfigCommon.torchLifespanMin && ConfigCommon.torchKillChance > 0 && this.worldObj.rand.nextInt(ConfigCommon.torchKillChance) == 0)
+
+            if (this.age > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && this.worldObj.rand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
             {
-                if (ConfigCommon.torchSingleUse)
+                if (this.worldObj.rand.nextInt(100) < ConfigCommon.torchDestroyChance)
                 {
                     this.destroyTorch();
                 }
@@ -72,34 +67,33 @@ public class TileEntityTorch extends TileEntity
                 {
                     this.killTorch("fire.fire");
                 }
-                
+
                 return;
             }
         }
-        
-        if (TickHandler.updateAge == 0)
+
+        if (worldObj.getTotalWorldTime() % 3 == 0)
         {
             this.age++;
         }
     }
-    
+
     private void destroyTorch()
     {
-        int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
         this.invalidate();
-        this.worldObj.playAuxSFX(2001, this.xCoord, this.yCoord, this.zCoord, 50 + (md << 12));
+//        int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
+//        this.worldObj.playAuxSFX(2001, this.xCoord, this.yCoord, this.zCoord, 50 + (md << 12));
+        Packet04BurnFX pkt = new Packet04BurnFX(this.xCoord, this.yCoord, this.zCoord, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+        PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 64D, this.worldObj.provider.dimensionId, pkt.create());
+        this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, "fire.fire", 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
     }
-    
+
     private void killTorch(String sound)
     {
         this.invalidate();
-        
-        int md = BlockTorch.getTorchMetadata(this.worldObj, this.xCoord, this.yCoord, this.zCoord);
-        if (md < 6) md += 5;
-        
-        this.worldObj.setBlockMetadataWithNotify(this.xCoord, this.yCoord, this.zCoord, md, 3);
-        this.worldObj.updateLightByType(EnumSkyBlock.Block, this.xCoord, this.yCoord, this.zCoord);
+        int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
+        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, ConfigCommon.blockIdTorchUnlit, md, 2);
         this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, sound, 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
     }
 
@@ -109,25 +103,29 @@ public class TileEntityTorch extends TileEntity
         super.readFromNBT(tag);
         this.age = tag.getInteger("age");
     }
-    
+
     @Override
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
         tag.setInteger("age", this.age);
     }
-    
+
     @Override
     public Packet getDescriptionPacket()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        this.writeToNBT(tag);
+        tag.setInteger("age", this.age);
         return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tag);
     }
-    
+
     @Override
     public void onDataPacket(INetworkManager net, Packet132TileEntityData pkt)
     {
-        this.readFromNBT(pkt.customParam1);
+        switch (pkt.actionType)
+        {
+            case 0:
+                this.age = pkt.data.getInteger("age");
+        }
     }
 }

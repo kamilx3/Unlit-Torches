@@ -1,0 +1,16 @@
+[
+{
+    "modid": "UnlitTorch",
+    "name": "Unlit Torches",
+    "description": "Unlit torches! This mod adds unlit torches to the game and also modifies other vanilla behavior.",
+    "version": "2.0.30",
+    "credits": "Many thanks to Mojang, MCP, and FML",
+    "authors": ["pelep"],
+    "logoFile": "",
+    "url": "http://www.minecraftforum.net/topic/1690690-",
+    "updateUrl": "",
+    "parent": "",
+    "screenshots": [],
+    "dependencies": []
+}
+]

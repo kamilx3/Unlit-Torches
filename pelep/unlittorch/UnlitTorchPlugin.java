@@ -1,38 +1,44 @@
 package pelep.unlittorch;
 
-import java.util.Map;
+import static pelep.unlittorch.UnlitTorchPlugin.MOD_ID;
+import static pelep.unlittorch.UnlitTorchPlugin.MOD_MCVERSION;
 
 import cpw.mods.fml.relauncher.IFMLLoadingPlugin;
-import pelep.unlittorch.asm.UTClassTransformer;
+import pelep.pcl.asm.PCLAccessTransformer;
 import pelep.unlittorch.handler.LogHandler;
 
-@IFMLLoadingPlugin.Name("UnlitTorch")
+import java.util.Map;
+
+/**
+ * @author pelep
+ */
+@IFMLLoadingPlugin.Name(MOD_ID)
 @IFMLLoadingPlugin.TransformerExclusions({"pelep.unlittorch.asm"})
-@IFMLLoadingPlugin.MCVersion("1.6.2")
+@IFMLLoadingPlugin.MCVersion(MOD_MCVERSION)
 public class UnlitTorchPlugin implements IFMLLoadingPlugin
 {
-    public static final String MOD_NAME = "Unlit Torches and Lanterns";
+    public static final String MOD_NAME = "Unlit Torches";
     public static final String MOD_ID = "UnlitTorch";
-    public static final String MOD_VERSION = "1.29.29";
-    public static final String MOD_MCVERSION = "1.6.2";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.10.0.837,);before:Bushwhacker";
-    
+    public static final String MOD_VERSION = "2.0.30";
+    public static final String MOD_MCVERSION = "1.6.4";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:PCL@[1.3.4,);before:Bushwhacker";
+    public static final String MOD_CHANNEL = MOD_ID;
+
     public UnlitTorchPlugin()
     {
         LogHandler.init();
     }
-    
+
     @Override
-    @Deprecated
     public String[] getLibraryRequestClass()
     {
         return null;
     }
-    
+
     @Override
     public String[] getASMTransformerClass()
     {
-        return new String[] {"pelep.unlittorch.asm.UTAccessTransformer", "pelep.unlittorch.asm.UTClassTransformer"};
+        return null;
     }
 
     @Override
@@ -50,9 +56,13 @@ public class UnlitTorchPlugin implements IFMLLoadingPlugin
     @Override
     public void injectData(Map<String, Object> data)
     {
-        if (data.containsKey("runtimeDeobfuscationEnabled") && !((Boolean)data.get("runtimeDeobfuscationEnabled")))
+        try
         {
-            UTClassTransformer.setDeobf();
+            PCLAccessTransformer.addMapFile("ut_at.cfg");
+        }
+        catch (NoClassDefFoundError e)
+        {
+            throw new RuntimeException("UnlitTorch requires PCL!");
         }
     }
 }
