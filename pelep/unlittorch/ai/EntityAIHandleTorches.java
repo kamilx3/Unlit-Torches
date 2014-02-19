@@ -20,21 +20,23 @@ public class EntityAIHandleTorches extends EntityAIBase
 {
     private EntityLiving el;
     private World world;
-
     private ArrayList<TorchInfo> torches = new ArrayList();
     private TorchSorter sorter;
+    private int delay;
 
     public EntityAIHandleTorches(EntityLiving el)
     {
         this.el = el;
         this.world = el.worldObj;
         this.sorter = new TorchSorter(el);
+        this.setMutexBits(1|2|5);
     }
 
     @Override
     public boolean shouldExecute()
     {
-        return this.findTorches();
+        if (this.delay > 0) this.delay--;
+        return this.delay == 0 && this.findTorches();
     }
 
     @Override
@@ -53,6 +55,7 @@ public class EntityAIHandleTorches extends EntityAIBase
             BlockTorchUnlit.igniteBlockTorch(0, this.world, torch.x, torch.y, torch.z, "fire.fire");
         }
 
+        this.delay = 20;
         this.el.getLookHelper().setLookPosition(torch.x + 0.5, torch.y + 0.5, torch.z + 0.5, 10F, this.el.getVerticalFaceSpeed());
         this.torches.clear();
     }

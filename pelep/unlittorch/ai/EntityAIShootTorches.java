@@ -38,11 +38,7 @@ public class EntityAIShootTorches extends EntityAIBase
     @Override
     public boolean shouldExecute()
     {
-        if (this.delay > 0)
-        {
-            this.delay--;
-        }
-
+        if (this.delay > 0) this.delay--;
         return this.delay == 0 && this.findTorch();
     }
 
@@ -118,10 +114,6 @@ public class EntityAIShootTorches extends EntityAIBase
     public void updateTask()
     {
         if (this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) != 50)
-        {
-            this.retry = 0;
-        }
-        else if (this.world.getBlockMetadata(this.torch.x, this.torch.y, this.torch.z) > 5)
         {
             this.retry = 0;
         }
