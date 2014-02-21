@@ -330,7 +330,7 @@ class BlockTorch extends BlockContainer
 
     protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound)
     {
-        setTileEntityAge(age, world, x, y, z, sound, world.rand.nextFloat() * 0.4F + 0.8F);
+        setTileEntityAge(age, world, x, y , z, sound, 1F);
     }
 
     protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound, float volume)
@@ -340,7 +340,7 @@ class BlockTorch extends BlockContainer
 
         if (sound != null)
         {
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, volume);
+            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
         }
 
         if (!world.isRemote)

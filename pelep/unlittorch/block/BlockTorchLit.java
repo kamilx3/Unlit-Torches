@@ -122,7 +122,7 @@ public class BlockTorchLit extends BlockTorch
         }
         else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
         {
-            killBlockTorch(world, x, y, z, "random.fizz", 0.5F);
+            killBlockTorch(world, x, y, z, "random.fizz", 0.3F);
             return true;
         }
         else if (id == Block.cloth.blockID)

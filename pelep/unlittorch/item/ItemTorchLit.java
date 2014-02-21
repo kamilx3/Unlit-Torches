@@ -122,7 +122,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                     }
                     else
                     {
-                        killItemTorch(world, p, ist, "fire.fire");
+                        killItemTorch(world, p, ist, "fire.fire", 1F);
                     }
 
                     return;
@@ -136,7 +136,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                     }
                     else
                     {
-                        killItemTorch(world, p, ist, "fire.fire");
+                        killItemTorch(world, p, ist, "fire.fire", 1F);
                     }
 
                     return;
@@ -148,7 +148,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
                 if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(50) == 0) || itemRand.nextInt(80) == 0))
                 {
-                    killItemTorch(world, p, ist, "random.fizz");
+                    killItemTorch(world, p, ist, "random.fizz", 0.3F);
                     return;
                 }
 
@@ -172,7 +172,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             {
                 if (ei.handleWaterMovement())
                 {
-                    killEntityTorch(ei, "random.fizz");
+                    killEntityTorch(ei, "random.fizz", 0.3F);
                     return false;
                 }
 
@@ -186,7 +186,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                     }
                     else
                     {
-                        killEntityTorch(ei, "fire.fire");
+                        killEntityTorch(ei, "fire.fire", 1F);
                     }
 
                     return false;
@@ -200,7 +200,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                     }
                     else
                     {
-                        killEntityTorch(ei, "fire.fire");
+                        killEntityTorch(ei, "fire.fire", 1F);
                     }
 
                     return false;
@@ -212,7 +212,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
                 if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
                 {
-                    killEntityTorch(ei, "random.fizz");
+                    killEntityTorch(ei, "random.fizz", 0.3F);
                     return false;
                 }
 
@@ -232,25 +232,25 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
     private static void destroyItemTorch(World world, EntityPlayer p, int slot)
     {
-        world.playSoundAtEntity(p, "fire.fire", 1F, 1F);
+        world.playSoundAtEntity(p, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
         p.inventory.setInventorySlotContents(slot, null);
     }
 
-    private static void killItemTorch(World world, EntityPlayer p, ItemStack ist, String sound)
+    private static void killItemTorch(World world, EntityPlayer p, ItemStack ist, String sound, float volume)
     {
-        world.playSoundAtEntity(p, sound, 0.8F, 1F);
+        world.playSoundAtEntity(p, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
         ist.itemID = ConfigCommon.blockIdTorchUnlit;
     }
 
     private static void destroyEntityTorch(EntityItem ei)
     {
-        ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, "fire.fire", 1F, 1F);
+        ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, "fire.fire", 1F, ei.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         ei.setDead();
     }
 
-    private static void killEntityTorch(EntityItem ei, String sound)
+    private static void killEntityTorch(EntityItem ei, String sound, float volume)
     {
-        ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, sound, 0.6F, 1F);
+        ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, sound, volume, ei.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;
         PacketDispatcher.sendPacketToAllInDimension(new Packet02UpdateEntity(ei).create(), ei.worldObj.provider.dimensionId);
     }

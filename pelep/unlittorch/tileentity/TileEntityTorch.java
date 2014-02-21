@@ -52,7 +52,7 @@ public class TileEntityTorch extends TileEntity
             }
             else
             {
-                this.killTorch("fire.fire");
+                this.killTorch("fire.fire", 1F);
             }
 
             return;
@@ -62,7 +62,7 @@ public class TileEntityTorch extends TileEntity
         {
             if (this.worldObj.canLightningStrikeAt(this.xCoord, this.yCoord, this.zCoord) && this.worldObj.rand.nextInt(30) == 0)
             {
-                this.killTorch("random.fizz");
+                this.killTorch("random.fizz", 0.3F);
                 return;
             }
 
@@ -74,7 +74,7 @@ public class TileEntityTorch extends TileEntity
                 }
                 else
                 {
-                    this.killTorch("fire.fire");
+                    this.killTorch("fire.fire", 1F);
                 }
 
                 return;
@@ -98,11 +98,11 @@ public class TileEntityTorch extends TileEntity
         this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
     }
 
-    private void killTorch(String sound)
+    private void killTorch(String sound, float volume)
     {
         int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
         this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, ConfigCommon.blockIdTorchUnlit, md, 2);
-        this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, sound, 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
+        this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, sound, volume, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         ((TileEntityTorch)this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord)).setAge(this.age);
     }
 
