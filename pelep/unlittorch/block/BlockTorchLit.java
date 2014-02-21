@@ -4,35 +4,32 @@ import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
 import pelep.unlittorch.packet.Packet03UpdateTile;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
+import java.util.Random;
+
 /**
  * @author pelep
  */
-import java.util.ArrayList;
-import java.util.Random;
-
-public class BlockTorchLit extends BlockTorch implements ITileEntityProvider
+public class BlockTorchLit extends BlockTorch
 {
     public BlockTorchLit()
     {
-        super(50);
+        super(50, true);
         this.setLightValue(0.9375F);
         this.setUnlocalizedName("unlittorch:torch_lit");
         this.setTextureName("torch_on");
-        this.isBlockContainer = true;
     }
 
 
@@ -75,85 +72,6 @@ public class BlockTorchLit extends BlockTorch implements ITileEntityProvider
     }
 
 
-    //--------------------------------container-------------------------------//
-
-
-    @Override
-    public boolean hasTileEntity(int md)
-    {
-        return true;
-    }
-
-    @Override
-    public TileEntity createTileEntity(World world, int md)
-    {
-        return new TileEntityTorch();
-    }
-
-    @Override
-    public TileEntity createNewTileEntity(World world)
-    {
-        return new TileEntityTorch();
-    }
-
-    @Override
-    public void breakBlock(World world, int x, int y, int z, int id, int md)
-    {
-        super.breakBlock(world, x, y, z, id, md);
-        world.removeBlockTileEntity(x, y, z);
-    }
-
-
-    //----------------------------------drop----------------------------------//
-
-
-    @Override
-    public boolean removeBlockByPlayer(World world, EntityPlayer p, int x, int y, int z)
-    {
-        int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
-        boolean drop = world.setBlockToAir(x, y, z);
-
-        if (drop && !world.isRemote && !ConfigCommon.torchDropsUnlit && !p.capabilities.isCreativeMode)
-        {
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(this.blockID, 1, age));
-        }
-
-        return drop;
-    }
-
-    @Override
-    public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int md, int fortune)
-    {
-        ArrayList<ItemStack> stacks = new ArrayList();
-
-        if (ConfigCommon.torchDropsUnlit)
-        {
-            stacks.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0));
-        }
-        else
-        {
-            TileEntity te = world.getBlockTileEntity(x, y, z);
-
-            if (te != null)
-            {
-                stacks.add(new ItemStack(this.blockID, 1, ((TileEntityTorch)te).getAge()));
-            }
-        }
-
-        return stacks;
-    }
-
-
-    //---------------------------------place----------------------------------//
-
-
-    @Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack ist)
-    {
-        setTileEntityAge(ist.getItemDamage(), world, x, y, z, null);
-    }
-
-
     //-------------------------------interact--------------------------------//
 
 
@@ -191,53 +109,15 @@ public class BlockTorchLit extends BlockTorch implements ITileEntityProvider
         }
 
         int id = ist.itemID;
-        int d = ist.getItemDamage();
 
-        if (IgnitersHandler.canIgniteSetTorch(id, d) || (id == ConfigCommon.blockIdTorchUnlit && IgnitersHandler.canIgniteHeldTorch(50, world.getBlockMetadata(x, y, z))))
+        if (id == this.blockID)
         {
-            if (id == this.blockID)
-            {
-                renewTorches(world, p, ist, x, y, z);
-            }
-            else if (id == ConfigCommon.blockIdTorchUnlit)
-            {
-                igniteTorch(world, ist, p, ((TileEntityTorch) world.getBlockTileEntity(x, y, z)).getAge());
-            }
-            else if (id == Item.flint.itemID)
-            {
-                setTileEntityAge(0, world, x, y, z, "fire.ignite");
-
-                if (!p.capabilities.isCreativeMode)
-                {
-                    p.inventory.decrStackSize(p.inventory.currentItem, 1);
-                }
-            }
-            else if (id == Item.flintAndSteel.itemID)
-            {
-                setTileEntityAge(0, world, x, y, z, "fire.ignite");
-                ist.damageItem(1, p);
-            }
-            else if (id == Item.bucketLava.itemID)
-            {
-                setTileEntityAge(0, world, x, y, z, "fire.fire");
-            }
-            else
-            {
-                setTileEntityAge(0, world, x, y, z, "fire.fire");
-
-                if (!p.capabilities.isCreativeMode)
-                {
-                    if (Item.itemsList[id].isDamageable())
-                    {
-                        ist.damageItem(1, p);
-                    }
-                    else
-                    {
-                        p.inventory.decrStackSize(p.inventory.currentItem, 1);
-                    }
-                }
-            }
-
+            renewTorches(world, p, ist, x, y, z);
+            return true;
+        }
+        else if (id == ConfigCommon.blockIdTorchUnlit && IgnitersHandler.canIgniteHeldTorch(this.blockID, world.getBlockMetadata(x, y, z)))
+        {
+            igniteHeldTorch(world, ist, p);
             return true;
         }
         else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
@@ -281,17 +161,15 @@ public class BlockTorchLit extends BlockTorch implements ITileEntityProvider
     public static void killBlockTorch(World world, int x, int y, int z, String sound, float volume)
     {
         TileEntity te = world.getBlockTileEntity(x, y, z);
-        if (te != null) te.invalidate();
+        int age = te != null ? ((TileEntityTorch)te).getAge() : 0;
 
         world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 2);
-        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
+        setTileEntityAge(age, world, x, y, z, sound, volume);
     }
 
     private static void renewTorches(World world, EntityPlayer p, ItemStack ist, int x, int y, int z)
     {
-        String sound = "fire.fire";
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-
         int ta = te.getAge();
         int ia = ist.getItemDamage();
 
@@ -299,29 +177,26 @@ public class BlockTorchLit extends BlockTorch implements ITileEntityProvider
         {
             return;
         }
-        else if (ta < ia)
+
+        double d = (ta + ia) / 2;
+        int age = MathHelper.ceiling_double_int(d);
+
+        if (!world.isRemote)
         {
-            ist.setItemDamage(ta);
-        }
-        else
-        {
-            te.setAge(ia);
-            if (!world.isRemote)
-            {
-                int dim = world.provider.dimensionId;
-                PacketDispatcher.sendPacketToAllInDimension(new Packet03UpdateTile(x, y, z, dim, ia).create(), dim);
-            }
+            int dim = world.provider.dimensionId;
+            PacketDispatcher.sendPacketToAllInDimension(new Packet03UpdateTile(x, y, z, dim, age).create(), dim);
         }
 
+        ist.setItemDamage(age);
+        setTileEntityAge(age, world, x, y, z, "fire.fire");
         p.swingItem();
-        world.playSoundAtEntity(p, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 
-    private static void igniteTorch(World world, ItemStack ist, EntityPlayer p, int age)
+    public static void igniteHeldTorch(World world, ItemStack ist, EntityPlayer p)
     {
         if (ist.stackSize > 1)
         {
-            ItemStack torch = new ItemStack(50, 1, age);
+            ItemStack torch = new ItemStack(50, 1, ist.getItemDamage());
             ist.stackSize--;
 
             if (!p.inventory.addItemStackToInventory(torch))
@@ -332,7 +207,6 @@ public class BlockTorchLit extends BlockTorch implements ITileEntityProvider
         else
         {
             ist.itemID = 50;
-            ist.setItemDamage(age);
         }
 
         world.playSoundAtEntity(p, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);

@@ -14,7 +14,16 @@ import pelep.unlittorch.packet.Packet04BurnFX;
  */
 public class TileEntityTorch extends TileEntity
 {
+    private boolean lit;
     private int age = 0;
+
+    public TileEntityTorch() {}
+
+    public TileEntityTorch(boolean lit, int age)
+    {
+        this.lit = lit;
+        this.age = age;
+    }
 
     public void setAge(int age)
     {
@@ -29,7 +38,7 @@ public class TileEntityTorch extends TileEntity
     @Override
     public boolean canUpdate()
     {
-        return ConfigCommon.torchUpdates;
+        return this.lit && ConfigCommon.torchUpdates;
     }
 
     @Override
@@ -51,7 +60,7 @@ public class TileEntityTorch extends TileEntity
 
         if (!this.worldObj.isRemote)
         {
-            if (this.worldObj.canLightningStrikeAt(this.xCoord, this.yCoord, this.zCoord) && this.worldObj.rand.nextInt(40) == 0)
+            if (this.worldObj.canLightningStrikeAt(this.xCoord, this.yCoord, this.zCoord) && this.worldObj.rand.nextInt(30) == 0)
             {
                 this.killTorch("random.fizz");
                 return;
@@ -91,10 +100,10 @@ public class TileEntityTorch extends TileEntity
 
     private void killTorch(String sound)
     {
-        this.invalidate();
         int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
         this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, ConfigCommon.blockIdTorchUnlit, md, 2);
         this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, sound, 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
+        ((TileEntityTorch)this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord)).setAge(this.age);
     }
 
     @Override

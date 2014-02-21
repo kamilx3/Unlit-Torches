@@ -51,7 +51,6 @@ public class Packet02UpdateEntity extends PacketCustom
                 {
                     EntityItem ei = (EntityItem) e;
                     ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;
-                    ei.getEntityItem().setItemDamage(0);
                 }
             }
         }

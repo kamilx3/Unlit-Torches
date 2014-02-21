@@ -7,6 +7,7 @@ import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.Configuration;
 import pelep.pcl.lights.LightsManager;
 import pelep.unlittorch.config.ConfigClient;
+import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.LogHandler;
 import pelep.unlittorch.render.RenderBlockTorch;
 import pelep.unlittorch.render.RenderItemTorch;
@@ -37,7 +38,9 @@ public class ProxyClient extends ProxyCommon
     public void registerRenderers()
     {
         LogHandler.info("Registering renderers");
-        MinecraftForgeClient.registerItemRenderer(50, new RenderItemTorch());
+        RenderItemTorch renderItemTorch = new RenderItemTorch();
+        MinecraftForgeClient.registerItemRenderer(50, renderItemTorch);
+        MinecraftForgeClient.registerItemRenderer(ConfigCommon.blockIdTorchUnlit, renderItemTorch);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTorch.class, new RenderBlockTorch());
     }
 

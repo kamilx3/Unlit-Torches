@@ -6,29 +6,38 @@ import static net.minecraftforge.common.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.ForgeDirection.WEST;
 
 import cpw.mods.fml.common.network.PacketDispatcher;
-import net.minecraft.block.Block;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet03UpdateTile;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
+import java.util.ArrayList;
 import java.util.Random;
 
 /**
  * @author pelep
  */
-public class BlockTorch extends Block
+class BlockTorch extends BlockContainer
 {
-    public BlockTorch(int id)
+    private final boolean lit;
+
+    public BlockTorch(int id, boolean lit)
     {
         super(id, Material.circuits);
         this.setTickRandomly(true);
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHardness(0F);
         this.setStepSound(soundWoodFootstep);
+        this.lit = lit;
     }
 
 
@@ -51,6 +60,22 @@ public class BlockTorch extends Block
     public int getRenderType()
     {
         return 2;
+    }
+
+
+    //--------------------------------container-------------------------------//
+
+
+    @Override
+    public TileEntity createTileEntity(World world, int md)
+    {
+        return new TileEntityTorch(this.lit, 0);
+    }
+
+    @Override
+    public TileEntity createNewTileEntity(World world)
+    {
+        return new TileEntityTorch(this.lit, 0);
     }
 
 
@@ -136,6 +161,12 @@ public class BlockTorch extends Block
 
     //----------------------------------place---------------------------------//
 
+
+    @Override
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack ist)
+    {
+        setTileEntityAge(ist.getItemDamage(), world, x, y, z, null);
+    }
 
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z)
@@ -259,17 +290,57 @@ public class BlockTorch extends Block
     }
 
 
+    //----------------------------------drop----------------------------------//
+
+
+    @Override
+    public boolean removeBlockByPlayer(World world, EntityPlayer p, int x, int y, int z)
+    {
+        int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
+        boolean drop = world.setBlockToAir(x, y, z);
+
+        if (drop && !world.isRemote && !p.capabilities.isCreativeMode)
+        {
+            int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
+            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(id, 1, age));
+        }
+
+        return drop;
+    }
+
+    @Override
+    public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int md, int fortune)
+    {
+        ArrayList<ItemStack> stacks = new ArrayList();
+
+        TileEntity te = world.getBlockTileEntity(x, y, z);
+
+        if (te != null)
+        {
+            int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
+            stacks.add(new ItemStack(id, 1, ((TileEntityTorch)te).getAge()));
+        }
+
+        return stacks;
+    }
+
+
     //----------------------------------mine----------------------------------//
 
 
     protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound)
+    {
+        setTileEntityAge(age, world, x, y, z, sound, world.rand.nextFloat() * 0.4F + 0.8F);
+    }
+
+    protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound, float volume)
     {
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         te.setAge(age);
 
         if (sound != null)
         {
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
+            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, volume);
         }
 
         if (!world.isRemote)

@@ -17,9 +17,10 @@ import pelep.unlittorch.handler.IgnitersHandler;
 import pelep.unlittorch.handler.LogHandler;
 import pelep.unlittorch.item.ItemTorchLit;
 import pelep.unlittorch.item.ItemTorchUnlit;
-import pelep.unlittorch.recipe.RecipeTorchA;
-import pelep.unlittorch.recipe.RecipeTorchB;
-import pelep.unlittorch.recipe.RecipeTorchC;
+import pelep.unlittorch.recipe.RecipeTorch;
+import pelep.unlittorch.recipe.RecipeTorchLitA;
+import pelep.unlittorch.recipe.RecipeTorchLitB;
+import pelep.unlittorch.recipe.RecipeTorchUnlit;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.io.File;
@@ -89,18 +90,19 @@ public class ProxyCommon
 
         LogHandler.info("Registering new crafting recipes");
 
-        RecipeTorchB recipeTorchB = new RecipeTorchB();
-        RecipeTorchC recipeTorchC = new RecipeTorchC();
-        GameRegistry.addRecipe(new RecipeTorchA());
-        GameRegistry.addRecipe(recipeTorchB);
-        GameRegistry.addRecipe(recipeTorchC);
+        RecipeTorchLitA recipeTorchLitA = new RecipeTorchLitA();
+        RecipeTorchLitB recipeTorchLitB = new RecipeTorchLitB();
+        GameRegistry.addRecipe(new RecipeTorch());
+        GameRegistry.addRecipe(recipeTorchLitA);
+        GameRegistry.addRecipe(recipeTorchLitB);
+        GameRegistry.addRecipe(new RecipeTorchUnlit());
 
         ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0);
         GameRegistry.addShapelessRecipe(new ItemStack(Item.stick, 1, 0), torch.copy(), torch.copy(), torch.copy(), torch);
 
         LogHandler.info("Registering crafting handlers");
-        GameRegistry.registerCraftingHandler(recipeTorchB);
-        GameRegistry.registerCraftingHandler(recipeTorchC);
+        GameRegistry.registerCraftingHandler(recipeTorchLitA);
+        GameRegistry.registerCraftingHandler(recipeTorchLitB);
     }
 
     public void registerTrackers()

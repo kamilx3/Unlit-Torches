@@ -6,13 +6,14 @@ import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 
 /**
  * @author pelep
  */
-public class RecipeTorchB implements IRecipe, ICraftingHandler
+public class RecipeTorchLitA implements IRecipe, ICraftingHandler
 {
     private ItemStack torch;
 
@@ -68,14 +69,15 @@ public class RecipeTorchB implements IRecipe, ICraftingHandler
 
             if (d1 != d2)
             {
-                this.torch = new ItemStack(50, 1, Math.min(d1, d2));
+                double d = (d1 + d2) / 2;
+                this.torch = new ItemStack(50, 1, MathHelper.ceiling_double_int(d));
                 return true;
             }
 
             return false;
         }
 
-        this.torch = new ItemStack(50, 1, ist1.getItemDamage());
+        this.torch = new ItemStack(50, 1, ist2.getItemDamage());
         return true;
     }
 
@@ -148,13 +150,20 @@ public class RecipeTorchB implements IRecipe, ICraftingHandler
         {
             ist1.stackSize++;
         }
-        else if (ist1.getItemDamage() < ist2.getItemDamage())
-        {
-            ist1.stackSize++;
-        }
         else
         {
-            ist2.stackSize++;
+            double d = (ist1.getItemDamage() + ist2.getItemDamage()) / 2;
+
+            if (ist1.getItemDamage() < ist2.getItemDamage())
+            {
+                ist1.stackSize++;
+                ist1.setItemDamage(MathHelper.ceiling_double_int(d));
+            }
+            else
+            {
+                ist2.stackSize++;
+                ist2.setItemDamage(MathHelper.ceiling_double_int(d));
+            }
         }
     }
 

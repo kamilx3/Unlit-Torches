@@ -1,7 +1,6 @@
 package pelep.unlittorch.recipe;
 
 import net.minecraft.inventory.InventoryCrafting;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -10,61 +9,55 @@ import pelep.unlittorch.config.ConfigCommon;
 /**
  * @author pelep
  */
-public class RecipeTorchA implements IRecipe
+public class RecipeTorchUnlit implements IRecipe
 {
     private ItemStack torch;
 
     @Override
     public boolean matches(InventoryCrafting ic, World world)
     {
-        int size = ic.getSizeInventory();
         int n = 0;
-        int s = -1;
-        int c = -1;
+        int t1 = -1;
+        int t2 = -1;
 
-        for (int i = 0; i < size; i++)
+        for (int i = 0; i < ic.getSizeInventory(); i++)
         {
             ItemStack ist = ic.getStackInSlot(i);
 
             if (ist != null)
             {
-                if (++n > 2)
+                if (++n > 2 || ist.getItemDamage() == 0)
                 {
                     return false;
                 }
 
-                int id = ist.itemID;
-
-                if (s == -1 && id == Item.stick.itemID)
+                if (ist.itemID == ConfigCommon.blockIdTorchUnlit)
                 {
-                    s = i;
-                    continue;
-                }
-                else if (c == -1 && id == Item.coal.itemID)
-                {
-                    c = i;
-                    continue;
+                    if (t1 == -1)
+                    {
+                        t1 = i;
+                        continue;
+                    }
+                    else if (t2 == -1)
+                    {
+                        t2 = i;
+                        continue;
+                    }
                 }
 
                 return false;
             }
         }
 
-        if (n != 2 || s == -1 || c == -1) return false;
-
-        int i = size == 9 ? 3 : 2;
-
-        if (c == (s - i))
+        if (n == 2 && t1 != -1 && t2 != -1)
         {
-            if (ConfigCommon.overrideTorchRecipe)
-            {
-                this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, ConfigCommon.torchRecipeYieldCount, 0);
-            }
-            else
-            {
-                this.torch = new ItemStack(50, ConfigCommon.torchRecipeYieldCount, 0);
-            }
-
+            int d1 = ic.getStackInSlot(t1).getItemDamage();
+            int d2 = ic.getStackInSlot(t2).getItemDamage();
+            int max = ConfigCommon.torchLifespanMax;
+            d1 = max - d1;
+            d2 = max - d2;
+            int d = d1 + d2 + max * 5 / 100;
+            this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, Math.max(0, max - d));
             return true;
         }
 

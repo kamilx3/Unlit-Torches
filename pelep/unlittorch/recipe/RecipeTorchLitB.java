@@ -13,9 +13,9 @@ import pelep.unlittorch.config.ConfigCommon;
 /**
  * @author pelep
  */
-public class RecipeTorchC implements IRecipe, ICraftingHandler
+public class RecipeTorchLitB implements IRecipe, ICraftingHandler
 {
-    private ItemStack torch = new ItemStack(50, 1, 0);
+    private ItemStack torch;
 
     @Override
     public boolean matches(InventoryCrafting ic, World world)
@@ -24,7 +24,7 @@ public class RecipeTorchC implements IRecipe, ICraftingHandler
         int t = -1;
         int f = -1;
 
-        for (int i = 0; i <ic.getSizeInventory(); i++)
+        for (int i = 0; i < ic.getSizeInventory(); i++)
         {
             ItemStack ist = ic.getStackInSlot(i);
 
@@ -37,7 +37,7 @@ public class RecipeTorchC implements IRecipe, ICraftingHandler
 
                 int id = ist.itemID;
 
-                if (t == -1 && ((id == 50 && ist.getItemDamage() != 0) || id == ConfigCommon.blockIdTorchUnlit))
+                if (t == -1 && (id == ConfigCommon.blockIdTorchUnlit))
                 {
                     t = i;
                     continue;
@@ -55,7 +55,13 @@ public class RecipeTorchC implements IRecipe, ICraftingHandler
             }
         }
 
-        return n == 2 && t != -1 && f != -1;
+        if (n == 2 && t != -1 && f != -1)
+        {
+            this.torch = new ItemStack(50, 1, ic.getStackInSlot(t).getItemDamage());
+            return true;
+        }
+
+        return false;
     }
 
     @Override
@@ -98,7 +104,7 @@ public class RecipeTorchC implements IRecipe, ICraftingHandler
 
                 int id = ist.itemID;
 
-                if (t == -1 && ((id == 50 && ist.getItemDamage() != 0) || id == ConfigCommon.blockIdTorchUnlit))
+                if (t == -1 && (id == ConfigCommon.blockIdTorchUnlit))
                 {
                     t = i;
                     continue;

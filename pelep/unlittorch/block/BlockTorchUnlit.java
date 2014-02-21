@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
+import pelep.unlittorch.tileentity.TileEntityTorch;
 
 /**
  * @author pelep
@@ -18,7 +19,7 @@ public class BlockTorchUnlit extends BlockTorch
 {
     public BlockTorchUnlit()
     {
-        super(ConfigCommon.blockIdTorchUnlit);
+        super(ConfigCommon.blockIdTorchUnlit, false);
         this.setLightValue(0F);
         this.setUnlocalizedName("unlittorch:torch_unlit");
         this.setTextureName("unlittorch:torch_off");
@@ -46,7 +47,8 @@ public class BlockTorchUnlit extends BlockTorch
 
         if (ist == null)
         {
-            p.inventory.setInventorySlotContents(p.inventory.currentItem, new ItemStack(this.blockID, 1, 0));
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+            p.inventory.setInventorySlotContents(p.inventory.currentItem, new ItemStack(this.blockID, 1, te.getAge()));
             world.setBlockToAir(x, y, z);
             return true;
         }
@@ -56,13 +58,15 @@ public class BlockTorchUnlit extends BlockTorch
 
         if (IgnitersHandler.canIgniteSetTorch(id, d))
         {
+            int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
+
             if (id == 50)
             {
-                igniteBlockTorch(d, world, x, y, z, "fire.fire");
+                igniteBlockTorch(age, world, x, y, z, "fire.fire");
             }
             else if (id == Item.flint.itemID)
             {
-                igniteBlockTorch(0, world, x, y, z, "fire.ignite");
+                igniteBlockTorch(age, world, x, y, z, "fire.ignite");
 
                 if (!p.capabilities.isCreativeMode)
                 {
@@ -71,16 +75,16 @@ public class BlockTorchUnlit extends BlockTorch
             }
             else if (id == Item.flintAndSteel.itemID)
             {
-                igniteBlockTorch(0, world, x, y, z, "fire.ignite");
+                igniteBlockTorch(age, world, x, y, z, "fire.ignite");
                 ist.damageItem(1, p);
             }
             else if (id == Item.bucketLava.itemID)
             {
-                igniteBlockTorch(0, world, x, y, z, "fire.fire");
+                igniteBlockTorch(age, world, x, y, z, "fire.fire");
             }
             else
             {
-                igniteBlockTorch(0, world, x, y, z, "fire.fire");
+                igniteBlockTorch(age, world, x, y, z, "fire.fire");
 
                 if (!p.capabilities.isCreativeMode)
                 {
