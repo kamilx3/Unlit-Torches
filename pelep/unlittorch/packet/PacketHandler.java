@@ -1,5 +1,7 @@
 package pelep.unlittorch.packet;
 
+import static pelep.unlittorch.UnlitTorch.MOD_CHANNEL;
+
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import cpw.mods.fml.common.network.IPacketHandler;
@@ -10,8 +12,6 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import pelep.pcl.ProtocolException;
 import pelep.unlittorch.handler.LogHandler;
-
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_CHANNEL;
 
 /**
  * @author pelep

@@ -1,6 +1,6 @@
 package pelep.unlittorch.packet;
 
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_CHANNEL;
+import static pelep.unlittorch.UnlitTorch.MOD_CHANNEL;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.ImmutableBiMap;

@@ -1,6 +1,6 @@
 package pelep.unlittorch.proxy;
 
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_ID;
+import static pelep.unlittorch.UnlitTorch.MOD_ID;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;

@@ -1,10 +1,10 @@
 package pelep.unlittorch;
 
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_NAME;
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_ID;
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_VERSION;
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_MCVERSION;
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_DEPENDENCIES;
+import static pelep.unlittorch.UnlitTorch.MOD_NAME;
+import static pelep.unlittorch.UnlitTorch.MOD_ID;
+import static pelep.unlittorch.UnlitTorch.MOD_VERSION;
+import static pelep.unlittorch.UnlitTorch.MOD_MCVERSION;
+import static pelep.unlittorch.UnlitTorch.MOD_DEPENDENCIES;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
@@ -27,6 +27,13 @@ import pelep.unlittorch.proxy.ProxyCommon;
 @NetworkMod(clientSideRequired = true, serverSideRequired = true, clientPacketHandlerSpec = @SidedPacketHandler(channels = MOD_ID, packetHandler = PacketHandler.class), connectionHandler = ConnectionHandler.class)
 public class UnlitTorch
 {
+    public static final String MOD_NAME = "Unlit Torches";
+    public static final String MOD_ID = "UnlitTorch";
+    public static final String MOD_VERSION = "2.0.30";
+    public static final String MOD_MCVERSION = "1.6.4";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:PCL@[1.3.4,);before:Bushwhacker";
+    public static final String MOD_CHANNEL = MOD_ID;
+
     @Instance(MOD_ID)
     public static UnlitTorch instance;
 

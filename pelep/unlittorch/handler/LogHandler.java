@@ -1,7 +1,7 @@
 package pelep.unlittorch.handler;
 
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_ID;
-import static pelep.unlittorch.UnlitTorchPlugin.MOD_VERSION;
+import static pelep.unlittorch.UnlitTorch.MOD_ID;
+import static pelep.unlittorch.UnlitTorch.MOD_VERSION;
 
 import cpw.mods.fml.common.FMLLog;
 
