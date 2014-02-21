@@ -120,12 +120,26 @@ public class BlockTorchLit extends BlockTorch
             igniteHeldTorch(world, ist, p);
             return true;
         }
+        else if (id == ConfigCommon.itemIdCloth)
+        {
+            if (ist.getItemDamage() == 0)
+            {
+                killBlockTorch(world, x, y, z, "fire.fire", 1F);
+                if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
+            }
+            else
+            {
+                killBlockTorch(world, x, y, z, "random.fizz", 0.3F);
+            }
+
+            return true;
+        }
         else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
         {
             killBlockTorch(world, x, y, z, "random.fizz", 0.3F);
             return true;
         }
-        else if (id == Block.cloth.blockID)
+        else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
         {
             killBlockTorch(world, x, y, z, "fire.fire", 1F);
 

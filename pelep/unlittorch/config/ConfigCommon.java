@@ -11,6 +11,7 @@ import net.minecraftforge.common.Property;
 public class ConfigCommon
 {
     public static int blockIdTorchUnlit;
+    public static int itemIdCloth;
 
     public static boolean overrideTorchRecipe;
     public static int torchRecipeYieldCount;
@@ -34,6 +35,7 @@ public class ConfigCommon
     public static void loadConfig(Configuration config)
     {
         blockIdTorchUnlit = config.getBlock(Configuration.CATEGORY_BLOCK, "IdBlockTorch", 550, "Block ID for the unlit torch").getInt();
+        itemIdCloth = config.get(Configuration.CATEGORY_ITEM, "IdCloth", 4201, "Item ID for cloth").getInt();
 
         overrideTorchRecipe = config.get("RECIPE", "OverrideTorchRecipe", true, "True if the torch recipe should yield unlit torches").getBoolean(true);
         torchRecipeYieldCount = getInt(1, 4, config.get("RECIPE", "TorchRecipeYieldCount", 2, "Number of torches the torch recipe should yield"));

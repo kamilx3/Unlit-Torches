@@ -9,7 +9,7 @@ import pelep.unlittorch.config.ConfigCommon;
 /**
  * @author pelep
  */
-public class RecipeTorchUnlit implements IRecipe
+public class RecipeTorchUnlitA implements IRecipe
 {
     private ItemStack torch;
 

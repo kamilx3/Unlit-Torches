@@ -47,6 +47,7 @@ public class UnlitTorch
 
         proxy.setUpConfig(e.getSuggestedConfigurationFile());
         proxy.registerTorches();
+        proxy.registerItems();
         proxy.registerTileEntity();
         proxy.registerRenderers();
     }

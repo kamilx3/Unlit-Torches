@@ -15,12 +15,10 @@ import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.EventHandler;
 import pelep.unlittorch.handler.IgnitersHandler;
 import pelep.unlittorch.handler.LogHandler;
+import pelep.unlittorch.item.ItemCloth;
 import pelep.unlittorch.item.ItemTorchLit;
 import pelep.unlittorch.item.ItemTorchUnlit;
-import pelep.unlittorch.recipe.RecipeTorch;
-import pelep.unlittorch.recipe.RecipeTorchLitA;
-import pelep.unlittorch.recipe.RecipeTorchLitB;
-import pelep.unlittorch.recipe.RecipeTorchUnlit;
+import pelep.unlittorch.recipe.*;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.io.File;
@@ -76,6 +74,12 @@ public class ProxyCommon
         GameRegistry.registerBlock(new BlockTorchUnlit(), ItemTorchUnlit.class, "unlittorch:torch_unlit", MOD_ID);
     }
 
+    public void registerItems()
+    {
+        LogHandler.info("Registering new items");
+        GameRegistry.registerItem(new ItemCloth(), "unlittorch:cloth", MOD_ID);
+    }
+
     public void registerTileEntity()
     {
         LogHandler.info("Registering tile entity");
@@ -92,17 +96,24 @@ public class ProxyCommon
 
         RecipeTorchLitA recipeTorchLitA = new RecipeTorchLitA();
         RecipeTorchLitB recipeTorchLitB = new RecipeTorchLitB();
+        RecipeTorchUnlitB recipeTorchUnlitB = new RecipeTorchUnlitB();
+        RecipeCloth recipeCloth = new RecipeCloth();
         GameRegistry.addRecipe(new RecipeTorch());
         GameRegistry.addRecipe(recipeTorchLitA);
         GameRegistry.addRecipe(recipeTorchLitB);
-        GameRegistry.addRecipe(new RecipeTorchUnlit());
+        GameRegistry.addRecipe(new RecipeTorchUnlitA());
+        GameRegistry.addRecipe(recipeTorchUnlitB);
+        GameRegistry.addRecipe(recipeCloth);
 
         ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0);
-        GameRegistry.addShapelessRecipe(new ItemStack(Item.stick, 1, 0), torch.copy(), torch.copy(), torch.copy(), torch);
+        GameRegistry.addShapelessRecipe(new ItemStack(Item.stick.itemID, 1, 0), torch.copy(), torch.copy(), torch.copy(), torch);
+        GameRegistry.addShapelessRecipe(new ItemStack(ConfigCommon.itemIdCloth, 1, 1), Item.bucketWater, new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
 
         LogHandler.info("Registering crafting handlers");
         GameRegistry.registerCraftingHandler(recipeTorchLitA);
         GameRegistry.registerCraftingHandler(recipeTorchLitB);
+        GameRegistry.registerCraftingHandler(recipeTorchUnlitB);
+        GameRegistry.registerCraftingHandler(recipeCloth);
     }
 
     public void registerTrackers()
