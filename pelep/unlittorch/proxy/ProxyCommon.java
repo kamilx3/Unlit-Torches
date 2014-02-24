@@ -22,6 +22,8 @@ import pelep.unlittorch.recipe.*;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.io.File;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 
 /**
  * @author pelep
@@ -57,12 +59,18 @@ public class ProxyCommon
 
         try
         {
-            Block.torchWood = blockTorchLit;
+//            Field torch = Block.class.getDeclaredField("torchWood");
+            Field torch = Block.class.getDeclaredField("field_72069_aq");
+            Field modifiers = Field.class.getDeclaredField("modifiers");
+            modifiers.setAccessible(true);
+            modifiers.setInt(torch, torch.getModifiers() & ~Modifier.FINAL);
+            torch.set(null, blockTorchLit);
             LogHandler.fine("Block field replaced!");
         }
-        catch(IllegalAccessError e)
+        catch(Exception e)
         {
-            LogHandler.warning("Block field not replaced! Was Unlit Torch loaded as a coremod?");
+            LogHandler.warning("Block field not replaced!");
+            e.printStackTrace();
         }
 
         LogHandler.info("Replacing item torch");
