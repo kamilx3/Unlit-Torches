@@ -18,10 +18,10 @@ import java.util.Collections;
  */
 public class EntityAIHandleTorches extends EntityAIBase
 {
-    private EntityLiving el;
-    private World world;
-    private ArrayList<TorchInfo> torches = new ArrayList();
-    private TorchSorter sorter;
+    private final EntityLiving el;
+    private final World world;
+    private final ArrayList<TorchInfo> torches = new ArrayList();
+    private final TorchSorter sorter;
     private int delay;
 
     public EntityAIHandleTorches(EntityLiving el)

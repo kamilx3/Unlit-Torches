@@ -16,10 +16,10 @@ import java.util.Collections;
  */
 public class EntityAIBreakTorches extends EntityAIBase
 {
-    private EntityLiving el;
-    private World world;
-    private TorchSorter sorter;
-    private ArrayList<TorchInfo> torches = new ArrayList();
+    private final EntityLiving el;
+    private final World world;
+    private final TorchSorter sorter;
+    private final ArrayList<TorchInfo> torches = new ArrayList();
     private int delay;
 
     public EntityAIBreakTorches(EntityLiving el)

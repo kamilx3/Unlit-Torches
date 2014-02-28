@@ -16,7 +16,7 @@ import pelep.unlittorch.config.ConfigCommon;
  */
 public class RecipeCloth implements IRecipe, ICraftingHandler
 {
-    private ItemStack cloth = new ItemStack(ConfigCommon.itemIdCloth, 3, 0);
+    private final ItemStack cloth = new ItemStack(ConfigCommon.itemIdCloth, 3, 0);
 
     @Override
     public boolean matches(InventoryCrafting ic, World world)

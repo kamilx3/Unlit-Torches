@@ -18,12 +18,12 @@ import java.util.Collections;
  */
 public class EntityAIShootTorches extends EntityAIBase
 {
-    private EntityLiving el;
-    private World world;
+    private final EntityLiving el;
+    private final World world;
 
-    private ArrayList<TorchInfo> torches = new ArrayList();
+    private final ArrayList<TorchInfo> torches = new ArrayList();
     private TorchInfo torch;
-    private TorchSorter sorter;
+    private final TorchSorter sorter;
 
     private int delay = 0;
     private int retry = 0;
