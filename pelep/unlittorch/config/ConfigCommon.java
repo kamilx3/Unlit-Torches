@@ -41,7 +41,7 @@ public class ConfigCommon
         torchRecipeYieldCount = getInt(1, 4, config.get("RECIPE", "TorchRecipeYieldCount", 2, "Number of torches the torch recipe should yield"));
 
         torchUpdates = config.get("TORCH", "TorchUpdates", true, "Set to false to disable torches aging, dying out, etc.").getBoolean(false);
-        torchDropsUnlit = config.get("TORCH", "DropsUnlit", true, "True if lit torches should drop as UNLIT torches").getBoolean(true);
+        torchDropsUnlit = config.get("TORCH", "DropsUnlit", false, "True if lit torches should drop as UNLIT torches").getBoolean(false);
         torchSingleUse = config.get("TORCH", "SingleUse", true, "True if torches should break when their lifespan is over").getBoolean(true);
 
         torchLifespanMin = getInt(1, 32000, config.get("TORCH", "MinimumAge", 8000, "MINIMUM lifespan of a torch (8000 = 1 MC day). Maximum of 32000 (4 MC days)"));
