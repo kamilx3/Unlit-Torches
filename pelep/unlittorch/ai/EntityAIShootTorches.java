@@ -20,10 +20,7 @@ public class EntityAIShootTorches extends EntityAIBase
 {
     private final EntityLiving el;
     private final World world;
-
-    private final ArrayList<TorchInfo> torches = new ArrayList();
     private TorchInfo torch;
-    private final TorchSorter sorter;
 
     private int delay = 0;
     private int retry = 0;
@@ -32,7 +29,7 @@ public class EntityAIShootTorches extends EntityAIBase
     {
         this.el = el;
         this.world = el.worldObj;
-        this.sorter = new TorchSorter(el);
+        this.setMutexBits(1|2);
     }
 
     @Override
@@ -45,10 +42,6 @@ public class EntityAIShootTorches extends EntityAIBase
     @Override
     public void startExecuting()
     {
-        Collections.sort(this.torches, this.sorter);
-        this.torch = this.torches.get(0);
-
-        this.torches.clear();
         this.delay = this.world.rand.nextInt(30) + 30;
         this.retry = this.world.rand.nextInt(2);
         this.shoot(this.torch.x + 0.5, this.torch.y + 0.5, this.torch.z + 0.5);
@@ -128,6 +121,7 @@ public class EntityAIShootTorches extends EntityAIBase
     @Override
     public void resetTask()
     {
+        this.torch = null;
         this.delay = 80;
     }
 
@@ -152,15 +146,32 @@ public class EntityAIShootTorches extends EntityAIBase
                     {
                         TorchInfo torch = new TorchInfo(x, y, z);
 
-                        if (EntityAIHelper.canEntitySeeTorch(this.el, torch, r))
+                        if (EntityAIHelper.canEntitySeeTorch(this.el, torch, r + 0.5D))
                         {
-                            this.torches.add(torch);
+                            if (this.torch == null)
+                            {
+                                this.torch = torch;
+                            }
+                            else
+                            {
+                                double x1 = this.torch.x + 0.5D;
+                                double y1 = this.torch.y + 0.5D;
+                                double z1 = this.torch.z + 0.5D;
+                                double x2 = torch.x + 0.5D;
+                                double y2 = torch.y + 0.5D;
+                                double z2 = torch.z + 0.5D;
+
+                                if (this.el.getDistanceSq(x1, y1, z1) > this.el.getDistanceSq(x2, y2, z2))
+                                {
+                                    this.torch = torch;
+                                }
+                            }
                         }
                     }
                 }
             }
         }
 
-        return !this.torches.isEmpty();
+        return this.torch != null;
     }
 }

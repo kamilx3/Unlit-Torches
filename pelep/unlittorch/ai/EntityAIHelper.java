@@ -54,8 +54,10 @@ public class EntityAIHelper
         }
     }
 
-    public static boolean canEntitySeeTorch(EntityLivingBase el, TorchInfo t, int r)
+    public static boolean canEntitySeeTorch(EntityLivingBase el, TorchInfo t, double r)
     {
+        if (el.getDistance(t.x + 0.5D, t.y + 0.5D, t.z + 0.5D) > r) return false;
+
         Vec3 v1 = el.worldObj.getWorldVec3Pool().getVecFromPool(el.posX, el.posY + el.getEyeHeight(), el.posZ);
         Vec3 v2 = el.worldObj.getWorldVec3Pool().getVecFromPool(t.x + 0.5, t.y + 0.5, t.z + 0.5);
 
@@ -95,7 +97,9 @@ public class EntityAIHelper
                 }
             }
 
-            while (r-- >= 0)
+            int i = 200;
+
+            while (i-- >= 0)
             {
                 if (Double.isNaN(v1.xCoord) || Double.isNaN(v1.yCoord) || Double.isNaN(v1.zCoord))
                 {

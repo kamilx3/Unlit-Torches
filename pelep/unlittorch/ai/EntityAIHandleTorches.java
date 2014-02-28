@@ -9,9 +9,9 @@ import pelep.unlittorch.ai.EntityAIHelper.TorchSorter;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.block.BlockTorchUnlit;
 import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.tileentity.TileEntityTorch;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.PriorityQueue;
 
 /**
  * @author pelep
@@ -20,15 +20,16 @@ public class EntityAIHandleTorches extends EntityAIBase
 {
     private final EntityLiving el;
     private final World world;
-    private final ArrayList<TorchInfo> torches = new ArrayList();
-    private final TorchSorter sorter;
+    private final PriorityQueue<TorchInfo> torches;
+    private TorchInfo torch;
     private int delay;
+    private int timer;
 
     public EntityAIHandleTorches(EntityLiving el)
     {
         this.el = el;
         this.world = el.worldObj;
-        this.sorter = new TorchSorter(el);
+        this.torches = new PriorityQueue(4, new TorchSorter(el));
         this.setMutexBits(1|2|5);
     }
 
@@ -36,28 +37,62 @@ public class EntityAIHandleTorches extends EntityAIBase
     public boolean shouldExecute()
     {
         if (this.delay > 0) this.delay--;
-        return this.delay == 0 && this.findTorches();
+        long time = this.world.getWorldTime() % 24000;
+        return (this.delay == 0 || time == 13000 || time == 23500) && this.findTorches();
     }
 
     @Override
     public void startExecuting()
     {
-        TorchInfo torch;
-        Collections.sort(this.torches, this.sorter);
-        torch = this.torches.get(0);
+        this.nextTorch();
+    }
 
-        if (torch.lit)
-        {
-            BlockTorchLit.killBlockTorch(this.world, torch.x, torch.y, torch.z, "fire.fire", 1F);
-        }
-        else
-        {
-            BlockTorchUnlit.igniteBlockTorch(0, this.world, torch.x, torch.y, torch.z, "fire.fire");
-        }
+    @Override
+    public void updateTask()
+    {
+        this.timer++;
 
-        this.delay = 20;
-        this.el.getLookHelper().setLookPosition(torch.x + 0.5, torch.y + 0.5, torch.z + 0.5, 10F, this.el.getVerticalFaceSpeed());
-        this.torches.clear();
+        if (EntityAIHelper.canEntitySeeTorch(this.el, this.torch, 4D))
+        {
+            if (this.torch.lit && this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) == 50)
+            {
+                BlockTorchLit.killBlockTorch(this.world, torch.x, torch.y, torch.z, "fire.fire", 1F);
+            }
+            else if (!this.torch.lit && this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) == ConfigCommon.blockIdTorchUnlit)
+            {
+                int age = ((TileEntityTorch)world.getBlockTileEntity(this.torch.x, this.torch.y, this.torch.z)).getAge();
+                BlockTorchUnlit.igniteBlockTorch(age, this.world, torch.x, torch.y, torch.z, "fire.fire");
+            }
+
+            this.nextTorch();
+        }
+        else if (this.timer >= 200)
+        {
+            this.nextTorch();
+        }
+    }
+
+    @Override
+    public boolean continueExecuting()
+    {
+        return this.torch != null;
+    }
+
+    @Override
+    public void resetTask()
+    {
+        this.delay = 1000;
+        this.torch = null;
+    }
+
+    private void nextTorch()
+    {
+        this.timer = 0;
+        this.torch = this.torches.poll();
+        if (this.torch != null)
+        {
+            this.el.getNavigator().tryMoveToXYZ(this.torch.x + 0.5D, this.torch.y, this.torch.z + 0.5D, 0.6D);
+        }
     }
 
     private boolean findTorches()
@@ -65,7 +100,7 @@ public class EntityAIHandleTorches extends EntityAIBase
         int ex = MathHelper.floor_double(this.el.posX);
         int ey = MathHelper.floor_double(this.el.posY);
         int ez = MathHelper.floor_double(this.el.posZ);
-        int r = 3;
+        int r = 16;
 
         for (int i = -r; i <= r; i++)
         {
@@ -78,15 +113,9 @@ public class EntityAIHandleTorches extends EntityAIBase
                     int z = ez + k;
                     int id = this.world.getBlockId(x, y, z);
 
-                    if ((id == 50 && this.world.isDaytime()) ||
-                        (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime()))
+                    if ((id == 50 && this.world.isDaytime()) || (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime()))
                     {
-                        TorchInfo torch = new TorchInfo(x, y, z, id == 50);
-
-                        if (EntityAIHelper.canEntitySeeTorch(this.el, torch, r))
-                        {
-                            this.torches.add(torch);
-                        }
+                        this.torches.add(new TorchInfo(x, y, z, id == 50));
                     }
                 }
             }
