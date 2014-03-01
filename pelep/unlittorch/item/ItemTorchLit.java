@@ -67,14 +67,11 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     @Override
     public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer p)
     {
-        if (!p.isSneaking())
+        if (!p.isSneaking() && rayTraceFromPlayer(world, p) == Material.water)
         {
-            if (rayTraceFromPlayer(world, p) == Material.water)
-            {
-                world.playSoundAtEntity(p, "random.fizz", 0.5F, itemRand.nextFloat() * 0.4F + 0.8F);
-                p.swingItem();
-                return new ItemStack(ConfigCommon.blockIdTorchUnlit, ist.stackSize, ist.getItemDamage());
-            }
+            world.playSoundAtEntity(p, "random.fizz", 0.5F, itemRand.nextFloat() * 0.4F + 0.8F);
+            p.swingItem();
+            return new ItemStack(ConfigCommon.blockIdTorchUnlit, ist.stackSize, ist.getItemDamage());
         }
 
         return ist;

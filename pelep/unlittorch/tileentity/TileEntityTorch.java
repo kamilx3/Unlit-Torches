@@ -101,7 +101,7 @@ public class TileEntityTorch extends TileEntity
     private void killTorch(String sound, float volume)
     {
         int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, ConfigCommon.blockIdTorchUnlit, md, 2);
+        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, ConfigCommon.blockIdTorchUnlit, md, 1|2);
         this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, sound, volume, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         ((TileEntityTorch)this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord)).setAge(this.age);
     }

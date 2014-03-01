@@ -54,11 +54,13 @@ public class EntityAIHandleTorches extends EntityAIBase
 
         if (EntityAIHelper.canEntitySeeTorch(this.el, this.torch, 4D))
         {
-            if (this.torch.lit && this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) == 50)
+            int id = this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z);
+
+            if (this.torch.lit && id == 50)
             {
                 BlockTorchLit.killBlockTorch(this.world, torch.x, torch.y, torch.z, "fire.fire", 1F);
             }
-            else if (!this.torch.lit && this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) == ConfigCommon.blockIdTorchUnlit)
+            else if (!this.torch.lit && id == ConfigCommon.blockIdTorchUnlit)
             {
                 int age = ((TileEntityTorch)world.getBlockTileEntity(this.torch.x, this.torch.y, this.torch.z)).getAge();
                 BlockTorchUnlit.igniteBlockTorch(age, this.world, torch.x, torch.y, torch.z, "fire.fire");

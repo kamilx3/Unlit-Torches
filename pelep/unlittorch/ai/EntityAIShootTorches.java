@@ -8,10 +8,6 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.ai.EntityAIHelper.TorchInfo;
-import pelep.unlittorch.ai.EntityAIHelper.TorchSorter;
-
-import java.util.ArrayList;
-import java.util.Collections;
 
 /**
  * @author pelep

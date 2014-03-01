@@ -82,18 +82,13 @@ public class EntityAIHelper
             int md = world.getBlockMetadata(v1x, v1y, v1z);
             Block block = Block.blocksList[id];
 
-            if (block != null)
+            if (id > 0 && block != null && block.canCollideCheck(md, false))
             {
-                MovingObjectPosition mop;
+                MovingObjectPosition mop = block.collisionRayTrace(world, v1x, v1y, v1z, v1, v2);
 
-                if (id > 0 && block.canCollideCheck(md, false))
+                if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE)
                 {
-                    mop = block.collisionRayTrace(world, v1x, v1y, v1z, v1, v2);
-
-                    if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE)
-                    {
-                        return mop.blockX == t.x && mop.blockY == t.y && mop.blockZ == t.z;
-                    }
+                    return mop.blockX == t.x && mop.blockY == t.y && mop.blockZ == t.z;
                 }
             }
 
@@ -219,18 +214,13 @@ public class EntityAIHelper
                 md = world.getBlockMetadata(v1x, v1y, v1z);
                 block = Block.blocksList[id];
 
-                if (block != null)
+                if (id > 0 && block != null && block.canCollideCheck(md, false))
                 {
-                    MovingObjectPosition mop;
+                    MovingObjectPosition mop = block.collisionRayTrace(world, v1x, v1y, v1z, v1, v2);
 
-                    if (id > 0 && block.canCollideCheck(md, false))
+                    if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE)
                     {
-                        mop = block.collisionRayTrace(world, v1x, v1y, v1z, v1, v2);
-
-                        if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE)
-                        {
-                            return mop.blockX == t.x && mop.blockY == t.y && mop.blockZ == t.z;
-                        }
+                        return mop.blockX == t.x && mop.blockY == t.y && mop.blockZ == t.z;
                     }
                 }
             }

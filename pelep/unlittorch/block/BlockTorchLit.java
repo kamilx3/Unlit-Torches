@@ -177,7 +177,7 @@ public class BlockTorchLit extends BlockTorch
         TileEntity te = world.getBlockTileEntity(x, y, z);
         int age = te != null ? ((TileEntityTorch)te).getAge() : 0;
 
-        world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 2);
+        world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 1|2);
         setTileEntityAge(age, world, x, y, z, sound, volume);
     }
 

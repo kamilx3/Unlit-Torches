@@ -299,7 +299,8 @@ class BlockTorch extends BlockContainer
         int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
         boolean drop = world.setBlockToAir(x, y, z);
 
-        if (drop && !world.isRemote && !p.capabilities.isCreativeMode)
+        //TODO figure out when p can be null and fix if needed
+        if (drop && !world.isRemote && (p == null || !p.capabilities.isCreativeMode))
         {
             int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
             this.dropBlockAsItem_do(world, x, y, z, new ItemStack(id, 1, age));
