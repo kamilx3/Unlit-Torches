@@ -6,6 +6,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.chunk.Chunk;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet04BurnFX;
 
@@ -16,13 +17,13 @@ public class TileEntityTorch extends TileEntity
 {
     private boolean lit;
     private int age = 0;
+    private Chunk chunk;
 
     public TileEntityTorch() {}
 
-    public TileEntityTorch(boolean lit, int age)
+    public TileEntityTorch(boolean lit)
     {
         this.lit = lit;
-        this.age = age;
     }
 
     public void setAge(int age)
@@ -84,6 +85,8 @@ public class TileEntityTorch extends TileEntity
         if (worldObj.getTotalWorldTime() % 3 == 0)
         {
             this.age++;
+            if (this.chunk == null) this.chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+            this.chunk.setChunkModified();
         }
     }
 
@@ -111,6 +114,7 @@ public class TileEntityTorch extends TileEntity
     {
         super.readFromNBT(tag);
         this.age = tag.getInteger("age");
+        this.lit = tag.getBoolean("lit");
     }
 
     @Override
@@ -118,6 +122,7 @@ public class TileEntityTorch extends TileEntity
     {
         super.writeToNBT(tag);
         tag.setInteger("age", this.age);
+        tag.setBoolean("lit", this.lit);
     }
 
     @Override

@@ -69,13 +69,13 @@ class BlockTorch extends BlockContainer
     @Override
     public TileEntity createTileEntity(World world, int md)
     {
-        return new TileEntityTorch(this.lit, 0);
+        return new TileEntityTorch(this.lit);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntityTorch(this.lit, 0);
+        return new TileEntityTorch(this.lit);
     }
 
 
