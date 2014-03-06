@@ -30,7 +30,7 @@ public class EntityAIHandleTorches extends EntityAIBase
         this.el = el;
         this.world = el.worldObj;
         this.torches = new PriorityQueue(4, new TorchSorter(el));
-        this.setMutexBits(1|2|5);
+        this.setMutexBits(1|2|4);
     }
 
     @Override

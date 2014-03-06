@@ -57,13 +57,13 @@ public class UnlitTorch
     {
         proxy.registerTrackers();
         proxy.registerLightSources();
+        proxy.registerRecipes();
     }
 
     @EventHandler
     public void postInit(FMLPostInitializationEvent e)
     {
         proxy.setUpIgniters();
-        proxy.registerRecipes();
         proxy.checkTorch();
     }
 }
