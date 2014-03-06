@@ -27,7 +27,6 @@ public class ItemCloth extends Item
     public ItemCloth()
     {
         super(ConfigCommon.itemIdCloth - 256);
-        this.setContainerItem(this);
         this.setCreativeTab(CreativeTabs.tabMaterials);
         this.setHasSubtypes(true);
         this.setMaxDamage(0);
