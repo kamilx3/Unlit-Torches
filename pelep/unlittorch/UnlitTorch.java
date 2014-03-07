@@ -16,7 +16,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import pelep.unlittorch.handler.ConnectionHandler;
-import pelep.unlittorch.handler.LogHandler;
 import pelep.unlittorch.packet.PacketHandler;
 import pelep.unlittorch.proxy.ProxyCommon;
 
@@ -43,8 +42,6 @@ public class UnlitTorch
     @EventHandler
     public void preInit(FMLPreInitializationEvent e)
     {
-        LogHandler.init();
-
         proxy.setUpConfig(e.getSuggestedConfigurationFile());
         proxy.registerTorches();
         proxy.registerItems();

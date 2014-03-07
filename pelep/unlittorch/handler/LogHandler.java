@@ -1,7 +1,6 @@
 package pelep.unlittorch.handler;
 
 import static pelep.unlittorch.UnlitTorch.MOD_ID;
-import static pelep.unlittorch.UnlitTorch.MOD_VERSION;
 
 import cpw.mods.fml.common.FMLLog;
 
@@ -13,16 +12,17 @@ import java.util.logging.Logger;
  */
 public class LogHandler
 {
-    private static Logger logger = Logger.getLogger(MOD_ID + MOD_VERSION);
+    private static Logger LOGGER;
 
-    public static void init()
+    static
     {
-        logger.setParent(FMLLog.getLogger());
+        LOGGER = Logger.getLogger(MOD_ID);
+        LOGGER.setParent(FMLLog.getLogger());
     }
 
     private static void log(Level lvl, String msg)
     {
-        logger.log(lvl, msg);
+        LOGGER.log(lvl, msg);
     }
 
     public static void info(String msg, Object... args)
