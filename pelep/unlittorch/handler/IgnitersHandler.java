@@ -30,8 +30,8 @@ public class IgnitersHandler
     {
         if (map.containsKey(id))
         {
-            ArrayList<Integer> v = map.get(id);
-            return v == null || v.contains(md);
+            ArrayList<Integer> mds = map.get(id);
+            return mds == null || mds.contains(md);
         }
 
         return false;
@@ -101,26 +101,17 @@ public class IgnitersHandler
 
                             if (Item.itemsList[id] != null)
                             {
-                                if (!addIgniter(id, map))
-                                {
-                                    LogHandler.info("Ignoring duplicate mapping %s", item);
-                                }
-
+                                if (!addIgniter(id, map)) LogHandler.info("Ignoring duplicate mapping %s", item);
                                 continue;
                             }
                         }
                         else if (values.length == 2)
                         {
                             int id = Integer.parseInt(values[0]);
-                            int md = Integer.parseInt(values[1]);
 
                             if (Item.itemsList[id] != null)
                             {
-                                if (!addIgniter(id, md, map))
-                                {
-                                    LogHandler.info("Ignoring duplicate mapping %s", item);
-                                }
-
+                                if (!addIgniter(id, Integer.parseInt(values[1]), map)) LogHandler.info("Ignoring duplicate mapping %s", item);
                                 continue;
                             }
                         }
@@ -136,42 +127,40 @@ public class IgnitersHandler
         }
     }
 
-    private static boolean addIgniter(int id, HashMap<Integer, ArrayList<Integer>> server)
+    private static boolean addIgniter(int id, HashMap<Integer, ArrayList<Integer>> map)
     {
-        if (server.containsKey(id))
+        if (!map.containsKey(id))
         {
-            return false;
-        }
-        else
-        {
-            server.put(id, null);
+            map.put(id, null);
             return true;
         }
+
+        return false;
     }
 
-    private static boolean addIgniter(int id, int md, HashMap<Integer, ArrayList<Integer>> server)
+    private static boolean addIgniter(int id, int md, HashMap<Integer, ArrayList<Integer>> map)
     {
-        if (!server.containsKey(id))
+        if (!map.containsKey(id))
         {
-            ArrayList<Integer> v = new ArrayList();
-            v.add(md);
-            server.put(id, v);
+            ArrayList<Integer> mds = new ArrayList();
+            mds.add(md);
+            map.put(id, mds);
             return true;
         }
         else
         {
-            ArrayList<Integer> v = server.get(id);
+            ArrayList<Integer> mds = map.get(id);
 
-            if (v == null)
+            if (mds == null)
             {
-                v = new ArrayList();
-                v.add(md);
-                server.put(id, v);
+                mds = new ArrayList();
+                mds.add(md);
+                map.put(id, mds);
                 return true;
             }
-            else if (!v.contains(md))
+            else if (!mds.contains(md))
             {
-                v.add(md);
+                mds.add(md);
                 return true;
             }
 
@@ -180,20 +169,27 @@ public class IgnitersHandler
     }
 
     @SideOnly(Side.CLIENT)
-    public static void syncIgniters(byte type, String string)
+    public static void syncWithServer(byte type, String string)
     {
         switch (type)
         {
             case 0:
-                sync(string, torchIgnitersSet);
+                setIgniters(string, torchIgnitersSet);
                 break;
             case 1:
-                sync(string, torchIgnitersHeld);
+                setIgniters(string, torchIgnitersHeld);
         }
     }
 
     @SideOnly(Side.CLIENT)
-    private static void sync(String string, HashMap<Integer, ArrayList<Integer>> map)
+    public static void desyncFromServer()
+    {
+        setIgniters(ConfigCommon.torchIgniterIdsSet, torchIgnitersSet);
+        setIgniters(ConfigCommon.torchIgniterIdsHeld, torchIgnitersHeld);
+    }
+
+    @SideOnly(Side.CLIENT)
+    private static void setIgniters(String string, HashMap<Integer, ArrayList<Integer>> map)
     {
         map.clear();
 
@@ -222,12 +218,5 @@ public class IgnitersHandler
                 map.put(Integer.parseInt(v[0]), mds);
             }
         }
-    }
-
-    @SideOnly(Side.CLIENT)
-    public static void unsync()
-    {
-        sync(ConfigCommon.torchIgniterIdsSet, torchIgnitersSet);
-        sync(ConfigCommon.torchIgniterIdsHeld, torchIgnitersHeld);
     }
 }

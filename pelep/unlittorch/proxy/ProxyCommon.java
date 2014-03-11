@@ -124,9 +124,9 @@ public class ProxyCommon
         GameRegistry.registerCraftingHandler(recipeCloth);
     }
 
-    public void registerTrackers()
+    public void registerListeners()
     {
-        LogHandler.info("Registering event handler");
+        LogHandler.info("Registering event listeners");
         MinecraftForge.EVENT_BUS.register(new EventHandler());
     }
 

@@ -53,7 +53,7 @@ public class Packet01Igniters extends PacketCustom
     {
         if (remote)
         {
-            IgnitersHandler.syncIgniters(this.type, this.igniters);
+            IgnitersHandler.syncWithServer(this.type, this.igniters);
         }
         else
         {

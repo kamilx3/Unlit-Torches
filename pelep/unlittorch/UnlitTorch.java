@@ -52,7 +52,7 @@ public class UnlitTorch
     @EventHandler
     public void init(FMLInitializationEvent e)
     {
-        proxy.registerTrackers();
+        proxy.registerListeners();
         proxy.registerLightSources();
         proxy.registerRecipes();
     }

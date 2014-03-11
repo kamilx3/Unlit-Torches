@@ -50,8 +50,6 @@ public class EntityAIHandleTorches extends EntityAIBase
     @Override
     public void updateTask()
     {
-        this.timer++;
-
         if (EntityAIHelper.canEntitySeeTorch(this.el, this.torch, 4D))
         {
             int id = this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z);
@@ -68,7 +66,7 @@ public class EntityAIHandleTorches extends EntityAIBase
 
             this.nextTorch();
         }
-        else if (this.timer >= 200)
+        else if (this.timer++ >= 200)
         {
             this.nextTorch();
         }

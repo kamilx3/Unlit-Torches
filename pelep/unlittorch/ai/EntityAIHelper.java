@@ -13,9 +13,9 @@ import java.util.Comparator;
 /**
  * @author pelep
  */
-public class EntityAIHelper
+class EntityAIHelper
 {
-    public static class TorchSorter implements Comparator<TorchInfo>
+    static class TorchSorter implements Comparator<TorchInfo>
     {
         private EntityLivingBase el;
 
@@ -33,7 +33,7 @@ public class EntityAIHelper
         }
     }
 
-    public static class TorchInfo
+    static class TorchInfo
     {
         public final int x;
         public final int y;
@@ -54,7 +54,7 @@ public class EntityAIHelper
         }
     }
 
-    public static boolean canEntitySeeTorch(EntityLivingBase el, TorchInfo t, double r)
+    static boolean canEntitySeeTorch(EntityLivingBase el, TorchInfo t, double r)
     {
         if (el.getDistance(t.x + 0.5D, t.y + 0.5D, t.z + 0.5D) > r) return false;
 

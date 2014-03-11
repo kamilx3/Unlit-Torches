@@ -27,7 +27,7 @@ public class ConfigClient
         torchLifespanMax = ConfigCommon.torchLifespanMax;
     }
 
-    public static void unsync()
+    public static void desyncFromServer()
     {
         ConfigCommon.overrideTorchRecipe = overrideTorchRecipe;
         ConfigCommon.torchRecipeYieldCount = torchRecipeYieldCount;

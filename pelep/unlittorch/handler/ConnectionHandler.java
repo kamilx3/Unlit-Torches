@@ -36,8 +36,8 @@ public class ConnectionHandler implements IConnectionHandler
         if (FMLCommonHandler.instance().getSide().isClient() && Minecraft.getMinecraft().getIntegratedServer() == null)
         {
             LogHandler.info("Unsyncing with server");
-            ConfigClient.unsync();
-            IgnitersHandler.unsync();
+            ConfigClient.desyncFromServer();
+            IgnitersHandler.desyncFromServer();
         }
     }
 
