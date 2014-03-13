@@ -45,6 +45,8 @@ public class TileEntityTorch extends TileEntity
     @Override
     public void updateEntity()
     {
+        if (this.worldObj.getTotalWorldTime() % 3 != 0) return;
+
         if (this.age >= ConfigCommon.torchLifespanMax)
         {
             if (ConfigCommon.torchSingleUse)
@@ -82,12 +84,9 @@ public class TileEntityTorch extends TileEntity
             }
         }
 
-        if (worldObj.getTotalWorldTime() % 3 == 0)
-        {
-            this.age++;
-            if (this.chunk == null) this.chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
-            this.chunk.setChunkModified();
-        }
+        this.age++;
+        if (this.chunk == null) this.chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+        this.chunk.setChunkModified();
     }
 
     private void destroyTorch()

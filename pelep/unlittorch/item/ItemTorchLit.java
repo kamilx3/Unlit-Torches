@@ -86,138 +86,134 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     {
         EntityPlayer p = (EntityPlayer) e;
 
-        if (!p.capabilities.isCreativeMode && ConfigCommon.torchUpdates)
+        if (p.capabilities.isCreativeMode || !ConfigCommon.torchUpdates || world.getTotalWorldTime() % 3 != 0)
         {
-            if (p.isInsideOfMaterial(Material.water))
+            return;
+        }
+
+        if (p.isInsideOfMaterial(Material.water))
+        {
+            if (!world.isRemote)
             {
-                if (!world.isRemote)
+                world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
+            }
+
+            for (int i = slot; i < p.inventory.mainInventory.length; i++)
+            {
+                ItemStack inv = p.inventory.mainInventory[i];
+
+                if (inv != null && inv.itemID == this.itemID)
                 {
-                    world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
+                    inv.itemID = ConfigCommon.blockIdTorchUnlit;
                 }
+            }
+        }
+        else
+        {
+            int d = ist.getItemDamage();
 
-                for (int i = slot; i < p.inventory.mainInventory.length; i++)
+            if (d >= ConfigCommon.torchLifespanMax)
+            {
+                if (ConfigCommon.torchSingleUse)
                 {
-                    ItemStack inv = p.inventory.mainInventory[i];
-
-                    if (inv != null && inv.itemID == this.itemID)
-                    {
-                        inv.itemID = ConfigCommon.blockIdTorchUnlit;
-                    }
+                    destroyItemTorch(world, p, slot);
+                }
+                else
+                {
+                    killItemTorch(world, p, ist, "fire.fire", 1F);
                 }
 
                 return;
             }
-            else
+
+            if (!world.isRemote && d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
             {
-                int d = ist.getItemDamage();
-
-                if (d >= ConfigCommon.torchLifespanMax)
+                if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
                 {
-                    if (ConfigCommon.torchSingleUse)
-                    {
-                        destroyItemTorch(world, p, slot);
-                    }
-                    else
-                    {
-                        killItemTorch(world, p, ist, "fire.fire", 1F);
-                    }
-
-                    return;
+                    destroyItemTorch(world, p, slot);
+                }
+                else
+                {
+                    killItemTorch(world, p, ist, "fire.fire", 1F);
                 }
 
-                if (!world.isRemote && d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
-                {
-                    if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
-                    {
-                        destroyItemTorch(world, p, slot);
-                    }
-                    else
-                    {
-                        killItemTorch(world, p, ist, "fire.fire", 1F);
-                    }
-
-                    return;
-                }
-
-                int x = MathHelper.floor_double(p.posX);
-                int y = MathHelper.floor_double(p.posY);
-                int z = MathHelper.floor_double(p.posZ);
-
-                if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(50) == 0) || itemRand.nextInt(80) == 0))
-                {
-                    killItemTorch(world, p, ist, "random.fizz", 0.3F);
-                    return;
-                }
-
-                if (world.getTotalWorldTime() % 3 == 0)
-                {
-                    int add = held ? 2 : 1;
-                    ist.setItemDamage(d + add);
-                }
+                return;
             }
+
+            int x = MathHelper.floor_double(p.posX);
+            int y = MathHelper.floor_double(p.posY);
+            int z = MathHelper.floor_double(p.posZ);
+
+            if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(50) == 0) || itemRand.nextInt(80) == 0))
+            {
+                killItemTorch(world, p, ist, "random.fizz", 0.3F);
+                return;
+            }
+
+            int add = held ? 2 : 1;
+            ist.setItemDamage(d + add);
         }
     }
 
     @Override
     public boolean onEntityItemUpdate(EntityItem ei)
     {
-        if (!ei.worldObj.isRemote && ConfigCommon.torchUpdates)
+        if (ei.worldObj.isRemote || !ConfigCommon.torchUpdates || ei.worldObj.getTotalWorldTime() % 3 != 0)
         {
-            ItemStack ist = ei.getEntityItem();
+            return false;
+        }
 
-            if (ist.itemID == this.itemID)
+        ItemStack ist = ei.getEntityItem();
+
+        if (ist.itemID == this.itemID)
+        {
+            if (ei.handleWaterMovement())
             {
-                if (ei.handleWaterMovement())
-                {
-                    killEntityTorch(ei, "random.fizz", 0.3F);
-                    return false;
-                }
-
-                int d = ist.getItemDamage();
-
-                if (d >= ConfigCommon.torchLifespanMax)
-                {
-                    if (ConfigCommon.torchSingleUse)
-                    {
-                        destroyEntityTorch(ei);
-                    }
-                    else
-                    {
-                        killEntityTorch(ei, "fire.fire", 1F);
-                    }
-
-                    return false;
-                }
-
-                if (d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
-                {
-                    if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
-                    {
-                        destroyEntityTorch(ei);
-                    }
-                    else
-                    {
-                        killEntityTorch(ei, "fire.fire", 1F);
-                    }
-
-                    return false;
-                }
-
-                int x = MathHelper.floor_double(ei.posX);
-                int y = MathHelper.floor_double(ei.posY);
-                int z = MathHelper.floor_double(ei.posZ);
-
-                if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
-                {
-                    killEntityTorch(ei, "random.fizz", 0.3F);
-                    return false;
-                }
-
-                if (ei.worldObj.getTotalWorldTime() % 3 == 0)
-                {
-                    ist.setItemDamage(d + 1);
-                }
+                killEntityTorch(ei, "random.fizz", 0.3F);
+                return false;
             }
+
+            int d = ist.getItemDamage();
+
+            if (d >= ConfigCommon.torchLifespanMax)
+            {
+                if (ConfigCommon.torchSingleUse)
+                {
+                    destroyEntityTorch(ei);
+                }
+                else
+                {
+                    killEntityTorch(ei, "fire.fire", 1F);
+                }
+
+                return false;
+            }
+
+            if (d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+            {
+                if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
+                {
+                    destroyEntityTorch(ei);
+                }
+                else
+                {
+                    killEntityTorch(ei, "fire.fire", 1F);
+                }
+
+                return false;
+            }
+
+            int x = MathHelper.floor_double(ei.posX);
+            int y = MathHelper.floor_double(ei.posY);
+            int z = MathHelper.floor_double(ei.posZ);
+
+            if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
+            {
+                killEntityTorch(ei, "random.fizz", 0.3F);
+                return false;
+            }
+
+            ist.setItemDamage(d + 1);
         }
 
         return false;
