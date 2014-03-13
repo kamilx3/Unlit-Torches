@@ -16,6 +16,8 @@ public class ConfigClient
     private static boolean torchSingleUse;
     private static int torchLifespanMax;
 
+    public static boolean enableDynamicLighting;
+
     public static void loadConfig(Configuration config)
     {
         ConfigCommon.loadConfig(config);
@@ -25,6 +27,8 @@ public class ConfigClient
         torchUpdates = ConfigCommon.torchUpdates;
         torchSingleUse = ConfigCommon.torchSingleUse;
         torchLifespanMax = ConfigCommon.torchLifespanMax;
+
+        enableDynamicLighting = config.get("LIGHTING", "EnableDynamicLighting", true, "True if dynamic lighting for lit torches should be enabled").getBoolean(true);
     }
 
     public static void desyncFromServer()
