@@ -123,6 +123,7 @@ public class EntityAIShootTorches extends EntityAIBase
 
     private boolean findTorch()
     {
+        this.delay = 40;
         int ex = MathHelper.floor_double(this.el.posX);
         int ey = MathHelper.floor_double(this.el.posY);
         int ez = MathHelper.floor_double(this.el.posZ);

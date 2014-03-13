@@ -58,33 +58,30 @@ class EntityAIHelper
     {
         if (el.getDistance(t.x + 0.5D, t.y + 0.5D, t.z + 0.5D) > r) return false;
 
-        Vec3 v1 = el.worldObj.getWorldVec3Pool().getVecFromPool(el.posX, el.posY + el.getEyeHeight(), el.posZ);
-        Vec3 v2 = el.worldObj.getWorldVec3Pool().getVecFromPool(t.x + 0.5, t.y + 0.5, t.z + 0.5);
+        Vec3 p1 = el.worldObj.getWorldVec3Pool().getVecFromPool(el.posX, el.posY + el.getEyeHeight(), el.posZ);
+        Vec3 p2 = el.worldObj.getWorldVec3Pool().getVecFromPool(t.x + 0.5, t.y + 0.5, t.z + 0.5);
 
-        if (!Double.isNaN(v1.xCoord) &&
-            !Double.isNaN(v1.yCoord) &&
-            !Double.isNaN(v1.zCoord) &&
-            !Double.isNaN(v2.xCoord) &&
-            !Double.isNaN(v2.yCoord) &&
-            !Double.isNaN(v2.zCoord))
+        if (!Double.isNaN(p1.xCoord) &&
+            !Double.isNaN(p1.yCoord) &&
+            !Double.isNaN(p1.zCoord) &&
+            !Double.isNaN(p2.xCoord) &&
+            !Double.isNaN(p2.yCoord) &&
+            !Double.isNaN(p2.zCoord))
         {
-            int v1x = MathHelper.floor_double(v1.xCoord);
-            int v1y = MathHelper.floor_double(v1.yCoord);
-            int v1z = MathHelper.floor_double(v1.zCoord);
-            int v2x = MathHelper.floor_double(v2.xCoord);
-            int v2y = MathHelper.floor_double(v2.yCoord);
-            int v2z = MathHelper.floor_double(v2.zCoord);
+            int curx = MathHelper.floor_double(p1.xCoord);
+            int cury = MathHelper.floor_double(p1.yCoord);
+            int curz = MathHelper.floor_double(p1.zCoord);
 
-            if (v1x == t.x && v1y == t.y && v1z == t.z) return true;
+            if (curx == t.x && cury == t.y && curz == t.z) return true;
 
             World world = el.worldObj;
-            int id = world.getBlockId(v1x, v1y, v1z);
-            int md = world.getBlockMetadata(v1x, v1y, v1z);
+            int id = world.getBlockId(curx, cury, curz);
+            int md = world.getBlockMetadata(curx, cury, curz);
             Block block = Block.blocksList[id];
 
             if (id > 0 && block != null && block.canCollideCheck(md, false))
             {
-                MovingObjectPosition mop = block.collisionRayTrace(world, v1x, v1y, v1z, v1, v2);
+                MovingObjectPosition mop = block.collisionRayTrace(world, curx, cury, curz, p1, p2);
 
                 if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE)
                 {
@@ -96,127 +93,130 @@ class EntityAIHelper
 
             while (i-- >= 0)
             {
-                if (Double.isNaN(v1.xCoord) || Double.isNaN(v1.yCoord) || Double.isNaN(v1.zCoord))
+                if (Double.isNaN(p1.xCoord) || Double.isNaN(p1.yCoord) || Double.isNaN(p1.zCoord))
                 {
                     return false;
                 }
 
-                if (v1x == v2x && v1y == v2y && v1z == v2z)
+                if (curx == t.x && cury == t.y && curz == t.z)
                 {
-                    return false;
+                    return true;
                 }
 
-                boolean xIsAngled = true;
-                boolean yIsAngled = true;
-                boolean zIsAngled = true;
-                double d0 = 999D;
-                double d1 = 999D;
-                double d2 = 999D;
+                boolean offsetx = true;
+                boolean offsety = true;
+                boolean offsetz = true;
 
-                if (v2x > v1x)
+                double newx = 999D;
+                double newy = 999D;
+                double newz = 999D;
+
+                if (t.x > curx)
                 {
-                    d0 = v1x + 1D;
+                    newx = curx + 1D;
                 }
-                else if (v2x < v1x)
+                else if (t.x < curx)
                 {
-                    d0 = v1x;
+                    newx = curx;
                 }
                 else
                 {
-                    xIsAngled = false;
+                    offsetx = false;
                 }
 
-                if (v2y > v1y)
+                if (t.y > cury)
                 {
-                    d1 = v1y + 1D;
+                    newy = cury + 1D;
                 }
-                else if (v2y < v1y)
+                else if (t.y < cury)
                 {
-                    d1 = v1y;
+                    newy = cury;
                 }
                 else
                 {
-                    yIsAngled = false;
+                    offsety = false;
                 }
 
-                if (v2z > v1z)
+                if (t.z > curz)
                 {
-                    d2 = v1z + 1D;
+                    newz = curz + 1D;
                 }
-                else if (v2z < v1z)
+                else if (t.z < curz)
                 {
-                    d2 = v1z;
+                    newz = curz;
                 }
                 else
                 {
-                    zIsAngled = false;
+                    offsetz = false;
                 }
 
-                double d3 = 999D;
-                double d4 = 999D;
-                double d5 = 999D;
-                double distX = v2.xCoord - v1.xCoord;
-                double distY = v2.yCoord - v1.yCoord;
-                double distZ = v2.zCoord - v1.zCoord;
+                double xf = 999D;
+                double yf = 999D;
+                double zf = 999D;
+                double lenx = p2.xCoord - p1.xCoord;
+                double leny = p2.yCoord - p1.yCoord;
+                double lenz = p2.zCoord - p1.zCoord;
 
-                if (xIsAngled) d3 = (d0 - v1.xCoord) / distX;
-                if (yIsAngled) d4 = (d1 - v1.yCoord) / distY;
-                if (zIsAngled) d5 = (d2 - v1.zCoord) / distZ;
+                if (offsetx) xf = (newx - p1.xCoord) / lenx;
+                if (offsety) yf = (newy - p1.yCoord) / leny;
+                if (offsetz) zf = (newz - p1.zCoord) / lenz;
 
-                byte b;
+                byte side;
 
-                if (d3 < d4 && d3 < d5)
+                if (xf < yf && xf < zf)
                 {
-                    b = v2x > v1x ? (byte) 4 : 5;
-                    v1.xCoord = d0;
-                    v1.yCoord += distY * d3;
-                    v1.zCoord += distZ * d3;
+                    side = t.x > curx ? (byte) 4 : 5;
+                    p1.xCoord = newx;
+                    p1.yCoord += leny * xf;
+                    p1.zCoord += lenz * xf;
                 }
-                else if (d4 < d5)
+                else if (yf < zf)
                 {
-                    b = v2y > v1y ? (byte) 0 : 1;
-                    v1.xCoord += distX * d4;
-                    v1.yCoord = d1;
-                    v1.zCoord += distZ * d4;
+                    side = t.y > cury ? (byte) 0 : 1;
+                    p1.xCoord += lenx * yf;
+                    p1.yCoord = newy;
+                    p1.zCoord += lenz * yf;
                 }
                 else
                 {
-                    b = v2z > v1z ? (byte) 2 : 3;
-                    v1.xCoord += distX * d5;
-                    v1.yCoord += distY * d5;
-                    v1.zCoord = d2;
+                    side = t.z > curz ? (byte) 2 : 3;
+                    p1.xCoord += lenx * zf;
+                    p1.yCoord += leny * zf;
+                    p1.zCoord = newz;
                 }
 
-                Vec3 v3 = world.getWorldVec3Pool().getVecFromPool(v1.xCoord, v1.yCoord, v1.zCoord);
+                Vec3 p3 = world.getWorldVec3Pool().getVecFromPool(p1.xCoord, p1.yCoord, p1.zCoord);
+                curx = (int)(p3.xCoord = MathHelper.floor_double(p1.xCoord));
+                cury = (int)(p3.yCoord = MathHelper.floor_double(p1.yCoord));
+                curz = (int)(p3.zCoord = MathHelper.floor_double(p1.zCoord));
 
-                v1x = (int)(v3.xCoord = MathHelper.floor_double(v1.xCoord));
-                v1y = (int)(v3.yCoord = MathHelper.floor_double(v1.yCoord));
-                v1z = (int)(v3.zCoord = MathHelper.floor_double(v1.zCoord));
-
-                switch (b)
+                switch (side)
                 {
                     case 5:
-                        v1x--;
-                        v3.xCoord++;
+                        curx--;
+                        p3.xCoord++;
                         break;
                     case 1:
-                        v1y--;
-                        v3.yCoord++;
+                        cury--;
+                        p3.yCoord++;
                         break;
                     case 3:
-                        v1z--;
-                        v3.zCoord++;
+                        curz--;
+                        p3.zCoord++;
                 }
 
-                if (v1x == t.x && v1y == t.y && v1z == t.z) return true;
+                if (curx == t.x && cury == t.y && curz == t.z)
+                {
+                    return true;
+                }
 
-                id = world.getBlockId(v1x, v1y, v1z);
-                md = world.getBlockMetadata(v1x, v1y, v1z);
+                id = world.getBlockId(curx, cury, curz);
+                md = world.getBlockMetadata(curx, cury, curz);
                 block = Block.blocksList[id];
 
                 if (id > 0 && block != null && block.canCollideCheck(md, false))
                 {
-                    MovingObjectPosition mop = block.collisionRayTrace(world, v1x, v1y, v1z, v1, v2);
+                    MovingObjectPosition mop = block.collisionRayTrace(world, curx, cury, curz, p1, p2);
 
                     if (mop != null && mop.typeOfHit == EnumMovingObjectType.TILE)
                     {

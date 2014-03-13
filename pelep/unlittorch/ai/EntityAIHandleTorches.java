@@ -37,7 +37,7 @@ public class EntityAIHandleTorches extends EntityAIBase
     public boolean shouldExecute()
     {
         if (this.delay > 0) this.delay--;
-        long time = this.world.getWorldTime() % 24000;
+        long time = this.world.getTotalWorldTime() % 24000;
         return (this.delay == 0 || time == 13000 || time == 23500) && this.findTorches();
     }
 
@@ -81,22 +81,43 @@ public class EntityAIHandleTorches extends EntityAIBase
     @Override
     public void resetTask()
     {
-        this.delay = 1000;
+        this.delay = 300;
         this.torch = null;
+        this.torches.clear();
     }
 
     private void nextTorch()
     {
         this.timer = 0;
-        this.torch = this.torches.poll();
+        this.torch = this.getTorch();
         if (this.torch != null)
         {
             this.el.getNavigator().tryMoveToXYZ(this.torch.x + 0.5D, this.torch.y, this.torch.z + 0.5D, 0.6D);
         }
     }
 
+    private TorchInfo getTorch()
+    {
+        TorchInfo torch = this.torches.poll();
+
+        if (torch != null)
+        {
+            int id = this.world.getBlockId(torch.x, torch.y, torch.z);
+
+            if ((id == 50 && torch.lit) || (id == ConfigCommon.blockIdTorchUnlit && !torch.lit))
+            {
+                return torch;
+            }
+
+            return this.getTorch();
+        }
+
+        return null;
+    }
+
     private boolean findTorches()
     {
+        this.delay = 300;
         int ex = MathHelper.floor_double(this.el.posX);
         int ey = MathHelper.floor_double(this.el.posY);
         int ez = MathHelper.floor_double(this.el.posZ);
@@ -113,7 +134,7 @@ public class EntityAIHandleTorches extends EntityAIBase
                     int z = ez + k;
                     int id = this.world.getBlockId(x, y, z);
 
-                    if ((id == 50 && this.world.isDaytime()) || (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime()))
+                    if ((id == 50 && this.world.isDaytime()) || (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime() && !this.world.isRaining()))
                     {
                         this.torches.add(new TorchInfo(x, y, z, id == 50));
                     }

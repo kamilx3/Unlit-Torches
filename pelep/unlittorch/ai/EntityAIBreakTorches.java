@@ -42,6 +42,7 @@ public class EntityAIBreakTorches extends EntityAIBase
 
     private boolean findTorch()
     {
+        this.delay = 20;
         int ex = MathHelper.floor_double(this.el.posX);
         int ey = MathHelper.floor_double(this.el.posY);
         int ez = MathHelper.floor_double(this.el.posZ);
