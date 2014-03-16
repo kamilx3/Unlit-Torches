@@ -3,6 +3,7 @@ package pelep.unlittorch.proxy;
 import static pelep.unlittorch.UnlitTorch.MOD_ID;
 
 import cpw.mods.fml.common.registry.GameRegistry;
+import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -59,8 +60,7 @@ public class ProxyCommon
 
         try
         {
-//            Field torch = Block.class.getDeclaredField("torchWood");
-            Field torch = Block.class.getDeclaredField("field_72069_aq");
+            Field torch = ReflectionHelper.findField(Block.class, "torchWood", "field_72069_aq");
             Field modifiers = Field.class.getDeclaredField("modifiers");
             modifiers.setAccessible(true);
             modifiers.setInt(torch, torch.getModifiers() & ~Modifier.FINAL);
