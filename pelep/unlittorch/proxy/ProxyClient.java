@@ -48,6 +48,7 @@ public class ProxyClient extends ProxyCommon
     public void registerLightSources()
     {
         LogHandler.info("Registering light sources");
-        if (ConfigClient.enableDynamicLighting) LightsManager.registerBasicLightSource(50, 13);
+        if (ConfigClient.enableDynamicLighting && ConfigClient.torchLightValue > 0)
+            LightsManager.registerBasicLightSource(50, ConfigClient.torchLightValue);
     }
 }

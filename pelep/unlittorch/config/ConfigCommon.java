@@ -59,7 +59,7 @@ public class ConfigCommon
         setChance();
     }
 
-    private static int getInt(int min, int max, Property prop)
+    static int getInt(int min, int max, Property prop)
     {
         int i = prop.getInt();
 
