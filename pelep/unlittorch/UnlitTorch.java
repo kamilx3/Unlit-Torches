@@ -1,10 +1,6 @@
 package pelep.unlittorch;
 
-import static pelep.unlittorch.UnlitTorch.MOD_NAME;
-import static pelep.unlittorch.UnlitTorch.MOD_ID;
-import static pelep.unlittorch.UnlitTorch.MOD_VERSION;
-import static pelep.unlittorch.UnlitTorch.MOD_MCVERSION;
-import static pelep.unlittorch.UnlitTorch.MOD_DEPENDENCIES;
+import static pelep.unlittorch.UnlitTorch.*;
 
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Instance;
@@ -22,14 +18,17 @@ import pelep.unlittorch.proxy.ProxyCommon;
 /**
  * @author pelep
  */
-@Mod(name = MOD_NAME, modid = MOD_ID, version = MOD_VERSION, acceptedMinecraftVersions = MOD_MCVERSION, dependencies = MOD_DEPENDENCIES)
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, clientPacketHandlerSpec = @SidedPacketHandler(channels = MOD_ID, packetHandler = PacketHandler.class), connectionHandler = ConnectionHandler.class)
+@Mod(name = MOD_NAME, modid = MOD_ID, version = MOD_VERSION, acceptedMinecraftVersions = MOD_VERSION_MC, dependencies = MOD_DEPENDENCIES)
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, clientPacketHandlerSpec = @SidedPacketHandler(channels = MOD_CHANNEL, packetHandler = PacketHandler.class), connectionHandler = ConnectionHandler.class)
 public class UnlitTorch
 {
     public static final String MOD_NAME = "Unlit Torches";
     public static final String MOD_ID = "unlittorch";
-    public static final String MOD_VERSION = "2.0.0";
-    public static final String MOD_MCVERSION = "1.6.4";
+    public static final String MOD_VERSION_MAJOR = "2";
+    public static final String MOD_VERSION_MINOR = "1";
+    public static final String MOD_VERSION_PATCH = "0";
+    public static final String MOD_VERSION = MOD_VERSION_MAJOR + "." + MOD_VERSION_MINOR + "." + MOD_VERSION_PATCH;
+    public static final String MOD_VERSION_MC = "1.6.4";
     public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:pcl@[2.0.0,);before:bushwhacker";
     public static final String MOD_CHANNEL = MOD_ID;
 
