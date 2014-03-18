@@ -112,9 +112,7 @@ public class ProxyCommon
         GameRegistry.addRecipe(new RecipeTorchUnlitA());
         GameRegistry.addRecipe(recipeTorchUnlitB);
         GameRegistry.addRecipe(recipeCloth);
-
-        ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0);
-        GameRegistry.addShapelessRecipe(new ItemStack(Item.stick.itemID, 1, 0), torch.copy(), torch.copy(), torch.copy(), torch);
+        GameRegistry.addRecipe(new RecipeStick());
         GameRegistry.addShapelessRecipe(new ItemStack(ConfigCommon.itemIdCloth, 1, 1), Item.bucketWater, new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
 
         LogHandler.info("Registering crafting handlers");
