@@ -5,11 +5,14 @@ import static pelep.unlittorch.UnlitTorch.MOD_ID;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import pelep.pcl.helper.RecipeHelper;
@@ -30,6 +33,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author pelep
@@ -58,19 +62,43 @@ public class ProxyCommon
 
     public void registerTorches()
     {
-        LogHandler.info("Replacing block torch");
+        LogHandler.info("Modifying block torch");
         Block.blocksList[Block.torchWood.blockID] = null;
+        //to be honest, i don't remember why i didn't just extend BlockTorch in the first place.
+        //it would have been much less prone to incompatibilities, but now that the new torch has a unique
+        //id, i don't see much point in extending it anymore. replacing the vanilla torch here is really
+        //just for convenience. the mod will function properly without this part
         BlockTorch blockTorch = new BlockTorch(Block.torchWood.blockID)
         {
             @Override
             public void getSubBlocks(int id, CreativeTabs tab, List list) {}
+
+            @Override
+            public void updateTick(World world, int x, int y, int z, Random rand)
+            {
+                int md = world.getBlockMetadata(x, y, z);
+                world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, md, 1|2);
+            }
+
+            @Override
+            public int idDropped(int md, Random rand, int fortune)
+            {
+                return ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : ConfigCommon.blockIdTorchLit;
+            }
+
+            @SideOnly(Side.CLIENT)
+            @Override
+            public int idPicked(World world, int x, int y, int z)
+            {
+                return ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : ConfigCommon.blockIdTorchLit;
+            }
         };
         blockTorch.setHardness(0F);
         blockTorch.setLightValue(0.9375F);
         blockTorch.setStepSound(Block.soundWoodFootstep);
         blockTorch.setUnlocalizedName("torch");
         blockTorch.setTextureName("torch_on");
-        LogHandler.fine("Block %d replaced!", 50);
+        LogHandler.fine("Block %d modified!", 50);
 
         try
         {
@@ -79,11 +107,11 @@ public class ProxyCommon
             modifiers.setAccessible(true);
             modifiers.setInt(torch, torch.getModifiers() & ~Modifier.FINAL);
             torch.set(null, blockTorch);
-            LogHandler.fine("Block field replaced!");
+            LogHandler.fine("Block field modified!");
         }
         catch(Exception e)
         {
-            LogHandler.warning("Block field not replaced!");
+            LogHandler.warning("Block field not modified!");
             e.printStackTrace();
         }
 
