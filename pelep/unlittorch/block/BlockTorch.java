@@ -5,13 +5,13 @@ import static net.minecraftforge.common.ForgeDirection.NORTH;
 import static net.minecraftforge.common.ForgeDirection.SOUTH;
 import static net.minecraftforge.common.ForgeDirection.WEST;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
@@ -164,7 +164,9 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack ist)
     {
-        setTileEntityAge(ist.getItemDamage(), world, x, y, z, null);
+        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        te.setAge(ist.getItemDamage());
+        te.setEternal(ist.stackTagCompound != null);
     }
 
     @Override
@@ -295,13 +297,17 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public boolean removeBlockByPlayer(World world, EntityPlayer p, int x, int y, int z)
     {
-        int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
+        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        int age = te.getAge();
+        boolean eternal = te.isEternal();
         boolean drop = world.setBlockToAir(x, y, z);
 
         if (drop && !world.isRemote && (p == null || !p.capabilities.isCreativeMode))
         {
             int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
-            this.dropBlockAsItem_do(world, x, y, z, new ItemStack(id, 1, age));
+            ItemStack ist = new ItemStack(id, 1, age);
+            ist.setTagCompound(eternal ? new NBTTagCompound() : null);
+            this.dropBlockAsItem_do(world, x, y, z, ist);
         }
 
         return drop;
@@ -316,26 +322,13 @@ abstract class BlockTorch extends BlockContainer
 
         if (te != null)
         {
+            TileEntityTorch tt = (TileEntityTorch) te;
             int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
-            stacks.add(new ItemStack(id, 1, ((TileEntityTorch)te).getAge()));
+            ItemStack ist = new ItemStack(id, 1, tt.getAge());
+            ist.setTagCompound(tt.isEternal() ? new NBTTagCompound() : null);
+            stacks.add(ist);
         }
 
         return stacks;
-    }
-
-
-    //----------------------------------mine----------------------------------//
-
-
-    protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound)
-    {
-        setTileEntityAge(age, world, x, y , z, sound, 1F);
-    }
-
-    protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound, float volume)
-    {
-        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-        te.setAge(age);
-        if (sound != null) world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 }

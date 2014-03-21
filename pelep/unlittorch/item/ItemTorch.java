@@ -1,13 +1,18 @@
 package pelep.unlittorch.item;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemBlock;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import pelep.pcl.helper.RayTraceHelper;
+
+import java.util.List;
 
 /**
  * @author pelep
@@ -20,6 +25,13 @@ abstract class ItemTorch extends ItemBlock
         this.setCreativeTab(CreativeTabs.tabDecorations);
         this.setHasSubtypes(true);
         this.setNoRepair();
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void addInformation(ItemStack ist, EntityPlayer p, List list, boolean adv)
+    {
+        if (ist.stackTagCompound != null) list.add("Eternal");
     }
 
     protected static Material getMaterialClicked(World world, EntityPlayer p)

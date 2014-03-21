@@ -60,8 +60,8 @@ public class EntityAIHandleTorches extends EntityAIBase
             }
             else if (!this.torch.lit && id == ConfigCommon.blockIdTorchUnlit)
             {
-                int age = ((TileEntityTorch)world.getBlockTileEntity(this.torch.x, this.torch.y, this.torch.z)).getAge();
-                BlockTorchUnlit.igniteBlockTorch(age, this.world, torch.x, torch.y, torch.z, "fire.fire");
+                TileEntityTorch te = (TileEntityTorch) this.world.getBlockTileEntity(this.torch.x, this.torch.y, this.torch.z);
+                BlockTorchUnlit.igniteBlockTorch(te.isEternal(), te.getAge(), this.world, torch.x, torch.y, torch.z, "fire.fire");
             }
 
             this.nextTorch();
@@ -134,9 +134,15 @@ public class EntityAIHandleTorches extends EntityAIBase
                     int z = ez + k;
                     int id = this.world.getBlockId(x, y, z);
 
-                    if ((id == ConfigCommon.blockIdTorchLit && this.world.isDaytime()) || (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime() && !this.world.isRaining()))
+                    if (id == ConfigCommon.blockIdTorchLit && this.world.isDaytime())
                     {
-                        this.torches.add(new TorchInfo(x, y, z, id == ConfigCommon.blockIdTorchLit));
+                        TileEntityTorch te = (TileEntityTorch) this.world.getBlockTileEntity(x, y, z);
+                        if (te.isEternal()) continue;
+                        this.torches.add(new TorchInfo(x, y, z, true));
+                    }
+                    else if (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime() && (!this.world.isRaining() || !this.world.canLightningStrikeAt(x, y, z)))
+                    {
+                        this.torches.add(new TorchInfo(x, y, z, false));
                     }
                 }
             }

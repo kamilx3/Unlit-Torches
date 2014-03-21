@@ -9,6 +9,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.ai.EntityAIHelper.TorchInfo;
 import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.tileentity.TileEntityTorch;
 
 /**
  * @author pelep
@@ -142,6 +143,10 @@ public class EntityAIShootTorches extends EntityAIBase
 
                     if (this.world.getBlockId(x, y, z) == ConfigCommon.blockIdTorchLit)
                     {
+                        TileEntityTorch te = (TileEntityTorch) this.world.getBlockTileEntity(x, y, z);
+
+                        if (te.isEternal()) continue;
+
                         TorchInfo torch = new TorchInfo(x, y, z);
 
                         if (EntityAIHelper.canEntitySeeTorch(this.el, torch, r + 0.5D))

@@ -54,7 +54,9 @@ public class RecipeTorchUnlitB implements IRecipe, ICraftingHandler
 
         if (n == 2 && t != -1 && c != -1)
         {
-            this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, ic.getStackInSlot(t).getItemDamage());
+            ItemStack ist = ic.getStackInSlot(t);
+            this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, ist.getItemDamage());
+            this.torch.setTagCompound(ist.getTagCompound());
             return true;
         }
 

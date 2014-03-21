@@ -9,6 +9,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -95,7 +97,9 @@ public class BlockTorchLit extends BlockTorch
         if (ist == null)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            p.inventory.setInventorySlotContents(p.inventory.currentItem, new ItemStack(this.blockID, 1, te.getAge()));
+            ItemStack torch = new ItemStack(this.blockID, 1, te.getAge());
+            torch.setTagCompound(te.isEternal() ? new NBTTagCompound() : null);
+            p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
             world.setBlockToAir(x, y, z);
             return true;
         }
@@ -166,10 +170,16 @@ public class BlockTorchLit extends BlockTorch
 
     public static void killBlockTorch(World world, int x, int y, int z, String sound, float volume)
     {
-        TileEntity te = world.getBlockTileEntity(x, y, z);
-        int age = te != null ? ((TileEntityTorch)te).getAge() : 0;
-        world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 1|2);
-        setTileEntityAge(age, world, x, y, z, sound, volume);
+        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        int age = te.getAge();
+        boolean eternal = te.isEternal();
+
+        world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 1 | 2);
+        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
+
+        te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        te.setAge(age);
+        te.setEternal(eternal);
     }
 
     private static void renewTorches(World world, EntityPlayer p, ItemStack ist, int x, int y, int z)
@@ -186,15 +196,18 @@ public class BlockTorchLit extends BlockTorch
         double d = (ta + ia) / 2;
         int age = MathHelper.ceiling_double_int(d);
 
-        p.swingItem();
-
         ist.setItemDamage(age);
-        setTileEntityAge(age, world, x, y, z, "fire.fire");
+        te.setAge(age);
+
+        p.swingItem();
+        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
 
         if (!world.isRemote)
         {
             int dim = world.provider.dimensionId;
-            PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dim);
+            NBTTagCompound tag = new NBTTagCompound();
+            tag.setInteger("age", age);
+            PacketDispatcher.sendPacketToAllInDimension(new Packet132TileEntityData(x, y, z, 1, tag), dim);
         }
     }
 
@@ -203,6 +216,7 @@ public class BlockTorchLit extends BlockTorch
         if (ist.stackSize > 1)
         {
             ItemStack torch = new ItemStack(50, 1, ist.getItemDamage());
+            torch.setTagCompound(ist.getTagCompound());
             ist.stackSize--;
 
             if (!p.inventory.addItemStackToInventory(torch))

@@ -6,6 +6,7 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet04BurnFX;
@@ -16,6 +17,7 @@ import pelep.unlittorch.packet.Packet04BurnFX;
 public class TileEntityTorch extends TileEntity
 {
     private boolean lit;
+    private boolean eternal;
     private int age = 0;
     private Chunk chunk;
 
@@ -36,16 +38,32 @@ public class TileEntityTorch extends TileEntity
         return this.age;
     }
 
+    public void setEternal(boolean eternal)
+    {
+        this.eternal = eternal;
+    }
+
+    public boolean isEternal()
+    {
+        return this.eternal;
+    }
+
     @Override
     public boolean canUpdate()
     {
-        return this.lit && ConfigCommon.torchUpdates;
+        return this.lit && !this.eternal && ConfigCommon.torchUpdates;
     }
 
     @Override
     public void updateEntity()
     {
         if (this.worldObj.getTotalWorldTime() % 3 != 0) return;
+
+        if (this.eternal)
+        {
+            this.worldObj.markTileEntityForDespawn(this);
+            return;
+        }
 
         if (this.age >= ConfigCommon.torchLifespanMax)
         {
@@ -111,6 +129,7 @@ public class TileEntityTorch extends TileEntity
         super.readFromNBT(tag);
         this.age = tag.getInteger("age");
         this.lit = tag.getBoolean("lit");
+        this.eternal = tag.getBoolean("eternal");
     }
 
     @Override
@@ -119,6 +138,7 @@ public class TileEntityTorch extends TileEntity
         super.writeToNBT(tag);
         tag.setInteger("age", this.age);
         tag.setBoolean("lit", this.lit);
+        tag.setBoolean("eternal", this.eternal);
     }
 
     @Override
@@ -126,6 +146,7 @@ public class TileEntityTorch extends TileEntity
     {
         NBTTagCompound tag = new NBTTagCompound();
         tag.setInteger("age", this.age);
+        tag.setBoolean("eternal", this.eternal);
         return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tag);
     }
 
@@ -135,6 +156,8 @@ public class TileEntityTorch extends TileEntity
         switch (pkt.actionType)
         {
             case 0:
+                this.eternal = pkt.data.getBoolean("eternal");
+            case 1:
                 this.age = pkt.data.getInteger("age");
         }
     }

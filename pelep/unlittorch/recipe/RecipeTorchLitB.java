@@ -58,6 +58,7 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
         if (n == 2 && t != -1 && f != -1)
         {
             this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ic.getStackInSlot(t).getItemDamage());
+            this.torch.setTagCompound(ic.getStackInSlot(t).getTagCompound());
             return true;
         }
 

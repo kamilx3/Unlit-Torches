@@ -3,6 +3,7 @@ package pelep.unlittorch.recipe;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 
@@ -51,13 +52,17 @@ public class RecipeTorchUnlitA implements IRecipe
 
         if (n == 2 && t1 != -1 && t2 != -1)
         {
-            int d1 = ic.getStackInSlot(t1).getItemDamage();
-            int d2 = ic.getStackInSlot(t2).getItemDamage();
+            ItemStack ist1 = ic.getStackInSlot(t1);
+            ItemStack ist2 = ic.getStackInSlot(t2);
+            int d1 = ist1.getItemDamage();
+            int d2 = ist2.getItemDamage();
             int max = ConfigCommon.torchLifespanMax;
             d1 = max - d1;
             d2 = max - d2;
             int d = d1 + d2 + max * 5 / 100;
             this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, Math.max(0, max - d));
+            if (ist1.stackTagCompound != null || ist2.stackTagCompound != null)
+                this.torch.setTagCompound(new NBTTagCompound());
             return true;
         }
 

@@ -10,6 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.pcl.IUpdatingItem;
@@ -39,7 +40,9 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     @Override
     public void getSubItems(int id, CreativeTabs ct, List list)
     {
-        list.add(new ItemStack(Block.torchWood.blockID, 1, 0));
+        ItemStack ist = new ItemStack(id, 1, 0);
+        ist.setTagCompound(new NBTTagCompound());
+        list.add(ist);
         list.add(new ItemStack(id, 1, 0));
         list.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0));
     }
@@ -73,7 +76,9 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         {
             world.playSoundAtEntity(p, "random.fizz", 0.5F, itemRand.nextFloat() * 0.4F + 0.8F);
             p.swingItem();
-            return new ItemStack(ConfigCommon.blockIdTorchUnlit, ist.stackSize, ist.getItemDamage());
+            ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, ist.stackSize, ist.getItemDamage());
+            torch.setTagCompound(ist.getTagCompound());
+            return torch;
         }
 
         return ist;
@@ -88,7 +93,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     {
         EntityPlayer p = (EntityPlayer) e;
 
-        if (p.capabilities.isCreativeMode || !ConfigCommon.torchUpdates || world.getTotalWorldTime() % 3 != 0)
+        if (p.capabilities.isCreativeMode || !ConfigCommon.torchUpdates || world.getTotalWorldTime() % 3 != 0 || ist.stackTagCompound != null)
         {
             return;
         }
@@ -167,56 +172,58 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
         ItemStack ist = ei.getEntityItem();
 
-        if (ist.itemID == this.itemID)
+        if (ist.itemID != this.itemID || ist.stackTagCompound != null)
         {
-            if (ei.handleWaterMovement())
-            {
-                killEntityTorch(ei, "random.fizz", 0.3F);
-                return false;
-            }
-
-            int d = ist.getItemDamage();
-
-            if (d >= ConfigCommon.torchLifespanMax)
-            {
-                if (ConfigCommon.torchSingleUse)
-                {
-                    destroyEntityTorch(ei);
-                }
-                else
-                {
-                    killEntityTorch(ei, "fire.fire", 1F);
-                }
-
-                return false;
-            }
-
-            if (d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
-            {
-                if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
-                {
-                    destroyEntityTorch(ei);
-                }
-                else
-                {
-                    killEntityTorch(ei, "fire.fire", 1F);
-                }
-
-                return false;
-            }
-
-            int x = MathHelper.floor_double(ei.posX);
-            int y = MathHelper.floor_double(ei.posY);
-            int z = MathHelper.floor_double(ei.posZ);
-
-            if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
-            {
-                killEntityTorch(ei, "random.fizz", 0.3F);
-                return false;
-            }
-
-            ist.setItemDamage(d + 1);
+            return false;
         }
+
+        if (ei.handleWaterMovement())
+        {
+            killEntityTorch(ei, "random.fizz", 0.3F);
+            return false;
+        }
+
+        int d = ist.getItemDamage();
+
+        if (d >= ConfigCommon.torchLifespanMax)
+        {
+            if (ConfigCommon.torchSingleUse)
+            {
+                destroyEntityTorch(ei);
+            }
+            else
+            {
+                killEntityTorch(ei, "fire.fire", 1F);
+            }
+
+            return false;
+        }
+
+        if (d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+        {
+            if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
+            {
+                destroyEntityTorch(ei);
+            }
+            else
+            {
+                killEntityTorch(ei, "fire.fire", 1F);
+            }
+
+            return false;
+        }
+
+        int x = MathHelper.floor_double(ei.posX);
+        int y = MathHelper.floor_double(ei.posY);
+        int z = MathHelper.floor_double(ei.posZ);
+
+        if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
+        {
+            killEntityTorch(ei, "random.fizz", 0.3F);
+            return false;
+        }
+
+        ist.setItemDamage(d + 1);
 
         return false;
     }

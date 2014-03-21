@@ -7,6 +7,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
@@ -37,8 +38,8 @@ public class BlockTorchUnlit extends BlockTorch
     {
         if (!world.isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
         {
-            int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
-            igniteBlockTorch(age, world, x, y, z, "fire.fire");
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+            igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
         }
     }
 
@@ -52,7 +53,9 @@ public class BlockTorchUnlit extends BlockTorch
         if (ist == null)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            p.inventory.setInventorySlotContents(p.inventory.currentItem, new ItemStack(this.blockID, 1, te.getAge()));
+            ItemStack torch = new ItemStack(this.blockID, 1, te.getAge());
+            torch.setTagCompound(te.isEternal() ? new NBTTagCompound() : null);
+            p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
             world.setBlockToAir(x, y, z);
             return true;
         }
@@ -62,15 +65,17 @@ public class BlockTorchUnlit extends BlockTorch
 
         if (IgnitersHandler.canIgniteSetTorch(id, d))
         {
-            int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+            int age = te.getAge();
+            boolean eternal = te.isEternal();
 
             if (id == ConfigCommon.blockIdTorchLit)
             {
-                igniteBlockTorch(age, world, x, y, z, "fire.fire");
+                igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
             }
             else if (id == Item.flint.itemID)
             {
-                igniteBlockTorch(age, world, x, y, z, "fire.ignite");
+                igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
 
                 if (!p.capabilities.isCreativeMode)
                 {
@@ -79,16 +84,16 @@ public class BlockTorchUnlit extends BlockTorch
             }
             else if (id == Item.flintAndSteel.itemID)
             {
-                igniteBlockTorch(age, world, x, y, z, "fire.ignite");
+                igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
                 ist.damageItem(1, p);
             }
             else if (id == Item.bucketLava.itemID)
             {
-                igniteBlockTorch(age, world, x, y, z, "fire.fire");
+                igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
             }
             else
             {
-                igniteBlockTorch(age, world, x, y, z, "fire.fire");
+                igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
 
                 if (!p.capabilities.isCreativeMode)
                 {
@@ -113,9 +118,12 @@ public class BlockTorchUnlit extends BlockTorch
     //----------------------------------mine----------------------------------//
 
 
-    public static void igniteBlockTorch(int age, World world, int x, int y, int z, String sound)
+    public static void igniteBlockTorch(boolean eternal, int age, World world, int x, int y, int z, String sound)
     {
         world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
-        setTileEntityAge(age, world, x, y, z, sound);
+        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        te.setAge(age);
+        te.setEternal(eternal);
+        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 }

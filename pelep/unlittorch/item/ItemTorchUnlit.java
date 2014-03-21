@@ -34,7 +34,6 @@ public class ItemTorchUnlit extends ItemTorch
     public void getSubItems(int id, CreativeTabs ct, List list) {}
 
 
-
     //---------------------------------itemuse---------------------------------//
 
 
