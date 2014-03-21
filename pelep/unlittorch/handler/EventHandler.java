@@ -1,10 +1,13 @@
 package pelep.unlittorch.handler;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
+import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import pelep.unlittorch.ai.EntityAIBreakTorches;
 import pelep.unlittorch.ai.EntityAIHandleTorches;
 import pelep.unlittorch.ai.EntityAIShootTorches;
@@ -48,5 +51,12 @@ public class EventHandler
                 }
             }
         }
+    }
+
+    @SideOnly(Side.CLIENT)
+    @ForgeSubscribe
+    public void renderTooltip(ItemTooltipEvent e)
+    {
+        if (e.itemStack.itemID == 50) e.toolTip.add("Vanilla");
     }
 }

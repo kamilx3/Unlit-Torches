@@ -9,7 +9,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockTorch;
-import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
@@ -32,7 +31,6 @@ import pelep.unlittorch.tileentity.TileEntityTorch;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -70,9 +68,6 @@ public class ProxyCommon
         //just for convenience. the mod will function properly without this part
         BlockTorch blockTorch = new BlockTorch(Block.torchWood.blockID)
         {
-            @Override
-            public void getSubBlocks(int id, CreativeTabs tab, List list) {}
-
             @Override
             public void updateTick(World world, int x, int y, int z, Random rand)
             {
