@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import pelep.unlittorch.block.BlockTorchUnlit;
@@ -23,9 +24,9 @@ public class TorchPartUnlit extends TorchPart
 {
     public TorchPartUnlit() {}
 
-    public TorchPartUnlit(int md, int age)
+    public TorchPartUnlit(int md, int age, boolean eternal)
     {
-        super(md, age);
+        super(md, age, eternal);
     }
 
     @Override
@@ -58,7 +59,9 @@ public class TorchPartUnlit extends TorchPart
         {
             if (!this.world().isRemote)
             {
-                ep.inventory.setInventorySlotContents(ep.inventory.currentItem, new ItemStack(this.getBlockId(), 1, this.age));
+                ItemStack torch = new ItemStack(this.getBlockId(), 1, this.age);
+                torch.setTagCompound(this.eternal ? new NBTTagCompound() : null);
+                ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
                 this.tile().remPart(this);
             }
 
@@ -125,7 +128,7 @@ public class TorchPartUnlit extends TorchPart
         int z = this.z();
 
         this.tile().remPart(this);
-        TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartLit(this.meta, this.age));
+        TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartLit(this.meta, this.age, this.eternal));
 
         if (sound != null && !"".equals(sound))
         {

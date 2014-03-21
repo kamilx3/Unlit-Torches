@@ -10,6 +10,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
@@ -31,9 +32,9 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
     public TorchPartLit() {}
 
-    public TorchPartLit(int md, int age)
+    public TorchPartLit(int md, int age, boolean eternal)
     {
-        super(md, age);
+        super(md, age, eternal);
     }
 
     @Override
@@ -100,7 +101,9 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         {
             if (!this.world().isRemote)
             {
-                ep.inventory.setInventorySlotContents(ep.inventory.currentItem, new ItemStack(this.getBlockId(), 1, this.age));
+                ItemStack torch = new ItemStack(this.getBlockId(), 1, this.age);
+                torch.setTagCompound(this.eternal ? new NBTTagCompound() : null);
+                ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
                 this.tile().remPart(this);
             }
 
@@ -178,13 +181,14 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public boolean doesTick()
     {
-        return ConfigCommon.torchUpdates;
+        return ConfigCommon.torchUpdates && !this.eternal;
     }
 
+    //called whether or not this should tick as long as a part in the same block needs ticking
     @Override
     public void update()
     {
-        if (this.world().getTotalWorldTime() % 3 != 0) return;
+        if (this.world().getTotalWorldTime() % 3 != 0 || this.eternal || !ConfigCommon.torchUpdates) return;
 
         if (this.age >= ConfigCommon.torchLifespanMax)
         {
@@ -238,7 +242,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         int z = this.z();
 
         this.tile().remPart(this);
-        TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartUnlit(this.meta, this.age));
+        TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartUnlit(this.meta, this.age, this.eternal));
 
         if (sound != null && !"".equals(sound))
         {

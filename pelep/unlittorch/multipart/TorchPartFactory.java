@@ -68,12 +68,12 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         if (id == ConfigCommon.blockIdTorchLit)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
-            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge());
+            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge(), te.isEternal());
         }
         else if (id == ConfigCommon.blockIdTorchUnlit)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
-            return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge());
+            return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge(), te.isEternal());
         }
 
         return null;
@@ -101,11 +101,11 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
 
         if (held.itemID == ConfigCommon.blockIdTorchLit)
         {
-            part = TorchPart.getPart(world, pos, hit.sideHit, true, held.getItemDamage());
+            part = TorchPart.getPart(world, pos, hit.sideHit, true, held.getItemDamage(), held.stackTagCompound != null);
         }
         else if (held.itemID == ConfigCommon.blockIdTorchUnlit)
         {
-            part = TorchPart.getPart(world, pos, hit.sideHit, false, held.getItemDamage());
+            part = TorchPart.getPart(world, pos, hit.sideHit, false, held.getItemDamage(), held.stackTagCompound != null);
         }
 
         if (part == null) return false;
