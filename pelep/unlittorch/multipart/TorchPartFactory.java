@@ -24,6 +24,7 @@ import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet05PlacePart;
+import pelep.unlittorch.tileentity.TileEntityTorch;
 
 /**
  * @author pelep
@@ -66,11 +67,13 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
 
         if (id == ConfigCommon.blockIdTorchLit)
         {
-            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), 0);
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
+            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge());
         }
         else if (id == ConfigCommon.blockIdTorchUnlit)
         {
-            return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), 0);
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
+            return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge());
         }
 
         return null;
