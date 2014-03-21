@@ -85,7 +85,7 @@ public class ProxyCommon
             @Override
             public int idPicked(World world, int x, int y, int z)
             {
-                return ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : ConfigCommon.blockIdTorchLit;
+                return ConfigCommon.blockIdTorchLit;
             }
         };
         blockTorch.setHardness(0F);
