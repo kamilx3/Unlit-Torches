@@ -37,7 +37,8 @@ public class BlockTorchUnlit extends BlockTorch
     {
         if (!world.isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
         {
-            igniteBlockTorch((ConfigCommon.torchLifespanMax / 3), world, x, y, z, "fire.fire");
+            int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
+            igniteBlockTorch(age, world, x, y, z, "fire.fire");
         }
     }
 

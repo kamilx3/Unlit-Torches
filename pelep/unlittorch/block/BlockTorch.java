@@ -26,7 +26,7 @@ import java.util.Random;
 /**
  * @author pelep
  */
-class BlockTorch extends BlockContainer
+abstract class BlockTorch extends BlockContainer
 {
     private final boolean lit;
 

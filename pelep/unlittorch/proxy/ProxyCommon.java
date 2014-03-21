@@ -108,7 +108,6 @@ public class ProxyCommon
     {
         LogHandler.info("Modifying crafting recipes");
         RecipeHelper.removeRecipesWithResult(new ItemStack(50, 4, 0));
-//        RecipeHelper.replaceRecipeIngredient(new ItemStack(50, 1, 0), new ItemStack(50, 1, 1));
 
         LogHandler.info("Registering new crafting recipes");
 

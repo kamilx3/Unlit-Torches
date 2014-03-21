@@ -43,7 +43,7 @@ public class ItemTorchUnlit extends ItemTorch
     {
         if (!p.isSneaking())
         {
-            Material m = rayTraceFromPlayer(world, p);
+            Material m = getMaterialClicked(world, p);
             if (m == Material.lava || m == Material.fire) return false;
 
             int id = world.getBlockId(x, y, z);
@@ -64,7 +64,7 @@ public class ItemTorchUnlit extends ItemTorch
     {
         if (!p.isSneaking())
         {
-            Material m = rayTraceFromPlayer(world, p);
+            Material m = getMaterialClicked(world, p);
 
             if (m == Material.lava || m == Material.fire)
             {

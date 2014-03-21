@@ -12,7 +12,7 @@ import pelep.pcl.helper.RayTraceHelper;
 /**
  * @author pelep
  */
-class ItemTorch extends ItemBlock
+abstract class ItemTorch extends ItemBlock
 {
     public ItemTorch(int id)
     {
@@ -22,7 +22,7 @@ class ItemTorch extends ItemBlock
         this.setNoRepair();
     }
 
-    protected static Material rayTraceFromPlayer(World world, EntityPlayer p)
+    protected static Material getMaterialClicked(World world, EntityPlayer p)
     {
         MovingObjectPosition mop = RayTraceHelper.rayTraceFromPlayer(world, p, false, true);
 

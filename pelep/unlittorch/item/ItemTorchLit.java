@@ -53,7 +53,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     {
         if (!p.isSneaking())
         {
-            if (rayTraceFromPlayer(world, p) == Material.water)
+            if (getMaterialClicked(world, p) == Material.water)
             {
                 return false;
             }
@@ -69,7 +69,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     @Override
     public ItemStack onItemRightClick(ItemStack ist, World world, EntityPlayer p)
     {
-        if (!p.isSneaking() && rayTraceFromPlayer(world, p) == Material.water)
+        if (!p.isSneaking() && getMaterialClicked(world, p) == Material.water)
         {
             world.playSoundAtEntity(p, "random.fizz", 0.5F, itemRand.nextFloat() * 0.4F + 0.8F);
             p.swingItem();
@@ -146,7 +146,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             int y = MathHelper.floor_double(p.posY);
             int z = MathHelper.floor_double(p.posZ);
 
-            if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(50) == 0) || itemRand.nextInt(80) == 0))
+            if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(15) == 0) || itemRand.nextInt(25) == 0))
             {
                 killItemTorch(world, p, ist, "random.fizz", 0.3F);
                 return;

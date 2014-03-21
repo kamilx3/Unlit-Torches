@@ -81,19 +81,9 @@ public class BlockTorchLit extends BlockTorch
     @Override
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity e)
     {
-        if (!world.isRemote && !e.onGround && e instanceof EntityArrow && (Math.abs(e.motionX) > 1 || Math.abs(e.motionY) > 1 || Math.abs(e.motionZ) > 1))
-        {
-            if (e.isBurning())
-            {
-                TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-                int age = te.getAge() - (ConfigCommon.torchLifespanMax / 3);
-                setTileEntityAge(Math.max(age, 0), world, x, y, z, "fire.fire");
-            }
-            else
-            {
-                killBlockTorch(world, x, y, z, "fire.fire", 1F);
-            }
-        }
+        if (world.isRemote || e.onGround || !(e instanceof EntityArrow)) return;
+        if (MathHelper.sqrt_double(e.motionX * e.motionX + e.motionY * e.motionY + e.motionZ * e.motionZ) > 1.2D)
+            killBlockTorch(world, x, y, z, "fire.fire", 1F);
     }
 
     @Override
