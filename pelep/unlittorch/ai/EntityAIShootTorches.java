@@ -8,6 +8,7 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.ai.EntityAIHelper.TorchInfo;
+import pelep.unlittorch.config.ConfigCommon;
 
 /**
  * @author pelep
@@ -102,7 +103,7 @@ public class EntityAIShootTorches extends EntityAIBase
     @Override
     public void updateTask()
     {
-        if (this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) != 50)
+        if (this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z) != ConfigCommon.blockIdTorchLit)
         {
             this.retry = 0;
         }
@@ -139,7 +140,7 @@ public class EntityAIShootTorches extends EntityAIBase
                     int y = ey + j;
                     int z = ez + k;
 
-                    if (this.world.getBlockId(x, y, z) == 50)
+                    if (this.world.getBlockId(x, y, z) == ConfigCommon.blockIdTorchLit)
                     {
                         TorchInfo torch = new TorchInfo(x, y, z);
 

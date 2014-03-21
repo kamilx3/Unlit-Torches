@@ -5,6 +5,8 @@ import static pelep.unlittorch.UnlitTorch.MOD_ID;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockTorch;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
@@ -25,6 +27,7 @@ import pelep.unlittorch.tileentity.TileEntityTorch;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.List;
 
 /**
  * @author pelep
@@ -54,8 +57,17 @@ public class ProxyCommon
     public void registerTorches()
     {
         LogHandler.info("Replacing block torch");
-        Block.blocksList[50] = null;
-        BlockTorchLit blockTorchLit = new BlockTorchLit();
+        Block.blocksList[Block.torchWood.blockID] = null;
+        BlockTorch blockTorch = new BlockTorch(Block.torchWood.blockID)
+        {
+            @Override
+            public void getSubBlocks(int id, CreativeTabs tab, List list) {}
+        };
+        blockTorch.setHardness(0F);
+        blockTorch.setLightValue(0.9375F);
+        blockTorch.setStepSound(Block.soundWoodFootstep);
+        blockTorch.setUnlocalizedName("torch");
+        blockTorch.setTextureName("torch_on");
         LogHandler.fine("Block %d replaced!", 50);
 
         try
@@ -64,7 +76,7 @@ public class ProxyCommon
             Field modifiers = Field.class.getDeclaredField("modifiers");
             modifiers.setAccessible(true);
             modifiers.setInt(torch, torch.getModifiers() & ~Modifier.FINAL);
-            torch.set(null, blockTorchLit);
+            torch.set(null, blockTorch);
             LogHandler.fine("Block field replaced!");
         }
         catch(Exception e)
@@ -73,12 +85,8 @@ public class ProxyCommon
             e.printStackTrace();
         }
 
-        LogHandler.info("Replacing item torch");
-        Item.itemsList[50] = null;
-        GameRegistry.registerBlock(blockTorchLit, ItemTorchLit.class, "unlittorch:torch_lit", MOD_ID);
-        LogHandler.fine("Item %d replaced!", 50);
-
-        LogHandler.info("Registering unlit torch");
+        LogHandler.info("Registering new torches");
+        GameRegistry.registerBlock(new BlockTorchLit(), ItemTorchLit.class, "unlittorch:torch_lit", MOD_ID);
         GameRegistry.registerBlock(new BlockTorchUnlit(), ItemTorchUnlit.class, "unlittorch:torch_unlit", MOD_ID);
     }
 

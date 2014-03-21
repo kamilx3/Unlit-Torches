@@ -37,7 +37,7 @@ public class RecipeTorchUnlitB implements IRecipe, ICraftingHandler
 
                 int id = ist.itemID;
 
-                if (t == -1 && id == 50)
+                if (t == -1 && id == ConfigCommon.blockIdTorchLit)
                 {
                     t = i;
                     continue;

@@ -12,7 +12,7 @@ import pelep.unlittorch.config.ConfigCommon;
  */
 public class RecipeTorch implements IRecipe
 {
-    private ItemStack torch = new ItemStack(50, 4, 0);
+    private ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchLit, 4, 0);
 
     @Override
     public boolean matches(InventoryCrafting ic, World world)

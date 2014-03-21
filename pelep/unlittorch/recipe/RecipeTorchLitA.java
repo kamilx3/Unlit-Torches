@@ -34,7 +34,7 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
                 {
                     return false;
                 }
-                else if (ist.itemID == 50)
+                else if (ist.itemID == ConfigCommon.blockIdTorchLit)
                 {
                     if (t1 == -1)
                     {
@@ -62,7 +62,7 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
         ItemStack ist1 = ic.getStackInSlot(t1);
         ItemStack ist2 = ic.getStackInSlot(t2);
 
-        if (ist2.itemID == 50)
+        if (ist2.itemID == ConfigCommon.blockIdTorchLit)
         {
             int d1 = ist1.getItemDamage();
             int d2 = ist2.getItemDamage();
@@ -70,14 +70,14 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
             if (d1 != d2)
             {
                 double d = (d1 + d2) / 2;
-                this.torch = new ItemStack(50, 1, MathHelper.ceiling_double_int(d));
+                this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
                 return true;
             }
 
             return false;
         }
 
-        this.torch = new ItemStack(50, 1, ist2.getItemDamage());
+        this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ist2.getItemDamage());
         return true;
     }
 
@@ -102,7 +102,7 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
     @Override
     public void onCrafting(EntityPlayer p, ItemStack r, IInventory inv)
     {
-        if (r.itemID != 50) return;
+        if (r.itemID != ConfigCommon.blockIdTorchLit) return;
 
         int n = 0;
         int t1 = -1;
@@ -118,7 +118,7 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
                 {
                     return;
                 }
-                else if (ist.itemID == 50)
+                else if (ist.itemID == ConfigCommon.blockIdTorchLit)
                 {
                     if (t1 == -1)
                     {

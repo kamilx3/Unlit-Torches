@@ -6,6 +6,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.ai.EntityAIHelper.TorchInfo;
 import pelep.unlittorch.block.BlockTorchLit;
+import pelep.unlittorch.config.ConfigCommon;
 
 /**
  * @author pelep
@@ -58,7 +59,7 @@ public class EntityAIBreakTorches extends EntityAIBase
                     int y = ey + j;
                     int z = ez + k;
 
-                    if (this.world.getBlockId(x, y, z) == 50)
+                    if (this.world.getBlockId(x, y, z) == ConfigCommon.blockIdTorchLit)
                     {
                         TorchInfo torch = new TorchInfo(x, y, z);
 

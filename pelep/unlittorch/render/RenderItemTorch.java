@@ -18,7 +18,7 @@ public class RenderItemTorch implements IItemRenderer
     @Override
     public boolean handleRenderType(ItemStack ist, ItemRenderType type)
     {
-        return type == ItemRenderType.INVENTORY && (ist.itemID == 50 || ist.itemID == ConfigCommon.blockIdTorchUnlit);
+        return type == ItemRenderType.INVENTORY && (ist.itemID == ConfigCommon.blockIdTorchLit || ist.itemID == ConfigCommon.blockIdTorchUnlit);
     }
 
     @Override

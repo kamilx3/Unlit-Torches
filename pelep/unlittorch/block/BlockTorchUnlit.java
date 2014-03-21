@@ -60,7 +60,7 @@ public class BlockTorchUnlit extends BlockTorch
         {
             int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
 
-            if (id == 50)
+            if (id == ConfigCommon.blockIdTorchLit)
             {
                 igniteBlockTorch(age, world, x, y, z, "fire.fire");
             }
@@ -111,7 +111,7 @@ public class BlockTorchUnlit extends BlockTorch
 
     public static void igniteBlockTorch(int age, World world, int x, int y, int z, String sound)
     {
-        world.setBlock(x, y, z, 50, world.getBlockMetadata(x, y, z), 1|2);
+        world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
         setTileEntityAge(age, world, x, y, z, sound);
     }
 }

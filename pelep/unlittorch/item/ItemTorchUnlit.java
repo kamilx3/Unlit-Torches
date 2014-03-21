@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import pelep.unlittorch.block.BlockTorchLit;
+import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
 
 import java.util.List;
@@ -47,7 +48,7 @@ public class ItemTorchUnlit extends ItemTorch
 
             int id = world.getBlockId(x, y, z);
 
-            if (id != 50 && IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z)))
+            if (id != ConfigCommon.blockIdTorchLit && IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z)))
             {
                 p.swingItem();
                 BlockTorchLit.igniteHeldTorch(world, ist, p);

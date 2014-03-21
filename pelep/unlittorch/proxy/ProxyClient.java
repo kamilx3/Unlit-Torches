@@ -39,7 +39,7 @@ public class ProxyClient extends ProxyCommon
     {
         LogHandler.info("Registering renderers");
         RenderItemTorch renderItemTorch = new RenderItemTorch();
-        MinecraftForgeClient.registerItemRenderer(50, renderItemTorch);
+        MinecraftForgeClient.registerItemRenderer(ConfigCommon.blockIdTorchLit, renderItemTorch);
         MinecraftForgeClient.registerItemRenderer(ConfigCommon.blockIdTorchUnlit, renderItemTorch);
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTorch.class, new RenderBlockTorch());
     }
@@ -49,6 +49,6 @@ public class ProxyClient extends ProxyCommon
     {
         LogHandler.info("Registering light sources");
         if (ConfigClient.enableDynamicLighting && ConfigClient.torchLightValue > 0)
-            LightsManager.registerBasicLightSource(50, ConfigClient.torchLightValue);
+            LightsManager.registerBasicLightSource(ConfigCommon.blockIdTorchLit, ConfigClient.torchLightValue);
     }
 }

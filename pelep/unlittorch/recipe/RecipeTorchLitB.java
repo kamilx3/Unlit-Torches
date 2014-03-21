@@ -57,7 +57,7 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
 
         if (n == 2 && t != -1 && f != -1)
         {
-            this.torch = new ItemStack(50, 1, ic.getStackInSlot(t).getItemDamage());
+            this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ic.getStackInSlot(t).getItemDamage());
             return true;
         }
 
@@ -85,7 +85,7 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
     @Override
     public void onCrafting(EntityPlayer p, ItemStack r, IInventory inv)
     {
-        if (r.itemID != 50) return;
+        if (r.itemID != ConfigCommon.blockIdTorchLit) return;
 
         int n = 0;
         int t = -1;

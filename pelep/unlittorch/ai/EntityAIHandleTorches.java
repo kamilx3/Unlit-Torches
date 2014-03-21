@@ -54,7 +54,7 @@ public class EntityAIHandleTorches extends EntityAIBase
         {
             int id = this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z);
 
-            if (this.torch.lit && id == 50)
+            if (this.torch.lit && id == ConfigCommon.blockIdTorchLit)
             {
                 BlockTorchLit.killBlockTorch(this.world, torch.x, torch.y, torch.z, "fire.fire", 1F);
             }
@@ -104,7 +104,7 @@ public class EntityAIHandleTorches extends EntityAIBase
         {
             int id = this.world.getBlockId(torch.x, torch.y, torch.z);
 
-            if ((id == 50 && torch.lit) || (id == ConfigCommon.blockIdTorchUnlit && !torch.lit))
+            if ((id == ConfigCommon.blockIdTorchLit && torch.lit) || (id == ConfigCommon.blockIdTorchUnlit && !torch.lit))
             {
                 return torch;
             }
@@ -134,9 +134,9 @@ public class EntityAIHandleTorches extends EntityAIBase
                     int z = ez + k;
                     int id = this.world.getBlockId(x, y, z);
 
-                    if ((id == 50 && this.world.isDaytime()) || (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime() && !this.world.isRaining()))
+                    if ((id == ConfigCommon.blockIdTorchLit && this.world.isDaytime()) || (id == ConfigCommon.blockIdTorchUnlit && !this.world.isDaytime() && !this.world.isRaining()))
                     {
-                        this.torches.add(new TorchInfo(x, y, z, id == 50));
+                        this.torches.add(new TorchInfo(x, y, z, id == ConfigCommon.blockIdTorchLit));
                     }
                 }
             }

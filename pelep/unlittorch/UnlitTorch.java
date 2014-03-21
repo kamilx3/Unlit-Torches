@@ -60,6 +60,5 @@ public class UnlitTorch
     public void postInit(FMLPostInitializationEvent e)
     {
         proxy.setUpIgniters();
-        proxy.checkTorch();
     }
 }

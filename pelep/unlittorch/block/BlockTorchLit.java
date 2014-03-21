@@ -26,7 +26,7 @@ public class BlockTorchLit extends BlockTorch
 {
     public BlockTorchLit()
     {
-        super(50, true);
+        super(ConfigCommon.blockIdTorchLit, true);
         this.setLightValue(0.9375F);
         this.setUnlocalizedName("unlittorch:torch_lit");
         this.setTextureName("torch_on");
@@ -220,7 +220,7 @@ public class BlockTorchLit extends BlockTorch
         }
         else
         {
-            ist.itemID = 50;
+            ist.itemID = ConfigCommon.blockIdTorchLit;
         }
 
         world.playSoundAtEntity(p, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);

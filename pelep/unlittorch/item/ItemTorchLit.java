@@ -3,6 +3,7 @@ package pelep.unlittorch.item;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -38,6 +39,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     @Override
     public void getSubItems(int id, CreativeTabs ct, List list)
     {
+        list.add(new ItemStack(Block.torchWood.blockID, 1, 0));
         list.add(new ItemStack(id, 1, 0));
         list.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0));
     }
