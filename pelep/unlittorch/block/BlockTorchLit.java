@@ -24,12 +24,15 @@ import java.util.Random;
  */
 public class BlockTorchLit extends BlockTorch
 {
+    public static BlockTorchLit instance;
+
     public BlockTorchLit()
     {
         super(ConfigCommon.blockIdTorchLit, true);
         this.setLightValue(0.9375F);
         this.setUnlocalizedName("unlittorch:torch_lit");
         this.setTextureName("torch_on");
+        instance = this;
     }
 
 

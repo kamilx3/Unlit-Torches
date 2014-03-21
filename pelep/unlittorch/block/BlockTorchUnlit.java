@@ -17,12 +17,15 @@ import pelep.unlittorch.tileentity.TileEntityTorch;
  */
 public class BlockTorchUnlit extends BlockTorch
 {
+    public static BlockTorchUnlit instance;
+
     public BlockTorchUnlit()
     {
         super(ConfigCommon.blockIdTorchUnlit, false);
         this.setLightValue(0F);
         this.setUnlocalizedName("unlittorch:torch_unlit");
         this.setTextureName("unlittorch:torch_off");
+        instance = this;
     }
 
 

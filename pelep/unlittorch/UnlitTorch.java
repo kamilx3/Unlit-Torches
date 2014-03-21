@@ -19,7 +19,7 @@ import pelep.unlittorch.proxy.ProxyCommon;
  * @author pelep
  */
 @Mod(name = MOD_NAME, modid = MOD_ID, version = MOD_VERSION, acceptedMinecraftVersions = MOD_VERSION_MC, dependencies = MOD_DEPENDENCIES)
-@NetworkMod(clientSideRequired = true, serverSideRequired = true, clientPacketHandlerSpec = @SidedPacketHandler(channels = MOD_CHANNEL, packetHandler = PacketHandler.class), connectionHandler = ConnectionHandler.class)
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, channels = MOD_CHANNEL, packetHandler = PacketHandler.class, connectionHandler = ConnectionHandler.class)
 public class UnlitTorch
 {
     public static final String MOD_NAME = "Unlit Torches";
@@ -46,6 +46,7 @@ public class UnlitTorch
         proxy.registerItems();
         proxy.registerTileEntity();
         proxy.registerRenderers();
+        proxy.registerTorchParts();
     }
 
     @EventHandler

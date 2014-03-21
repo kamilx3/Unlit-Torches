@@ -2,6 +2,7 @@ package pelep.unlittorch.proxy;
 
 import static pelep.unlittorch.UnlitTorch.MOD_ID;
 
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.ReflectionHelper;
 import net.minecraft.block.Block;
@@ -21,6 +22,7 @@ import pelep.unlittorch.handler.LogHandler;
 import pelep.unlittorch.item.ItemCloth;
 import pelep.unlittorch.item.ItemTorchLit;
 import pelep.unlittorch.item.ItemTorchUnlit;
+import pelep.unlittorch.multipart.TorchPartFactory;
 import pelep.unlittorch.recipe.*;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
@@ -138,22 +140,8 @@ public class ProxyCommon
 
     public void registerLightSources() {}
 
-    public void checkTorch()
+    public void registerTorchParts()
     {
-        if (!(Block.blocksList[50] instanceof BlockTorchLit))
-        {
-            LogHandler.severe("Block %d is either still vanilla torches or has been changed by a mod other than Unlit Torch", 50);
-            LogHandler.severe("Rectifying. This could result in bugs. Best to single out what mod causes this and take it out");
-            Block.blocksList[50] = null;
-            new BlockTorchLit();
-        }
-
-        if (!(Item.itemsList[50] instanceof ItemTorchLit))
-        {
-            LogHandler.severe("Item %d is either still vanilla torches or has been changed by a mod other than Unlit Torch", 50);
-            LogHandler.severe("Rectifying. This could result in bugs. Best to single out what mod causes this and take it out");
-            Item.itemsList[50] = null;
-            new ItemTorchLit(50 - 256);
-        }
+        if (Loader.isModLoaded("ForgeMultipart")) new TorchPartFactory();
     }
 }
