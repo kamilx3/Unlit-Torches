@@ -91,9 +91,6 @@ public class TileEntityTorch extends TileEntity
 
     private void destroyTorch()
     {
-        this.invalidate();
-//        int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-//        this.worldObj.playAuxSFX(2001, this.xCoord, this.yCoord, this.zCoord, 50 + (md << 12));
         Packet04BurnFX pkt = new Packet04BurnFX(this.xCoord, this.yCoord, this.zCoord, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
         PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 64D, this.worldObj.provider.dimensionId, pkt.create());
         this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, "fire.fire", 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);

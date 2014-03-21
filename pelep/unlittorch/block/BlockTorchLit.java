@@ -14,7 +14,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
-import pelep.unlittorch.packet.Packet03UpdateTile;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.util.Random;
@@ -169,7 +168,6 @@ public class BlockTorchLit extends BlockTorch
     {
         TileEntity te = world.getBlockTileEntity(x, y, z);
         int age = te != null ? ((TileEntityTorch)te).getAge() : 0;
-
         world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 1|2);
         setTileEntityAge(age, world, x, y, z, sound, volume);
     }
@@ -188,15 +186,16 @@ public class BlockTorchLit extends BlockTorch
         double d = (ta + ia) / 2;
         int age = MathHelper.ceiling_double_int(d);
 
-        if (!world.isRemote)
-        {
-            int dim = world.provider.dimensionId;
-            PacketDispatcher.sendPacketToAllInDimension(new Packet03UpdateTile(x, y, z, dim, age).create(), dim);
-        }
+        p.swingItem();
 
         ist.setItemDamage(age);
         setTileEntityAge(age, world, x, y, z, "fire.fire");
-        p.swingItem();
+
+        if (!world.isRemote)
+        {
+            int dim = world.provider.dimensionId;
+            PacketDispatcher.sendPacketToAllInDimension(te.getDescriptionPacket(), dim);
+        }
     }
 
     public static void igniteHeldTorch(World world, ItemStack ist, EntityPlayer p)

@@ -59,7 +59,7 @@ public class Packet06UpdatePart extends PacketCustom
     public void execute(EntityPlayer p, boolean remote) throws ProtocolException
     {
         if (!remote) throw new ProtocolException("Packet was received on wrong side!");
-        if (p.worldObj.provider.dimensionId != this.dim) return;
+        if (p.worldObj.provider.dimensionId != this.dim || !p.worldObj.blockExists(this.x, this.y, this.z)) return;
 
         TileEntity te = p.worldObj.getBlockTileEntity(this.x, this.y, this.z);
 

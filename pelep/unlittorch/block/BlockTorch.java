@@ -17,7 +17,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.packet.Packet03UpdateTile;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.util.ArrayList;
@@ -299,7 +298,6 @@ abstract class BlockTorch extends BlockContainer
         int age = ((TileEntityTorch)world.getBlockTileEntity(x, y, z)).getAge();
         boolean drop = world.setBlockToAir(x, y, z);
 
-        //TODO figure out when p can be null and fix if needed
         if (drop && !world.isRemote && (p == null || !p.capabilities.isCreativeMode))
         {
             int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
@@ -338,16 +336,6 @@ abstract class BlockTorch extends BlockContainer
     {
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         te.setAge(age);
-
-        if (sound != null)
-        {
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
-        }
-
-        if (!world.isRemote)
-        {
-            int dim = world.provider.dimensionId;
-            PacketDispatcher.sendPacketToAllInDimension(new Packet03UpdateTile(x, y, z, dim, age).create(), dim);
-        }
+        if (sound != null) world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 }

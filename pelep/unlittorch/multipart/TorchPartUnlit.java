@@ -127,7 +127,7 @@ public class TorchPartUnlit extends TorchPart
         this.tile().remPart(this);
         TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartLit(this.meta, age));
 
-        if (!"".equals(sound))
+        if (sound != null && !"".equals(sound))
         {
             world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
         }

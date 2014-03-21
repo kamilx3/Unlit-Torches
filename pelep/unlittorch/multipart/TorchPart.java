@@ -210,27 +210,4 @@ abstract class TorchPart extends McSidedMetaPart
             GL11.glPopMatrix();
         }
     }
-
-//    TODO
-//    protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound)
-//    {
-//        setTileEntityAge(age, world, x, y , z, sound, 1F);
-//    }
-//
-//    protected static void setTileEntityAge(int age, World world, int x, int y, int z, String sound, float volume)
-//    {
-//        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-//        te.setAge(age);
-//
-//        if (sound != null)
-//        {
-//            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
-//        }
-//
-//        if (!world.isRemote)
-//        {
-//            int dim = world.provider.dimensionId;
-//            PacketDispatcher.sendPacketToAllInDimension(new Packet03UpdateTile(x, y, z, dim, age).create(), dim);
-//        }
-//    }
 }

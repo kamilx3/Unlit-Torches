@@ -55,14 +55,12 @@ public class Packet03UpdateTile extends PacketCustom
     {
         if (remote)
         {
-            if (p.worldObj.provider.dimensionId == this.dim && p.worldObj.getBlockId(this.x, this.y, this.z) == ConfigCommon.blockIdTorchLit)
+            if (p.worldObj.provider.dimensionId == this.dim &&
+                p.worldObj.blockExists(this.x, this.y, this.z) &&
+                p.worldObj.getBlockId(this.x, this.y, this.z) == ConfigCommon.blockIdTorchLit)
             {
                 TileEntity te = p.worldObj.getBlockTileEntity(this.x, this.y, this.z);
-
-                if (te != null && te instanceof TileEntityTorch)
-                {
-                    ((TileEntityTorch)te).setAge(this.age);
-                }
+                ((TileEntityTorch)te).setAge(this.age);
             }
         }
         else
