@@ -26,8 +26,8 @@ public class ConnectionHandler implements IConnectionHandler
     {
         LogHandler.fine("Sending config packets to player %s", ((EntityPlayer)p).getEntityName());
         PacketDispatcher.sendPacketToPlayer(new Packet00Config().create(), p);
-        PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)0, ConfigCommon.torchIgniterIdsSet).create(), p);
-        PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)1, ConfigCommon.torchIgniterIdsHeld).create(), p);
+        PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)0, ConfigCommon.igniterIdsSet).create(), p);
+        PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)1, ConfigCommon.igniterIdsHeld).create(), p);
     }
 
     @Override

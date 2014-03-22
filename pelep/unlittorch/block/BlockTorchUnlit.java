@@ -1,5 +1,6 @@
 package pelep.unlittorch.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
@@ -63,13 +64,18 @@ public class BlockTorchUnlit extends BlockTorch
         int id = ist.itemID;
         int d = ist.getItemDamage();
 
-        if (IgnitersHandler.canIgniteSetTorch(id, d))
+        if (id == ConfigCommon.blockIdTorchLit)
+        {
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+            igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+        }
+        else if (IgnitersHandler.canIgniteSetTorch(id, d))
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
             int age = te.getAge();
             boolean eternal = te.isEternal();
 
-            if (id == ConfigCommon.blockIdTorchLit)
+            if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
             {
                 igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
             }
@@ -86,10 +92,6 @@ public class BlockTorchUnlit extends BlockTorch
             {
                 igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
                 ist.damageItem(1, p);
-            }
-            else if (id == Item.bucketLava.itemID)
-            {
-                igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
             }
             else
             {

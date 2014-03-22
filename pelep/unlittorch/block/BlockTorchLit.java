@@ -111,7 +111,7 @@ public class BlockTorchLit extends BlockTorch
             renewTorches(world, p, ist, x, y, z);
             return true;
         }
-        else if (id == ConfigCommon.blockIdTorchUnlit && IgnitersHandler.canIgniteHeldTorch(this.blockID, world.getBlockMetadata(x, y, z)))
+        else if (id == ConfigCommon.blockIdTorchUnlit)
         {
             igniteHeldTorch(world, ist, p);
             return true;

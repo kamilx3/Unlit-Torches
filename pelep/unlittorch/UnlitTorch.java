@@ -10,7 +10,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import pelep.unlittorch.handler.ConnectionHandler;
 import pelep.unlittorch.packet.PacketHandler;
 import pelep.unlittorch.proxy.ProxyCommon;
@@ -60,6 +59,6 @@ public class UnlitTorch
     @EventHandler
     public void postInit(FMLPostInitializationEvent e)
     {
-        proxy.setUpIgniters();
+        proxy.setUpTools();
     }
 }

@@ -26,8 +26,8 @@ public class ConfigCommon
     public static int torchRandomKillChance;
     public static int torchDestroyChance;
 
-    public static String torchIgniterIdsHeld = (Block.torchWood.blockID + "");
-    public static String torchIgniterIdsSet = (Block.torchWood.blockID + "," + Item.flint.itemID + "," + Item.flintAndSteel.itemID + "," + Item.bucketLava.itemID);
+    public static String igniterIdsHeld = (Block.torchWood.blockID + "");
+    public static String igniterIdsSet = (Block.torchWood.blockID + "," + Item.flint.itemID + "," + Item.flintAndSteel.itemID + "," + Item.bucketLava.itemID);
 
     public static int mobZombieTorch;
     public static int mobSkeletonTorch;
@@ -51,8 +51,8 @@ public class ConfigCommon
         torchRandomKillChance = getInt(0, 100, config.get("TORCH", "ChanceToRandomlyBurnOut", 25, "x/100 chance for a torch to burn out. Set to 0 to disable random dying out of torches"));
         torchDestroyChance = getInt(0, 100, config.get("TORCH", "ChanceToDestroy", 30, "x/100 chance that a torch is destroyed instead when it randomly burns out. Set to 0 to disable."));
 
-        torchIgniterIdsHeld = config.get("IGNITERS", "TorchHeld", blockIdTorchLit + "," + torchIgniterIdsHeld, "Block/Item IDs of igniters for HELD torches. Items are separated by commas. IDs and metadata by colons. Note that block and itemstack metadata are DIFFERENT. Example: 2,33:2,33:4,5").getString();
-        torchIgniterIdsSet = config.get("IGNITERS", "TorchSet", blockIdTorchLit + "," + torchIgniterIdsSet, "Block/Item IDs of igniters for SET torches. Items are separated by commas. IDs and metadata by colons. Example: 2,33:2,33:4,5").getString();
+        igniterIdsHeld = config.get("IGNITERS", "TorchHeld", igniterIdsHeld, "Ids of blocks/items that can ignite HELD torches. Items are separated by commas. IDs and metadata by colons. Note that block and itemstack metadata are DIFFERENT. Example: 2,33:2,33:4,5").getString();
+        igniterIdsSet = config.get("IGNITERS", "TorchSet", igniterIdsSet, "Ids of blocks/items that can ignite SET torches. Items are separated by commas. IDs and metadata by colons. Example: 2,33:2,33:4,5").getString();
 
         mobVillagerTorch = config.get("MOBS", "Villager", true, "True if villagers should kill torches during day and light them up at night").getBoolean(true);
         mobZombieTorch = config.get("MOBS", "Zombie", 5, "1 in x zombies will kill torches when close. Set to 0 to disable").getInt();

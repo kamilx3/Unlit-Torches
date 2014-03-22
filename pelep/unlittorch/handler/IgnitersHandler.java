@@ -2,7 +2,7 @@ package pelep.unlittorch.handler;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.item.Item;
+import pelep.pcl.helper.ItemInfoStorageHelper;
 import pelep.unlittorch.config.ConfigCommon;
 
 import java.util.ArrayList;
@@ -11,161 +11,27 @@ import java.util.HashMap;
 /**
  * @author pelep
  */
-public class IgnitersHandler
+public class IgnitersHandler extends ItemInfoStorageHelper
 {
-    private static final HashMap<Integer, ArrayList<Integer>> torchIgnitersSet = new HashMap();
-    private static final HashMap<Integer, ArrayList<Integer>> torchIgnitersHeld = new HashMap();
+    private static final HashMap<Integer, ArrayList<Integer>> ignitersSet = new HashMap();
+    private static final HashMap<Integer, ArrayList<Integer>> ignitersHeld = new HashMap();
 
     public static boolean canIgniteSetTorch(int id, int md)
     {
-        return isIgniter(id, md, torchIgnitersSet);
+        return valid(id, md, ignitersSet);
     }
 
     public static boolean canIgniteHeldTorch(int id, int md)
     {
-        return isIgniter(id, md, torchIgnitersHeld);
+        return valid(id, md, ignitersHeld);
     }
 
-    private static boolean isIgniter(int id, int md, HashMap<Integer, ArrayList<Integer>> map)
+    public static void setUpTorchIgniters()
     {
-        if (map.containsKey(id))
-        {
-            ArrayList<Integer> mds = map.get(id);
-            return mds == null || mds.contains(md);
-        }
-
-        return false;
-    }
-
-    public static void setUpSetTorchIgniters()
-    {
-        setUpIgniters(ConfigCommon.torchIgniterIdsSet, torchIgnitersSet);
-        ConfigCommon.torchIgniterIdsSet = format(torchIgnitersSet);
-    }
-
-    public static void setUpHeldTorchIgniters()
-    {
-        setUpIgniters(ConfigCommon.torchIgniterIdsHeld, torchIgnitersHeld);
-        ConfigCommon.torchIgniterIdsHeld = format(torchIgnitersHeld);
-    }
-
-    private static String format(HashMap<Integer, ArrayList<Integer>> map)
-    {
-        String igniters = "";
-
-        for (int id : map.keySet())
-        {
-            igniters += id;
-            ArrayList<Integer> v = map.get(id);
-
-            if (v != null && v.size() != 0)
-            {
-                igniters += ":";
-                for (int md : v)
-                {
-                    igniters += md;
-                    igniters += ",";
-                }
-            }
-
-            igniters += ";";
-        }
-
-        if (!igniters.equals(""))
-        {
-            igniters = igniters.replaceAll(",;", ";");
-            igniters = igniters.substring(0, igniters.length() - 1);
-        }
-
-        return igniters;
-    }
-
-    private static void setUpIgniters(String igniters, HashMap<Integer, ArrayList<Integer>> map)
-    {
-        if (igniters != null)
-        {
-            igniters = igniters.replace(" ", "");
-            igniters = igniters.replace(",,", ",");
-
-            for (String item : igniters.split(","))
-            {
-                if (item != null && item.length() > 0)
-                {
-                    String[] values = item.split(":");
-
-                    try
-                    {
-                        if (values.length == 1)
-                        {
-                            int id = Integer.parseInt(values[0]);
-
-                            if (Item.itemsList[id] != null)
-                            {
-                                if (!addIgniter(id, map)) LogHandler.info("Ignoring duplicate mapping %s", item);
-                                continue;
-                            }
-                        }
-                        else if (values.length == 2)
-                        {
-                            int id = Integer.parseInt(values[0]);
-
-                            if (Item.itemsList[id] != null)
-                            {
-                                if (!addIgniter(id, Integer.parseInt(values[1]), map)) LogHandler.info("Ignoring duplicate mapping %s", item);
-                                continue;
-                            }
-                        }
-
-                        LogHandler.warning("Igniter ID '%s' is invalid", item);
-                    }
-                    catch (NumberFormatException e)
-                    {
-                        LogHandler.warning("Igniter ID '%s' is invalid", item);
-                    }
-                }
-            }
-        }
-    }
-
-    private static boolean addIgniter(int id, HashMap<Integer, ArrayList<Integer>> map)
-    {
-        if (!map.containsKey(id))
-        {
-            map.put(id, null);
-            return true;
-        }
-
-        return false;
-    }
-
-    private static boolean addIgniter(int id, int md, HashMap<Integer, ArrayList<Integer>> map)
-    {
-        if (!map.containsKey(id))
-        {
-            ArrayList<Integer> mds = new ArrayList();
-            mds.add(md);
-            map.put(id, mds);
-            return true;
-        }
-        else
-        {
-            ArrayList<Integer> mds = map.get(id);
-
-            if (mds == null)
-            {
-                mds = new ArrayList();
-                mds.add(md);
-                map.put(id, mds);
-                return true;
-            }
-            else if (!mds.contains(md))
-            {
-                mds.add(md);
-                return true;
-            }
-
-            return false;
-        }
+        parseConfigString(ConfigCommon.igniterIdsSet, ignitersSet);
+        parseConfigString(ConfigCommon.igniterIdsHeld, ignitersHeld);
+        ConfigCommon.igniterIdsSet = getFormattedString(ignitersSet);
+        ConfigCommon.igniterIdsHeld = getFormattedString(ignitersHeld);
     }
 
     @SideOnly(Side.CLIENT)
@@ -174,49 +40,27 @@ public class IgnitersHandler
         switch (type)
         {
             case 0:
-                setIgniters(string, torchIgnitersSet);
+                parseFormattedString(string, ignitersSet);
                 break;
             case 1:
-                setIgniters(string, torchIgnitersHeld);
+                parseFormattedString(string, ignitersHeld);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static void desyncFromServer()
     {
-        setIgniters(ConfigCommon.torchIgniterIdsSet, torchIgnitersSet);
-        setIgniters(ConfigCommon.torchIgniterIdsHeld, torchIgnitersHeld);
+        parseFormattedString(ConfigCommon.igniterIdsSet, ignitersSet);
+        parseFormattedString(ConfigCommon.igniterIdsHeld, ignitersHeld);
     }
 
-    @SideOnly(Side.CLIENT)
-    private static void setIgniters(String string, HashMap<Integer, ArrayList<Integer>> map)
+    public static HashMap<Integer, ArrayList<Integer>> getSetIgniters()
     {
-        map.clear();
+        return new HashMap<Integer, ArrayList<Integer>>(ignitersSet);
+    }
 
-        for (String item : string.split(";"))
-        {
-            String[] v = item.split(":");
-
-            if (v.length == 1)
-            {
-                map.put(Integer.parseInt(v[0]), null);
-            }
-            else if (v.length == 2)
-            {
-                ArrayList<Integer> mds = new ArrayList();
-
-                for (String md : v[1].split(","))
-                {
-                    mds.add(Integer.parseInt(md));
-                }
-
-                if (mds.isEmpty())
-                {
-                    mds = null;
-                }
-
-                map.put(Integer.parseInt(v[0]), mds);
-            }
-        }
+    public static HashMap<Integer, ArrayList<Integer>> getHeldIgniters()
+    {
+        return new HashMap<Integer, ArrayList<Integer>>(ignitersHeld);
     }
 }

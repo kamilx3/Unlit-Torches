@@ -50,10 +50,10 @@ public class ProxyCommon
         LogHandler.fine("Read!");
     }
 
-    public void setUpIgniters()
+    public void setUpTools()
     {
-        IgnitersHandler.setUpSetTorchIgniters();
-        IgnitersHandler.setUpHeldTorchIgniters();
+        LogHandler.info("Registering igniters");
+        IgnitersHandler.setUpTorchIgniters();
     }
 
     public void registerRenderers() {}
