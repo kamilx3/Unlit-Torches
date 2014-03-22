@@ -68,6 +68,7 @@ public class BlockTorchUnlit extends BlockTorch
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
             igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+            return true;
         }
         else if (IgnitersHandler.canIgniteSetTorch(id, d))
         {

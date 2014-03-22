@@ -118,7 +118,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
                 this.renewTorches(ep, ist);
             return true;
         }
-        else if (id == ConfigCommon.blockIdTorchUnlit && IgnitersHandler.canIgniteHeldTorch(this.getBlockId(), this.meta))
+        else if (id == ConfigCommon.blockIdTorchUnlit)
         {
             BlockTorchLit.igniteHeldTorch(this.world(), ist, ep);
             return true;

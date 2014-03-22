@@ -71,9 +71,14 @@ public class TorchPartUnlit extends TorchPart
         int id = ist.itemID;
         int d = ist.getItemDamage();
 
-        if (IgnitersHandler.canIgniteSetTorch(id, d))
+        if (id == ConfigCommon.blockIdTorchLit)
         {
-            if (id == ConfigCommon.blockIdTorchLit)
+            this.igniteTorchPart("fire.fire");
+            return true;
+        }
+        else if (IgnitersHandler.canIgniteSetTorch(id, d))
+        {
+            if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
             {
                 this.igniteTorchPart("fire.fire");
             }
@@ -90,10 +95,6 @@ public class TorchPartUnlit extends TorchPart
             {
                 this.igniteTorchPart("fire.ignite");
                 ist.damageItem(1, ep);
-            }
-            else if (id == Item.bucketLava.itemID)
-            {
-                this.igniteTorchPart("fire.fire");
             }
             else
             {
