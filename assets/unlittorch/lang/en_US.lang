@@ -5,3 +5,7 @@ item.unlittorch:cloth_dry.name=Cloth
 item.unlittorch:cloth_wet.name=Damp Cloth
 
 unlittorch.eternal=Eternal
+
+nei.unlittorch.notConsumed=Not consumed
+nei.unlittorch.willBeDamaged=Will be damaged
+nei.unlittorch.returnedEmpty=Returned empty

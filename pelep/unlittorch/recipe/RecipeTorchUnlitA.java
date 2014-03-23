@@ -54,19 +54,23 @@ public class RecipeTorchUnlitA implements IRecipe
         {
             ItemStack ist1 = ic.getStackInSlot(t1);
             ItemStack ist2 = ic.getStackInSlot(t2);
-            int d1 = ist1.getItemDamage();
-            int d2 = ist2.getItemDamage();
-            int max = ConfigCommon.torchLifespanMax;
-            d1 = max - d1;
-            d2 = max - d2;
-            int d = d1 + d2 + max * 5 / 100;
-            this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, Math.max(0, max - d));
+            int d = getRepairedValue(ist1.getItemDamage(), ist2.getItemDamage());
+            this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d);
             if (ist1.stackTagCompound != null || ist2.stackTagCompound != null)
                 this.torch.setTagCompound(new NBTTagCompound());
             return true;
         }
 
         return false;
+    }
+
+    public static int getRepairedValue(int d1, int d2)
+    {
+        int max = ConfigCommon.torchLifespanMax;
+        d1 = max - d1;
+        d2 = max - d2;
+        int d = d1 + d2 + max * 5 / 100;
+        return Math.max(0, max - d);
     }
 
     @Override
