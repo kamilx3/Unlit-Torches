@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
@@ -42,7 +43,11 @@ public class RecipeTorchUnlitB implements IRecipe, ICraftingHandler
                     t = i;
                     continue;
                 }
-                else if (c == -1 && (id == ConfigCommon.itemIdCloth || id == Block.cloth.blockID || id == Block.carpet.blockID))
+                else if (c == -1 && (id == ConfigCommon.itemIdCloth ||
+                                    id == Block.cloth.blockID ||
+                                    id == Block.carpet.blockID ||
+                                    id == Item.bucketWater.itemID ||
+                                    id == Item.bucketMilk.itemID))
                 {
                     c = i;
                     continue;

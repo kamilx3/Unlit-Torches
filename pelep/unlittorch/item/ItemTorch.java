@@ -9,6 +9,7 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import pelep.pcl.helper.RayTraceHelper;
 
@@ -31,7 +32,8 @@ abstract class ItemTorch extends ItemBlock
     @Override
     public void addInformation(ItemStack ist, EntityPlayer p, List list, boolean adv)
     {
-        if (ist.stackTagCompound != null) list.add("Eternal");
+        if (ist.stackTagCompound != null)
+            list.add(StatCollector.translateToLocalFormatted("unlittorch.eternal"));
     }
 
     protected static Material getMaterialClicked(World world, EntityPlayer p)

@@ -44,7 +44,7 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
                 }
                 else if (f == -1)
                 {
-                    if (id == Item.flint.itemID || id == Item.flintAndSteel.itemID)
+                    if (id == Item.flint.itemID || id == Item.flintAndSteel.itemID || id == Item.bucketLava.itemID)
                     {
                         f = i;
                         continue;
