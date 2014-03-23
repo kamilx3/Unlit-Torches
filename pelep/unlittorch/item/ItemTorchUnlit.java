@@ -39,6 +39,40 @@ public class ItemTorchUnlit extends ItemTorch
 
 
     @Override
+    public boolean canPlaceItemBlockOnSide(World world, int x, int y, int z, int side, EntityPlayer ep, ItemStack ist)
+    {
+        int id = world.getBlockId(x, y, z);
+
+        if (!ep.isSneaking() && (id == Block.torchWood.blockID ||
+                IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z))))
+        {
+            return true;
+        }
+        else if (id == Block.snow.blockID)
+        {
+            side = 1;
+        }
+        else if (Block.vine.blockID != id &&
+                Block.tallGrass.blockID != id &&
+                Block.deadBush.blockID != id &&
+                (Block.blocksList[id] == null ||
+                !Block.blocksList[id].isBlockReplaceable(world, x, y, z)))
+        {
+            switch (side)
+            {
+                case 0: z--; break;
+                case 1: z++; break;
+                case 2: y--; break;
+                case 3: y++; break;
+                case 4: x--; break;
+                case 5: x++;
+            }
+        }
+
+        return world.canPlaceEntityOnSide(this.itemID, x, y, z, false, side, null, ist);
+    }
+
+    @Override
     public boolean onItemUse(ItemStack ist, EntityPlayer p, World world, int x, int y, int z, int side, float i, float j, float k)
     {
         if (!p.isSneaking())
