@@ -28,7 +28,7 @@ public class UnlitTorch
     public static final String MOD_VERSION_PATCH = "0";
     public static final String MOD_VERSION = MOD_VERSION_MAJOR + "." + MOD_VERSION_MINOR + "." + MOD_VERSION_PATCH;
     public static final String MOD_VERSION_MC = "1.6.4";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:pcl@[2.0.0,);before:bushwhacker";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:pcl@[2.0.0,);after:ForgeMultipart;before:bushwhacker";
     public static final String MOD_CHANNEL = MOD_ID;
 
     @Instance(MOD_ID)
