@@ -47,70 +47,80 @@ public class BlockTorchUnlit extends BlockTorch
     @Override
     public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer p, int side, float i, float j, float k)
     {
-        if (p.isSneaking()) return false;
-
         ItemStack ist = p.inventory.getCurrentItem();
 
-        if (ist == null)
+        if (p.isSneaking())
         {
+            if (ist != null) return false;
+
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
             ItemStack torch = new ItemStack(this.blockID, 1, te.getAge());
             torch.setTagCompound(te.isEternal() ? new NBTTagCompound() : null);
             p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
             world.setBlockToAir(x, y, z);
+
             return true;
         }
-
-        int id = ist.itemID;
-        int d = ist.getItemDamage();
-
-        if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
+        else if (ist != null)
         {
-            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
-            return true;
-        }
-        else if (IgnitersHandler.canIgniteSetTorch(id, d))
-        {
-            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            int age = te.getAge();
-            boolean eternal = te.isEternal();
+            int id = ist.itemID;
+            int d = ist.getItemDamage();
 
-            if (id == Item.bucketLava.itemID)
+            if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
             {
-                igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
+                TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+                igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+                return true;
             }
-            else if (id == Item.flint.itemID)
+            else if (IgnitersHandler.canIgniteSetTorch(id, d))
             {
-                igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
+                TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+                int age = te.getAge();
+                boolean eternal = te.isEternal();
 
-                if (!p.capabilities.isCreativeMode)
+                if (id == Item.bucketLava.itemID)
                 {
-                    p.inventory.decrStackSize(p.inventory.currentItem, 1);
+                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
                 }
-            }
-            else if (id == Item.flintAndSteel.itemID)
-            {
-                igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
-                ist.damageItem(1, p);
-            }
-            else
-            {
-                igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
-
-                if (!p.capabilities.isCreativeMode)
+                else if (id == Item.flint.itemID)
                 {
-                    if (Item.itemsList[id].isDamageable())
-                    {
-                        ist.damageItem(1, p);
-                    }
-                    else
+                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
+
+                    if (!p.capabilities.isCreativeMode)
                     {
                         p.inventory.decrStackSize(p.inventory.currentItem, 1);
                     }
                 }
-            }
+                else if (id == Item.flintAndSteel.itemID)
+                {
+                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
+                    ist.damageItem(1, p);
+                }
+                else
+                {
+                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
 
+                    if (!p.capabilities.isCreativeMode)
+                    {
+                        if (Item.itemsList[id].isDamageable())
+                        {
+                            ist.damageItem(1, p);
+                        }
+                        else
+                        {
+                            p.inventory.decrStackSize(p.inventory.currentItem, 1);
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        if (canIgnite(p))
+        {
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+            igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
             return true;
         }
 
@@ -128,5 +138,51 @@ public class BlockTorchUnlit extends BlockTorch
         te.setAge(age);
         te.setEternal(eternal);
         world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
+    }
+
+    public static boolean canIgnite(EntityPlayer ep)
+    {
+        int slot = -1;
+
+        for (int i = 0; i < ep.inventory.mainInventory.length; i++)
+        {
+            ItemStack ist = ep.inventory.mainInventory[i];
+
+            if (ist != null)
+            {
+                if (ist.itemID == ConfigCommon.blockIdTorchLit || ist.itemID == Block.torchWood.blockID)
+                {
+                    slot = i;
+                    break;
+                }
+                else if (IgnitersHandler.canIgniteSetTorch(ist.itemID, ist.getItemDamage()))
+                {
+                    slot = i;
+                    if (ist.itemID == Item.bucketLava.itemID) break;
+                }
+            }
+        }
+
+        if (slot == -1) return false;
+
+        ItemStack ist = ep.inventory.mainInventory[slot];
+        int id = ist.itemID;
+
+        if (!ep.capabilities.isCreativeMode &&
+            id != Item.bucketLava.itemID &&
+            id != ConfigCommon.blockIdTorchLit &&
+            id != Block.torchWood.blockID)
+        {
+            if (Item.itemsList[id].isDamageable())
+            {
+                ist.damageItem(1, ep);
+            }
+            else
+            {
+                ep.inventory.decrStackSize(slot, 1);
+            }
+        }
+
+        return true;
     }
 }

@@ -95,10 +95,10 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public boolean activate(EntityPlayer ep, MovingObjectPosition mop, ItemStack ist)
     {
-        if (ep.isSneaking()) return false;
-
-        if (ist == null)
+        if (ep.isSneaking())
         {
+            if (ist != null) return false;
+
             if (!this.world().isRemote)
             {
                 ItemStack torch = new ItemStack(this.getBlockId(), 1, this.age);
@@ -109,63 +109,65 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
             return true;
         }
+        else if (ist != null)
+        {
+            int id = ist.itemID;
 
-        int id = ist.itemID;
-
-        if (id == this.getBlockId())
-        {
-            if (ep.swingProgress == 0F) //because multipart activates the block again too quickly
-                this.renewTorches(ep, ist);
-            return true;
-        }
-        else if (id == ConfigCommon.blockIdTorchUnlit)
-        {
-            BlockTorchLit.igniteHeldTorch(this.world(), ist, ep);
-            return true;
-        }
-        else if (id == ConfigCommon.itemIdCloth)
-        {
-            if (ist.getItemDamage() == 0)
+            if (id == this.getBlockId())
             {
-                this.killTorchPart("fire.fire", 1F);
-                if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                if (ep.swingProgress == 0F) //because multipart activates the block again too quickly
+                    this.renewTorches(ep, ist);
+                return true;
             }
-            else
+            else if (id == ConfigCommon.blockIdTorchUnlit)
+            {
+                BlockTorchLit.igniteHeldTorch(this.world(), ist, ep);
+                return true;
+            }
+            else if (id == ConfigCommon.itemIdCloth)
+            {
+                if (ist.getItemDamage() == 0)
+                {
+                    this.killTorchPart("fire.fire", 1F);
+                    if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                }
+                else
+                {
+                    this.killTorchPart("random.fizz", 0.3F);
+                }
+
+                return true;
+            }
+            else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
             {
                 this.killTorchPart("random.fizz", 0.3F);
+                return true;
             }
-
-            return true;
-        }
-        else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
-        {
-            this.killTorchPart("random.fizz", 0.3F);
-            return true;
-        }
-        else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
-        {
-            this.killTorchPart("fire.fire", 1F);
-
-            if (!ep.capabilities.isCreativeMode)
+            else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
-                ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                this.killTorchPart("fire.fire", 1F);
+
+                if (!ep.capabilities.isCreativeMode)
+                {
+                    ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                }
+
+                return true;
             }
-
-            return true;
-        }
-        else if (id == Item.gunpowder.itemID)
-        {
-            int size = ist.stackSize;
-            float strength = size < 5 ? (size * 0.2F) : 1F;
-
-            this.world().newExplosion(ep, this.x(), this.y(), this.z(), strength, size > 5, true);
-
-            if (!ep.capabilities.isCreativeMode)
+            else if (id == Item.gunpowder.itemID)
             {
-                ep.inventory.decrStackSize(ep.inventory.currentItem, 5);
-            }
+                int size = ist.stackSize;
+                float strength = size < 5 ? (size * 0.2F) : 1F;
 
-            return true;
+                this.world().newExplosion(ep, this.x(), this.y(), this.z(), strength, size > 5, true);
+
+                if (!ep.capabilities.isCreativeMode)
+                {
+                    ep.inventory.decrStackSize(ep.inventory.currentItem, 5);
+                }
+
+                return true;
+            }
         }
 
         return false;

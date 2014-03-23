@@ -53,10 +53,10 @@ public class TorchPartUnlit extends TorchPart
     @Override
     public boolean activate(EntityPlayer ep, MovingObjectPosition mop, ItemStack ist)
     {
-        if (ep.isSneaking()) return false;
-
-        if (ist == null)
+        if (ep.isSneaking())
         {
+            if (ist != null) return false;
+
             if (!this.world().isRemote)
             {
                 ItemStack torch = new ItemStack(this.getBlockId(), 1, this.age);
@@ -67,52 +67,60 @@ public class TorchPartUnlit extends TorchPart
 
             return true;
         }
-
-        int id = ist.itemID;
-        int d = ist.getItemDamage();
-
-        if (id == ConfigCommon.blockIdTorchLit)
+        else if (ist != null)
         {
-            this.igniteTorchPart("fire.fire");
-            return true;
-        }
-        else if (IgnitersHandler.canIgniteSetTorch(id, d))
-        {
-            if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
+            int id = ist.itemID;
+            int d = ist.getItemDamage();
+
+            if (id == ConfigCommon.blockIdTorchLit)
             {
                 this.igniteTorchPart("fire.fire");
+                return true;
             }
-            else if (id == Item.flint.itemID)
+            else if (IgnitersHandler.canIgniteSetTorch(id, d))
             {
-                this.igniteTorchPart("fire.ignite");
-
-                if (!ep.capabilities.isCreativeMode)
+                if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
                 {
-                    ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                    this.igniteTorchPart("fire.fire");
                 }
-            }
-            else if (id == Item.flintAndSteel.itemID)
-            {
-                this.igniteTorchPart("fire.ignite");
-                ist.damageItem(1, ep);
-            }
-            else
-            {
-                this.igniteTorchPart("fire.fire");
-
-                if (!ep.capabilities.isCreativeMode)
+                else if (id == Item.flint.itemID)
                 {
-                    if (Item.itemsList[id].isDamageable())
-                    {
-                        ist.damageItem(1, ep);
-                    }
-                    else
+                    this.igniteTorchPart("fire.ignite");
+
+                    if (!ep.capabilities.isCreativeMode)
                     {
                         ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
                     }
                 }
-            }
+                else if (id == Item.flintAndSteel.itemID)
+                {
+                    this.igniteTorchPart("fire.ignite");
+                    ist.damageItem(1, ep);
+                }
+                else
+                {
+                    this.igniteTorchPart("fire.fire");
 
+                    if (!ep.capabilities.isCreativeMode)
+                    {
+                        if (Item.itemsList[id].isDamageable())
+                        {
+                            ist.damageItem(1, ep);
+                        }
+                        else
+                        {
+                            ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                        }
+                    }
+                }
+
+                return true;
+            }
+        }
+
+        if (BlockTorchUnlit.canIgnite(ep))
+        {
+            this.igniteTorchPart("fire.fire");
             return true;
         }
 
