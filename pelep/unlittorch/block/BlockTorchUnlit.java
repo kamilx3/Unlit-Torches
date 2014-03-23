@@ -64,7 +64,7 @@ public class BlockTorchUnlit extends BlockTorch
         int id = ist.itemID;
         int d = ist.getItemDamage();
 
-        if (id == ConfigCommon.blockIdTorchLit)
+        if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
             igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
@@ -76,7 +76,7 @@ public class BlockTorchUnlit extends BlockTorch
             int age = te.getAge();
             boolean eternal = te.isEternal();
 
-            if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
+            if (id == Item.bucketLava.itemID)
             {
                 igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
             }

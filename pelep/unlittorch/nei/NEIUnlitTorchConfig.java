@@ -13,7 +13,6 @@ import pelep.unlittorch.handler.IgnitersHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author pelep
@@ -30,9 +29,13 @@ public class NEIUnlitTorchConfig implements IConfigureNEI
 
         torches.add(ConfigCommon.blockIdTorchLit);
         torches.add(ConfigCommon.blockIdTorchUnlit);
+        ignitersHeld.add(Block.torchWood.blockID);
+        ignitersHeld.add(ConfigCommon.blockIdTorchLit);
         ignitersHeld.add(Block.lavaMoving.blockID);
         ignitersHeld.add(Block.lavaStill.blockID);
         ignitersHeld.add(Block.fire.blockID);
+        ignitersSet.add(Block.torchWood.blockID);
+        ignitersSet.add(ConfigCommon.blockIdTorchLit);
         addRanges(ignitersHeld, IgnitersHandler.getHeldIgniters());
         addRanges(ignitersSet, IgnitersHandler.getSetIgniters());
         extinguishers.add(ConfigCommon.itemIdCloth);
@@ -54,10 +57,9 @@ public class NEIUnlitTorchConfig implements IConfigureNEI
 
     private static void addRanges(MultiItemRange mr, HashMap<Integer, ArrayList<Integer>> map)
     {
-        for (Map.Entry<Integer, ArrayList<Integer>> e : map.entrySet())
+        for (int id : map.keySet())
         {
-            int id = e.getKey();
-            ArrayList<Integer> mds = e.getValue();
+            ArrayList<Integer> mds = map.get(id);
 
             if (mds == null)
             {

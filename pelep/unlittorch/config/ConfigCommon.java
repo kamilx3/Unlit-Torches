@@ -1,6 +1,5 @@
 package pelep.unlittorch.config;
 
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.Property;
@@ -26,8 +25,8 @@ public class ConfigCommon
     public static int torchRandomKillChance;
     public static int torchDestroyChance;
 
-    public static String igniterIdsHeld = (Block.torchWood.blockID + "");
-    public static String igniterIdsSet = (Block.torchWood.blockID + "," + Item.flint.itemID + "," + Item.flintAndSteel.itemID + "," + Item.bucketLava.itemID);
+    public static String igniterIdsHeld = "";
+    public static String igniterIdsSet = (Item.flint.itemID + "," + Item.flintAndSteel.itemID + "," + Item.bucketLava.itemID);
 
     public static int mobZombieTorch;
     public static int mobSkeletonTorch;

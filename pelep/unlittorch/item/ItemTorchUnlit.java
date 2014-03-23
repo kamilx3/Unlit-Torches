@@ -2,6 +2,7 @@ package pelep.unlittorch.item;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +48,8 @@ public class ItemTorchUnlit extends ItemTorch
 
             int id = world.getBlockId(x, y, z);
 
-            if (id != ConfigCommon.blockIdTorchLit && IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z)))
+            if (id != ConfigCommon.blockIdTorchLit && (id == Block.torchWood.blockID ||
+                    IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z))))
             {
                 p.swingItem();
                 BlockTorchLit.igniteHeldTorch(world, ist, p);

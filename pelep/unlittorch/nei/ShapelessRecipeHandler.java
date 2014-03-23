@@ -34,6 +34,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         else if (result.itemID == ConfigCommon.blockIdTorchLit)
         {
             this.addTorchLit();
+            this.addTorchLit(new ItemStack(Block.torchWood));
             this.addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
             this.addTorchLit(new ItemStack(Item.flint));
             this.addTorchLit(new ItemStack(Item.flintAndSteel));
@@ -68,13 +69,15 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         else if (ingr.itemID == ConfigCommon.blockIdTorchUnlit)
         {
             this.addStick();
+            this.addTorchLit(new ItemStack(Block.torchWood));
             this.addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
             this.addTorchLit(new ItemStack(Item.flint));
             this.addTorchLit(new ItemStack(Item.flintAndSteel));
             this.addTorchLit(new ItemStack(Item.bucketLava));
             this.addTorchUnlit();
         }
-        else if (ingr.itemID == Item.flint.itemID || ingr.itemID == Item.flintAndSteel.itemID || ingr.itemID == Item.bucketLava.itemID)
+        else if (ingr.itemID == Block.torchWood.blockID || ingr.itemID == Item.flint.itemID ||
+                ingr.itemID == Item.flintAndSteel.itemID || ingr.itemID == Item.bucketLava.itemID)
         {
             this.addTorchLit(ingr.copy());
         }
@@ -181,8 +184,9 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
                 tip.add(EnumChatFormatting.GRAY + translate("unlittorch.notConsumed"));
                 tip.add(EnumChatFormatting.RED + translate("unlittorch.willBeDamaged"));
             }
-            else if ((ist.itemID == ConfigCommon.itemIdCloth && ist.getItemDamage() == 1) ||
-                    ist.itemID == ConfigCommon.blockIdTorchLit && ist.getItemDamage() == 0)
+            else if (ist.itemID == Block.torchWood.blockID ||
+                    (ist.itemID == ConfigCommon.blockIdTorchLit && ist.getItemDamage() == 0) ||
+                    (ist.itemID == ConfigCommon.itemIdCloth && ist.getItemDamage() == 1))
             {
                 tip.add(EnumChatFormatting.GRAY + translate("unlittorch.notConsumed"));
             }

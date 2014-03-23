@@ -47,11 +47,6 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
                         continue;
                     }
                 }
-                else if (t2 == -1 && ist.itemID == ConfigCommon.blockIdTorchUnlit)
-                {
-                    t2 = i;
-                    continue;
-                }
 
                 return false;
             }
@@ -61,26 +56,18 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
 
         ItemStack ist1 = ic.getStackInSlot(t1);
         ItemStack ist2 = ic.getStackInSlot(t2);
+        int d1 = ist1.getItemDamage();
+        int d2 = ist2.getItemDamage();
 
-        if (ist2.itemID == ConfigCommon.blockIdTorchLit)
+        if (d1 != d2)
         {
-            int d1 = ist1.getItemDamage();
-            int d2 = ist2.getItemDamage();
-
-            if (d1 != d2)
-            {
-                double d = (d1 + d2) / 2;
-                this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
-                this.torch.setTagCompound(d1 < d2 ? ist2.getTagCompound() : ist1.getTagCompound());
-                return true;
-            }
-
-            return false;
+            double d = (d1 + d2) / 2;
+            this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
+            this.torch.setTagCompound(d1 < d2 ? ist2.getTagCompound() : ist1.getTagCompound());
+            return true;
         }
 
-        this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ist2.getItemDamage());
-        this.torch.setTagCompound(ist2.getTagCompound());
-        return true;
+        return false;
     }
 
     @Override
@@ -133,11 +120,6 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
                         continue;
                     }
                 }
-                else if (t2 == -1 && ist.itemID == ConfigCommon.blockIdTorchUnlit)
-                {
-                    t2 = i;
-                    continue;
-                }
 
                 return;
             }
@@ -148,24 +130,17 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
         ItemStack ist1 = inv.getStackInSlot(t1);
         ItemStack ist2 = inv.getStackInSlot(t2);
 
-        if (ist2.itemID == ConfigCommon.blockIdTorchUnlit)
+        double d = (ist1.getItemDamage() + ist2.getItemDamage()) / 2;
+
+        if (ist1.getItemDamage() < ist2.getItemDamage())
         {
             ist1.stackSize++;
+            ist1.setItemDamage(MathHelper.ceiling_double_int(d));
         }
         else
         {
-            double d = (ist1.getItemDamage() + ist2.getItemDamage()) / 2;
-
-            if (ist1.getItemDamage() < ist2.getItemDamage())
-            {
-                ist1.stackSize++;
-                ist1.setItemDamage(MathHelper.ceiling_double_int(d));
-            }
-            else
-            {
-                ist2.stackSize++;
-                ist2.setItemDamage(MathHelper.ceiling_double_int(d));
-            }
+            ist2.stackSize++;
+            ist2.setItemDamage(MathHelper.ceiling_double_int(d));
         }
     }
 

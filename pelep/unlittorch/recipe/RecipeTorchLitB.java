@@ -1,6 +1,7 @@
 package pelep.unlittorch.recipe;
 
 import cpw.mods.fml.common.ICraftingHandler;
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.InventoryCrafting;
@@ -9,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.handler.IgnitersHandler;
 
 /**
  * @author pelep
@@ -44,10 +46,19 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
                 }
                 else if (f == -1)
                 {
-                    if (id == Item.flint.itemID || id == Item.flintAndSteel.itemID || id == Item.bucketLava.itemID)
+                    if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
                     {
                         f = i;
                         continue;
+                    }
+                    else if (id == Item.flint.itemID || id == Item.flintAndSteel.itemID || id == Item.bucketLava.itemID)
+                    {
+                        //from the set torch list to check itemstack md not block md
+                        if (IgnitersHandler.canIgniteSetTorch(id, ist.getItemDamage()))
+                        {
+                            f = i;
+                            continue;
+                        }
                     }
                 }
 
@@ -105,12 +116,12 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
 
                 int id = ist.itemID;
 
-                if (t == -1 && (id == ConfigCommon.blockIdTorchUnlit))
+                if (t == -1 && id == ConfigCommon.blockIdTorchUnlit)
                 {
                     t = i;
                     continue;
                 }
-                else if (f == -1 && id == Item.flintAndSteel.itemID)
+                else if (f == -1 && id == Item.flintAndSteel.itemID || id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
                 {
                     f = i;
                     continue;
@@ -122,10 +133,10 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
 
         if (n != 2 || t == -1 || f == -1) return;
 
-        ItemStack fs = inv.getStackInSlot(f);
-        fs.stackSize++;
+        ItemStack ign = inv.getStackInSlot(f);
+        ign.stackSize++;
 
-        if (fs.attemptDamageItem(1, p.getRNG()))
+        if (ign.itemID == Item.flintAndSteel.itemID && ign.attemptDamageItem(1, p.getRNG()))
         {
             inv.setInventorySlotContents(f, null);
         }
