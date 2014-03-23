@@ -48,28 +48,8 @@ public class ItemTorchUnlit extends ItemTorch
         {
             return true;
         }
-        else if (id == Block.snow.blockID)
-        {
-            side = 1;
-        }
-        else if (Block.vine.blockID != id &&
-                Block.tallGrass.blockID != id &&
-                Block.deadBush.blockID != id &&
-                (Block.blocksList[id] == null ||
-                !Block.blocksList[id].isBlockReplaceable(world, x, y, z)))
-        {
-            switch (side)
-            {
-                case 0: z--; break;
-                case 1: z++; break;
-                case 2: y--; break;
-                case 3: y++; break;
-                case 4: x--; break;
-                case 5: x++;
-            }
-        }
 
-        return world.canPlaceEntityOnSide(this.itemID, x, y, z, false, side, null, ist);
+        return super.canPlaceItemBlockOnSide(world, x, y, z, side, ep, ist);
     }
 
     @Override
@@ -82,7 +62,7 @@ public class ItemTorchUnlit extends ItemTorch
 
             int id = world.getBlockId(x, y, z);
 
-            if (id != ConfigCommon.blockIdTorchLit && (id == Block.torchWood.blockID ||
+            if (id == Block.torchWood.blockID || (id != ConfigCommon.blockIdTorchLit &&
                     IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z))))
             {
                 p.swingItem();

@@ -123,11 +123,11 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             {
                 if (ConfigCommon.torchSingleUse)
                 {
-                    destroyItemTorch(world, p, slot);
+                    destroyItem(world, p, slot);
                 }
                 else
                 {
-                    killItemTorch(world, p, ist, "fire.fire", 1F);
+                    extinguishItem(world, p, ist, "fire.fire", 1F);
                 }
 
                 return;
@@ -137,11 +137,11 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             {
                 if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
                 {
-                    destroyItemTorch(world, p, slot);
+                    destroyItem(world, p, slot);
                 }
                 else
                 {
-                    killItemTorch(world, p, ist, "fire.fire", 1F);
+                    extinguishItem(world, p, ist, "fire.fire", 1F);
                 }
 
                 return;
@@ -153,7 +153,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
             if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(15) == 0) || itemRand.nextInt(25) == 0))
             {
-                killItemTorch(world, p, ist, "random.fizz", 0.3F);
+                extinguishItem(world, p, ist, "random.fizz", 0.3F);
                 return;
             }
 
@@ -179,7 +179,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
         if (ei.handleWaterMovement())
         {
-            killEntityTorch(ei, "random.fizz", 0.3F);
+            extinguishEntity(ei, "random.fizz", 0.3F);
             return false;
         }
 
@@ -189,11 +189,11 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         {
             if (ConfigCommon.torchSingleUse)
             {
-                destroyEntityTorch(ei);
+                destroyEntity(ei);
             }
             else
             {
-                killEntityTorch(ei, "fire.fire", 1F);
+                extinguishEntity(ei, "fire.fire", 1F);
             }
 
             return false;
@@ -203,11 +203,11 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         {
             if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
             {
-                destroyEntityTorch(ei);
+                destroyEntity(ei);
             }
             else
             {
-                killEntityTorch(ei, "fire.fire", 1F);
+                extinguishEntity(ei, "fire.fire", 1F);
             }
 
             return false;
@@ -219,7 +219,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
         if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
         {
-            killEntityTorch(ei, "random.fizz", 0.3F);
+            extinguishEntity(ei, "random.fizz", 0.3F);
             return false;
         }
 
@@ -232,25 +232,25 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     //----------------------------------mine----------------------------------//
 
 
-    private static void destroyItemTorch(World world, EntityPlayer p, int slot)
+    private static void destroyItem(World world, EntityPlayer p, int slot)
     {
         world.playSoundAtEntity(p, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
         p.inventory.setInventorySlotContents(slot, null);
     }
 
-    private static void killItemTorch(World world, EntityPlayer p, ItemStack ist, String sound, float volume)
+    private static void extinguishItem(World world, EntityPlayer p, ItemStack ist, String sound, float volume)
     {
         world.playSoundAtEntity(p, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
         ist.itemID = ConfigCommon.blockIdTorchUnlit;
     }
 
-    private static void destroyEntityTorch(EntityItem ei)
+    private static void destroyEntity(EntityItem ei)
     {
         ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, "fire.fire", 1F, ei.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         ei.setDead();
     }
 
-    private static void killEntityTorch(EntityItem ei, String sound, float volume)
+    private static void extinguishEntity(EntityItem ei, String sound, float volume)
     {
         ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, sound, volume, ei.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;
