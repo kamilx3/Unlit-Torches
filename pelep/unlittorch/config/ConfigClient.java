@@ -12,7 +12,7 @@ import net.minecraftforge.common.Configuration;
 @SideOnly(Side.CLIENT)
 public class ConfigClient
 {
-    private static boolean overrideTorchRecipe;
+    private static boolean torchRecipeYieldsUnlit;
     private static int torchRecipeYieldCount;
     private static boolean torchUpdates;
     private static boolean torchSingleUse;
@@ -25,7 +25,7 @@ public class ConfigClient
     {
         ConfigCommon.loadConfig(config);
 
-        overrideTorchRecipe = ConfigCommon.overrideTorchRecipe;
+        torchRecipeYieldsUnlit = ConfigCommon.torchRecipeYieldsUnlit;
         torchRecipeYieldCount = ConfigCommon.torchRecipeYieldCount;
         torchUpdates = ConfigCommon.torchUpdates;
         torchSingleUse = ConfigCommon.torchSingleUse;
@@ -37,7 +37,7 @@ public class ConfigClient
 
     public static void desyncFromServer()
     {
-        ConfigCommon.overrideTorchRecipe = overrideTorchRecipe;
+        ConfigCommon.torchRecipeYieldsUnlit = torchRecipeYieldsUnlit;
         ConfigCommon.torchRecipeYieldCount = torchRecipeYieldCount;
         ConfigCommon.torchUpdates = torchUpdates;
         ConfigCommon.torchSingleUse = torchSingleUse;

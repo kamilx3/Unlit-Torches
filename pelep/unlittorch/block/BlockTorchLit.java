@@ -11,11 +11,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet132TileEntityData;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.handler.IgnitersHandler;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.util.Random;
@@ -188,10 +186,7 @@ public class BlockTorchLit extends BlockTorch
         int ta = te.getAge();
         int ia = ist.getItemDamage();
 
-        if (ta == ia)
-        {
-            return;
-        }
+        if (ta == ia) return;
 
         double d = (ta + ia) / 2;
         int age = MathHelper.ceiling_double_int(d);
@@ -220,9 +215,7 @@ public class BlockTorchLit extends BlockTorch
             ist.stackSize--;
 
             if (!p.inventory.addItemStackToInventory(torch))
-            {
                 p.dropPlayerItemWithRandomChoice(torch, false).delayBeforeCanPickup = 10;
-            }
         }
         else
         {

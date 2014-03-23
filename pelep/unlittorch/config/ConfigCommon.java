@@ -14,7 +14,7 @@ public class ConfigCommon
     public static int blockIdTorchUnlit;
     public static int itemIdCloth;
 
-    public static boolean overrideTorchRecipe;
+    public static boolean torchRecipeYieldsUnlit;
     public static int torchRecipeYieldCount;
 
     public static boolean torchUpdates;
@@ -39,8 +39,8 @@ public class ConfigCommon
         blockIdTorchUnlit = config.getBlock(Configuration.CATEGORY_BLOCK, "IdBlockTorchUnlit", 550, "Block ID for the UNLIT torch").getInt();
         itemIdCloth = config.get(Configuration.CATEGORY_ITEM, "IdCloth", 4201, "Item ID for cloth").getInt();
 
-        overrideTorchRecipe = config.get("RECIPE", "OverrideTorchRecipe", true, "True if the torch recipe should yield unlit torches").getBoolean(true);
-        torchRecipeYieldCount = getInt(1, 4, config.get("RECIPE", "TorchRecipeYieldCount", 2, "Number of torches the torch recipe should yield"));
+        torchRecipeYieldsUnlit = config.get("RECIPE", "OverrideTorchRecipe", true, "True if the torch recipe should yield unlit torches").getBoolean(true);
+        torchRecipeYieldCount = getInt(1, 9, config.get("RECIPE", "TorchRecipeYieldCount", 4, "Number of torches the torch recipe should yield. Lower it for a challenge. Min:1 Max:9"));
 
         torchUpdates = config.get("TORCH", "TorchUpdates", true, "Set to false to disable torches aging, dying out, etc.").getBoolean(false);
         torchDropsUnlit = config.get("TORCH", "DropsUnlit", false, "True if lit torches should drop as UNLIT torches").getBoolean(false);

@@ -166,7 +166,7 @@ public class ProxyCommon
     {
         if (Loader.isModLoaded("ForgeMultipart"))
         {
-            LogHandler.info("Registering torch parts to Forge Multipart");
+            LogHandler.info("Registering Forge Multipart parts");
             new TorchPartFactory();
         }
     }

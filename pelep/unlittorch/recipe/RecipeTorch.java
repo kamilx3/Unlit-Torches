@@ -56,7 +56,7 @@ public class RecipeTorch implements IRecipe
 
         if (c == (s - i))
         {
-            if (ConfigCommon.overrideTorchRecipe)
+            if (ConfigCommon.torchRecipeYieldsUnlit)
             {
                 this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, ConfigCommon.torchRecipeYieldCount, 0);
             }
