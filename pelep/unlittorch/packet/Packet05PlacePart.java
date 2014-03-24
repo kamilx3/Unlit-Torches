@@ -12,19 +12,25 @@ import pelep.unlittorch.multipart.TorchPartFactory;
 public class Packet05PlacePart extends PacketCustom
 {
     @Override
-    public void write(ByteArrayDataOutput data)
+    public void encode(ByteArrayDataOutput data)
     {
     }
 
     @Override
-    public void read(ByteArrayDataInput data) throws ProtocolException
+    public void decode(ByteArrayDataInput data) throws ProtocolException
     {
     }
 
     @Override
-    public void execute(EntityPlayer p, boolean remote) throws ProtocolException
+    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
-        if (remote) throw new ProtocolException("Packet was received on wrong side!");
+        if (client) throw new ProtocolException("Packet was received on wrong side!");
+        TorchPartFactory.place(p, p.worldObj);
+    }
+
+    @Override
+    public void handleServer(EntityPlayer p)
+    {
         TorchPartFactory.place(p, p.worldObj);
     }
 

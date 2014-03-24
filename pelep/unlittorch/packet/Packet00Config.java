@@ -18,7 +18,7 @@ public class Packet00Config extends PacketCustom
     public Packet00Config() {}
 
     @Override
-    public void write(ByteArrayDataOutput data)
+    public void encode(ByteArrayDataOutput data)
     {
         byte b = 0;
         b |= ConfigCommon.torchRecipeYieldsUnlit ? 1 << 0 : 0;
@@ -31,7 +31,7 @@ public class Packet00Config extends PacketCustom
     }
 
     @Override
-    public void read(ByteArrayDataInput data) throws ProtocolException
+    public void decode(ByteArrayDataInput data) throws ProtocolException
     {
         this.b = data.readByte();
         this.torchLifespanMax = data.readShort();
@@ -39,20 +39,21 @@ public class Packet00Config extends PacketCustom
     }
 
     @Override
-    public void execute(EntityPlayer p, boolean remote) throws ProtocolException
+    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
-        if (remote)
-        {
-            ConfigCommon.torchRecipeYieldsUnlit = (this.b & (1 << 0)) == (1 << 0);
-            ConfigCommon.torchUpdates = (this.b & (1 << 1)) == (1 << 1);
-            ConfigCommon.torchSingleUse = (this.b & (1 << 2)) == (1 << 2);
-            ConfigCommon.torchLifespanMax = this.torchLifespanMax;
-            ConfigCommon.torchRecipeYieldCount = this.torchRecipeYieldCount;
-        }
-        else
-        {
-            throw new ProtocolException("Config packet received on server side!");
-        }
+        if (!client) throw new ProtocolException("Config packet received on server side!");
+
+        ConfigCommon.torchRecipeYieldsUnlit = (this.b & (1 << 0)) == (1 << 0);
+        ConfigCommon.torchUpdates = (this.b & (1 << 1)) == (1 << 1);
+        ConfigCommon.torchSingleUse = (this.b & (1 << 2)) == (1 << 2);
+        ConfigCommon.torchLifespanMax = this.torchLifespanMax;
+        ConfigCommon.torchRecipeYieldCount = this.torchRecipeYieldCount;
+    }
+
+    @Override
+    public void handleServer(EntityPlayer p) throws ProtocolException
+    {
+        throw new ProtocolException("Config packet received on server side!");
     }
 
     @Override

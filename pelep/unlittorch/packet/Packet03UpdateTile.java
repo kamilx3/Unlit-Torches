@@ -31,7 +31,7 @@ public class Packet03UpdateTile extends PacketCustom
     }
 
     @Override
-    public void write(ByteArrayDataOutput data)
+    public void encode(ByteArrayDataOutput data)
     {
         data.writeInt(this.x);
         data.writeInt(this.y);
@@ -41,7 +41,7 @@ public class Packet03UpdateTile extends PacketCustom
     }
 
     @Override
-    public void read(ByteArrayDataInput data) throws ProtocolException
+    public void decode(ByteArrayDataInput data) throws ProtocolException
     {
         this.x = data.readInt();
         this.y = data.readInt();
@@ -51,22 +51,23 @@ public class Packet03UpdateTile extends PacketCustom
     }
 
     @Override
-    public void execute(EntityPlayer p, boolean remote) throws ProtocolException
+    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
-        if (remote)
+        if (!client) throw new ProtocolException("Packet was received on wrong side!");
+
+        if (p.worldObj.provider.dimensionId == this.dim &&
+            p.worldObj.blockExists(this.x, this.y, this.z) &&
+            p.worldObj.getBlockId(this.x, this.y, this.z) == ConfigCommon.blockIdTorchLit)
         {
-            if (p.worldObj.provider.dimensionId == this.dim &&
-                p.worldObj.blockExists(this.x, this.y, this.z) &&
-                p.worldObj.getBlockId(this.x, this.y, this.z) == ConfigCommon.blockIdTorchLit)
-            {
-                TileEntity te = p.worldObj.getBlockTileEntity(this.x, this.y, this.z);
-                ((TileEntityTorch)te).setAge(this.age);
-            }
+            TileEntity te = p.worldObj.getBlockTileEntity(this.x, this.y, this.z);
+            ((TileEntityTorch)te).setAge(this.age);
         }
-        else
-        {
-            throw new ProtocolException("Packet was received on wrong side!");
-        }
+    }
+
+    @Override
+    public void handleServer(EntityPlayer p) throws ProtocolException
+    {
+        throw new ProtocolException("Packet was received on wrong side!");
     }
 
     @Override

@@ -4,6 +4,7 @@ import static pelep.unlittorch.UnlitTorch.MOD_CHANNEL;
 
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 import net.minecraft.entity.player.EntityPlayer;
@@ -28,9 +29,16 @@ public class PacketHandler implements IPacketHandler
                 ByteArrayDataInput data = ByteStreams.newDataInput(pkt.data);
                 int id = data.readUnsignedByte();
                 EntityPlayer p = (EntityPlayer) player;
-                PacketCustom packet = PacketCustom.construct(id);
-                packet.read(data);
-                packet.execute(p, p.worldObj.isRemote);
+                PacketCustom packet = PacketCustom.create(id);
+                packet.decode(data);
+                if (FMLCommonHandler.instance().getSide().isClient())
+                {
+                    packet.handleClient(p, p.worldObj.isRemote);
+                }
+                else
+                {
+                    packet.handleServer(p);
+                }
             }
             catch (ProtocolException e)
             {

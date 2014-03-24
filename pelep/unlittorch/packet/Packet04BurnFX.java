@@ -26,7 +26,7 @@ public class Packet04BurnFX extends PacketCustom
     }
 
     @Override
-    public void write(ByteArrayDataOutput data)
+    public void encode(ByteArrayDataOutput data)
     {
         data.writeInt(this.x);
         data.writeInt(this.y);
@@ -35,7 +35,7 @@ public class Packet04BurnFX extends PacketCustom
     }
 
     @Override
-    public void read(ByteArrayDataInput data) throws ProtocolException
+    public void decode(ByteArrayDataInput data) throws ProtocolException
     {
         this.x = data.readInt();
         this.y = data.readInt();
@@ -44,61 +44,62 @@ public class Packet04BurnFX extends PacketCustom
     }
 
     @Override
-    public void execute(EntityPlayer p, boolean remote) throws ProtocolException
+    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
-        if (remote)
-        {
-            double dx = this.x + 0.5D;
-            double dy = this.y + 0.7D;
-            double dz = this.z + 0.5D;
+        if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
-            switch (this.md)
-            {
-                case 1:
-                    p.worldObj.spawnParticle("flame", dx - 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("flame", dx - 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx - 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx - 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx - 0.375D, dy - 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx - 0.425D, dy - 0.450D, dz, 0D, 0D, 0D);
-                    break;
-                case 2:
-                    p.worldObj.spawnParticle("flame", dx + 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("flame", dx + 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx + 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx + 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx + 0.375D, dy - 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx + 0.425D, dy - 0.450D, dz, 0D, 0D, 0D);
-                    break;
-                case 3:
-                    p.worldObj.spawnParticle("flame", dx, dy + 0.225D, dz - 0.275D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("flame", dx, dy + 0.000D, dz - 0.325D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy + 0.225D, dz - 0.275D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy + 0.000D, dz - 0.325D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.225D, dz - 0.375D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.450D, dz - 0.425D, 0D, 0D, 0D);
-                    break;
-                case 4:
-                    p.worldObj.spawnParticle("flame", dx, dy + 0.225D, dz + 0.275D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("flame", dx, dy + 0.000D, dz + 0.325D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy + 0.225D, dz + 0.275D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy + 0.000D, dz + 0.325D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.225D, dz + 0.375D, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.450D, dz + 0.425D, 0D, 0D, 0D);
-                    break;
-                default:
-                    p.worldObj.spawnParticle("flame", dx, dy - 0.000D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("flame", dx, dy - 0.250D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.000D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.225D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.450D, dz, 0D, 0D, 0D);
-                    p.worldObj.spawnParticle("smoke", dx, dy - 0.675D, dz, 0D, 0D, 0D);
-            }
-        }
-        else
+        double dx = this.x + 0.5D;
+        double dy = this.y + 0.7D;
+        double dz = this.z + 0.5D;
+
+        switch (this.md)
         {
-            throw new ProtocolException("Packet was received on wrong side!");
+            case 1:
+                p.worldObj.spawnParticle("flame", dx - 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("flame", dx - 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx - 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx - 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx - 0.375D, dy - 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx - 0.425D, dy - 0.450D, dz, 0D, 0D, 0D);
+                break;
+            case 2:
+                p.worldObj.spawnParticle("flame", dx + 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("flame", dx + 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx + 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx + 0.325D, dy + 0.000D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx + 0.375D, dy - 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx + 0.425D, dy - 0.450D, dz, 0D, 0D, 0D);
+                break;
+            case 3:
+                p.worldObj.spawnParticle("flame", dx, dy + 0.225D, dz - 0.275D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("flame", dx, dy + 0.000D, dz - 0.325D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy + 0.225D, dz - 0.275D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy + 0.000D, dz - 0.325D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.225D, dz - 0.375D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.450D, dz - 0.425D, 0D, 0D, 0D);
+                break;
+            case 4:
+                p.worldObj.spawnParticle("flame", dx, dy + 0.225D, dz + 0.275D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("flame", dx, dy + 0.000D, dz + 0.325D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy + 0.225D, dz + 0.275D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy + 0.000D, dz + 0.325D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.225D, dz + 0.375D, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.450D, dz + 0.425D, 0D, 0D, 0D);
+                break;
+            default:
+                p.worldObj.spawnParticle("flame", dx, dy - 0.000D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("flame", dx, dy - 0.250D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.000D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.225D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.450D, dz, 0D, 0D, 0D);
+                p.worldObj.spawnParticle("smoke", dx, dy - 0.675D, dz, 0D, 0D, 0D);
         }
+    }
+
+    @Override
+    public void handleServer(EntityPlayer p) throws ProtocolException
+    {
+        throw new ProtocolException("Packet was received on wrong side!");
     }
 
     @Override

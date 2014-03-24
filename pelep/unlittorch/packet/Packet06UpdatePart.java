@@ -34,7 +34,7 @@ public class Packet06UpdatePart extends PacketCustom
     }
 
     @Override
-    public void write(ByteArrayDataOutput data)
+    public void encode(ByteArrayDataOutput data)
     {
         data.writeInt(this.index);
         data.writeInt(this.x);
@@ -45,7 +45,7 @@ public class Packet06UpdatePart extends PacketCustom
     }
 
     @Override
-    public void read(ByteArrayDataInput data) throws ProtocolException
+    public void decode(ByteArrayDataInput data) throws ProtocolException
     {
         this.index = data.readInt();
         this.x = data.readInt();
@@ -56,9 +56,9 @@ public class Packet06UpdatePart extends PacketCustom
     }
 
     @Override
-    public void execute(EntityPlayer p, boolean remote) throws ProtocolException
+    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
-        if (!remote) throw new ProtocolException("Packet was received on wrong side!");
+        if (!client) throw new ProtocolException("Packet was received on wrong side!");
         if (p.worldObj.provider.dimensionId != this.dim || !p.worldObj.blockExists(this.x, this.y, this.z)) return;
 
         TileEntity te = p.worldObj.getBlockTileEntity(this.x, this.y, this.z);
@@ -78,6 +78,12 @@ public class Packet06UpdatePart extends PacketCustom
                 //
             }
         }
+    }
+
+    @Override
+    public void handleServer(EntityPlayer p) throws ProtocolException
+    {
+        throw new ProtocolException("Packet was received on wrong side!");
     }
 
     @Override

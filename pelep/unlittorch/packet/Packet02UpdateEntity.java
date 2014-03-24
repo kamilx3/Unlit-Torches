@@ -25,39 +25,40 @@ public class Packet02UpdateEntity extends PacketCustom
     }
 
     @Override
-    public void write(ByteArrayDataOutput data)
+    public void encode(ByteArrayDataOutput data)
     {
         data.writeInt(this.id);
         data.writeInt(this.dim);
     }
 
     @Override
-    public void read(ByteArrayDataInput data) throws ProtocolException
+    public void decode(ByteArrayDataInput data) throws ProtocolException
     {
         this.id = data.readInt();
         this.dim = data.readInt();
     }
 
     @Override
-    public void execute(EntityPlayer p, boolean remote) throws ProtocolException
+    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
-        if (remote)
-        {
-            if (p.worldObj.provider.dimensionId == this.dim)
-            {
-                Entity e = p.worldObj.getEntityByID(this.id);
+        if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
-                if (e != null && e instanceof EntityItem)
-                {
-                    EntityItem ei = (EntityItem) e;
-                    ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;
-                }
+        if (p.worldObj.provider.dimensionId == this.dim)
+        {
+            Entity e = p.worldObj.getEntityByID(this.id);
+
+            if (e != null && e instanceof EntityItem)
+            {
+                EntityItem ei = (EntityItem) e;
+                ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;
             }
         }
-        else
-        {
-            throw new ProtocolException("Packet was received on wrong side!");
-        }
+    }
+
+    @Override
+    public void handleServer(EntityPlayer p) throws ProtocolException
+    {
+        throw new ProtocolException("Packet was received on wrong side!");
     }
 
     @Override

@@ -33,7 +33,7 @@ abstract class PacketCustom
         packets = builder.build();
     }
 
-    public static PacketCustom construct(int id) throws ProtocolException, ReflectiveOperationException
+    static PacketCustom create(int id) throws ProtocolException, ReflectiveOperationException
     {
         Class<? extends PacketCustom> clazz = packets.get(id);
 
@@ -52,7 +52,7 @@ abstract class PacketCustom
         ByteArrayDataOutput data = ByteStreams.newDataOutput();
 
         data.write(getId());
-        this.write(data);
+        this.encode(data);
 
         Packet250CustomPayload pkt = new Packet250CustomPayload(MOD_CHANNEL, data.toByteArray());
         pkt.isChunkDataPacket = this.isChunkPacket();
@@ -70,11 +70,13 @@ abstract class PacketCustom
         throw new RuntimeException("Packet " + this.getClass().getSimpleName() + " is missing a mapping!");
     }
 
-    public abstract void write(ByteArrayDataOutput data);
+    public abstract void encode(ByteArrayDataOutput data);
 
-    public abstract void read(ByteArrayDataInput data) throws ProtocolException;
+    public abstract void decode(ByteArrayDataInput data) throws ProtocolException;
 
-    public abstract void execute(EntityPlayer p, boolean remote) throws ProtocolException;
+    public abstract void handleClient(EntityPlayer p, boolean client) throws ProtocolException;
+
+    public abstract void handleServer(EntityPlayer p) throws ProtocolException;
 
     protected abstract boolean isChunkPacket();
 }
