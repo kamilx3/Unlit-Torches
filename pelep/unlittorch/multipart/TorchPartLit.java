@@ -88,7 +88,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     {
         if (this.world().isRemote || e.onGround || !(e instanceof EntityArrow)) return;
         if (MathHelper.sqrt_double(e.motionX * e.motionX + e.motionY * e.motionY + e.motionZ * e.motionZ) > 1.2D)
-            this.killTorchPart("fire.fire", 1F);
+            this.extinguishPart("fire.fire", 1F);
     }
 
     //DO NOT MODIFY PART ON CLIENT SIDE
@@ -128,24 +128,24 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
             {
                 if (ist.getItemDamage() == 0)
                 {
-                    this.killTorchPart("fire.fire", 1F);
+                    this.extinguishPart("fire.fire", 1F);
                     if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
                 }
                 else
                 {
-                    this.killTorchPart("random.fizz", 0.3F);
+                    this.extinguishPart("random.fizz", 0.3F);
                 }
 
                 return true;
             }
             else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
             {
-                this.killTorchPart("random.fizz", 0.3F);
+                this.extinguishPart("random.fizz", 0.3F);
                 return true;
             }
             else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
-                this.killTorchPart("fire.fire", 1F);
+                this.extinguishPart("fire.fire", 1F);
 
                 if (!ep.capabilities.isCreativeMode)
                 {
@@ -196,11 +196,11 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         {
             if (ConfigCommon.torchSingleUse)
             {
-                this.destroyTorchPart();
+                this.destroyPart();
             }
             else
             {
-                this.killTorchPart("fire.fire", 1F);
+                this.extinguishPart("fire.fire", 1F);
             }
 
             return;
@@ -208,9 +208,9 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
         if (!this.world().isRemote)
         {
-            if (this.canTorchGetWet() && this.world().rand.nextInt(10) == 0)
+            if (this.isWet() && this.world().rand.nextInt(10) == 0)
             {
-                this.killTorchPart("random.fizz", 0.3F);
+                this.extinguishPart("random.fizz", 0.3F);
                 return;
             }
 
@@ -218,11 +218,11 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
             {
                 if (this.world().rand.nextInt(100) < ConfigCommon.torchDestroyChance)
                 {
-                    this.destroyTorchPart();
+                    this.destroyPart();
                 }
                 else
                 {
-                    this.killTorchPart("fire.fire", 1F);
+                    this.extinguishPart("fire.fire", 1F);
                 }
 
                 return;
@@ -234,7 +234,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         this.chunk.setChunkModified();
     }
 
-    private void killTorchPart(String sound, float volume)
+    private void extinguishPart(String sound, float volume)
     {
         if (this.world().isRemote) return;
 
@@ -252,7 +252,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         }
     }
 
-    private void destroyTorchPart()
+    private void destroyPart()
     {
         if (this.world().isRemote) return;
         Packet04BurnFX pkt = new Packet04BurnFX(this.x(), this.y(), this.z(), this.meta);
@@ -285,7 +285,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     }
 
     //replacement for world#canLightningStrikeAt(x, y, z)
-    private boolean canTorchGetWet()
+    private boolean isWet()
     {
         if (!this.world().isRaining())
         {

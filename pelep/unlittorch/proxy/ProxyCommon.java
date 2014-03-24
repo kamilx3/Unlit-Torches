@@ -62,10 +62,7 @@ public class ProxyCommon
     {
         LogHandler.info("Modifying block torch");
         Block.blocksList[Block.torchWood.blockID] = null;
-        //to be honest, i don't remember why i didn't just extend BlockTorch in the first place.
-        //it would have been much less prone to incompatibilities, but now that the new torch has a unique
-        //id, i don't see much point in extending it anymore. replacing the vanilla torch here is really
-        //just for convenience. the mod will function properly without this part
+        //make vanilla torches turn into modded ones. technically, without actually replacing it
         BlockTorch blockTorch = new BlockTorch(Block.torchWood.blockID)
         {
             @Override
@@ -166,7 +163,7 @@ public class ProxyCommon
     {
         if (Loader.isModLoaded("ForgeMultipart"))
         {
-            LogHandler.info("Registering Forge Multipart parts");
+            LogHandler.info("Registering Forge Multipart torches");
             new TorchPartFactory();
         }
     }

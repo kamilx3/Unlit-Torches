@@ -82,7 +82,7 @@ public class BlockTorchLit extends BlockTorch
     {
         if (world.isRemote || e.onGround || !(e instanceof EntityArrow)) return;
         if (MathHelper.sqrt_double(e.motionX * e.motionX + e.motionY * e.motionY + e.motionZ * e.motionZ) > 1.2D)
-            killBlockTorch(world, x, y, z, "fire.fire", 1F);
+            extinguishBlock(world, x, y, z, "fire.fire", 1F);
     }
 
     @Override
@@ -120,24 +120,24 @@ public class BlockTorchLit extends BlockTorch
             {
                 if (ist.getItemDamage() == 0)
                 {
-                    killBlockTorch(world, x, y, z, "fire.fire", 1F);
+                    extinguishBlock(world, x, y, z, "fire.fire", 1F);
                     if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
                 }
                 else
                 {
-                    killBlockTorch(world, x, y, z, "random.fizz", 0.3F);
+                    extinguishBlock(world, x, y, z, "random.fizz", 0.3F);
                 }
 
                 return true;
             }
             else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
             {
-                killBlockTorch(world, x, y, z, "random.fizz", 0.3F);
+                extinguishBlock(world, x, y, z, "random.fizz", 0.3F);
                 return true;
             }
             else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
-                killBlockTorch(world, x, y, z, "fire.fire", 1F);
+                extinguishBlock(world, x, y, z, "fire.fire", 1F);
 
                 if (!p.capabilities.isCreativeMode)
                 {
@@ -169,7 +169,7 @@ public class BlockTorchLit extends BlockTorch
     //----------------------------------mine----------------------------------//
 
 
-    public static void killBlockTorch(World world, int x, int y, int z, String sound, float volume)
+    public static void extinguishBlock(World world, int x, int y, int z, String sound, float volume)
     {
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         int age = te.getAge();
