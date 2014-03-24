@@ -70,13 +70,13 @@ abstract class PacketCustom
         throw new RuntimeException("Packet " + this.getClass().getSimpleName() + " is missing a mapping!");
     }
 
-    public abstract void encode(ByteArrayDataOutput data);
+    abstract void encode(ByteArrayDataOutput data);
 
-    public abstract void decode(ByteArrayDataInput data) throws ProtocolException;
+    abstract void decode(ByteArrayDataInput data) throws ProtocolException;
 
-    public abstract void handleClient(EntityPlayer p, boolean client) throws ProtocolException;
+    abstract void handleClient(EntityPlayer p, boolean client) throws ProtocolException;
 
-    public abstract void handleServer(EntityPlayer p) throws ProtocolException;
+    abstract void handleServer(EntityPlayer p) throws ProtocolException;
 
     protected abstract boolean isChunkPacket();
 }
