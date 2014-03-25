@@ -40,7 +40,7 @@ public class BlockTorchUnlit extends BlockTorch
         if (!world.isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+            igniteBlock(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
         }
     }
 
@@ -69,7 +69,7 @@ public class BlockTorchUnlit extends BlockTorch
             if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
             {
                 TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-                igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+                igniteBlock(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
                 return true;
             }
             else if (IgnitersHandler.canIgniteSetTorch(id, d))
@@ -80,11 +80,11 @@ public class BlockTorchUnlit extends BlockTorch
 
                 if (id == Item.bucketLava.itemID)
                 {
-                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
+                    igniteBlock(eternal, age, world, x, y, z, "fire.fire");
                 }
                 else if (id == Item.flint.itemID)
                 {
-                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
+                    igniteBlock(eternal, age, world, x, y, z, "fire.ignite");
 
                     if (!p.capabilities.isCreativeMode)
                     {
@@ -93,12 +93,12 @@ public class BlockTorchUnlit extends BlockTorch
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {
-                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.ignite");
+                    igniteBlock(eternal, age, world, x, y, z, "fire.ignite");
                     ist.damageItem(1, p);
                 }
                 else
                 {
-                    igniteBlockTorch(eternal, age, world, x, y, z, "fire.fire");
+                    igniteBlock(eternal, age, world, x, y, z, "fire.fire");
 
                     if (!p.capabilities.isCreativeMode)
                     {
@@ -120,7 +120,7 @@ public class BlockTorchUnlit extends BlockTorch
         if (canIgnite(p))
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            igniteBlockTorch(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+            igniteBlock(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
             return true;
         }
 
@@ -131,7 +131,7 @@ public class BlockTorchUnlit extends BlockTorch
     //----------------------------------mine----------------------------------//
 
 
-    public static void igniteBlockTorch(boolean eternal, int age, World world, int x, int y, int z, String sound)
+    public static void igniteBlock(boolean eternal, int age, World world, int x, int y, int z, String sound)
     {
         world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);

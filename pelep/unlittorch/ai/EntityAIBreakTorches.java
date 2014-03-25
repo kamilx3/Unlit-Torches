@@ -36,7 +36,7 @@ public class EntityAIBreakTorches extends EntityAIBase
     @Override
     public void startExecuting()
     {
-        BlockTorchLit.killBlockTorch(this.world, this.torch.x, this.torch.y, this.torch.z, "fire.fire", 1F);
+        BlockTorchLit.extinguishBlock(this.world, this.torch.x, this.torch.y, this.torch.z, "fire.fire", 1F);
         this.delay = 100;
         this.el.getLookHelper().setLookPosition(this.torch.x + 0.5, this.torch.y + 0.5, this.torch.z + 0.5, 10F, this.el.getVerticalFaceSpeed());
         this.torch = null;
