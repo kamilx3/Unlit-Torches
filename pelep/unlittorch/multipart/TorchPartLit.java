@@ -90,7 +90,6 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
             this.extinguishPart("fire.fire", 1F);
     }
 
-    //DO NOT MODIFY PART ON CLIENT SIDE
     @Override
     public boolean activate(EntityPlayer ep, MovingObjectPosition mop, ItemStack ist)
     {
@@ -174,7 +173,6 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         return ConfigCommon.torchUpdates && !this.eternal;
     }
 
-    //called whether or not this should tick as long as a part in the same block needs ticking
     @Override
     public void update()
     {
@@ -215,11 +213,12 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
                 return;
             }
+
+            if (this.chunk == null) this.chunk = this.world().getChunkFromBlockCoords(this.x(), this.z());
+            this.chunk.setChunkModified();
         }
 
         this.age++;
-        if (this.chunk == null) this.chunk = this.world().getChunkFromBlockCoords(this.x(), this.z());
-        this.chunk.setChunkModified();
     }
 
     private void extinguishPart(String sound, float volume)
@@ -235,9 +234,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartUnlit(this.meta, this.age, this.eternal));
 
         if (sound != null && !"".equals(sound))
-        {
             world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
-        }
     }
 
     private void destroyPart()

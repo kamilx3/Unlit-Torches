@@ -35,15 +35,8 @@ abstract class PacketCustom
     static PacketCustom create(int id) throws ProtocolException, ReflectiveOperationException
     {
         Class<? extends PacketCustom> clazz = packets.get(id);
-
-        if (clazz == null)
-        {
-            throw new ProtocolException("Unknown Packet Id!");
-        }
-        else
-        {
-            return clazz.newInstance();
-        }
+        if (clazz == null) throw new ProtocolException("Unknown Packet Id!");
+        return clazz.newInstance();
     }
 
     public final Packet250CustomPayload create()
@@ -61,12 +54,9 @@ abstract class PacketCustom
 
     private int getId()
     {
-        if (packets.inverse().containsKey(this.getClass()))
-        {
-            return packets.inverse().get(this.getClass());
-        }
-
-        throw new RuntimeException("Packet " + this.getClass().getSimpleName() + " is missing a mapping!");
+        if (!packets.inverse().containsKey(this.getClass()))
+            throw new RuntimeException("Packet " + this.getClass().getSimpleName() + " is missing a mapping!");
+        return packets.inverse().get(this.getClass());
     }
 
     abstract void encode(ByteArrayDataOutput data);
