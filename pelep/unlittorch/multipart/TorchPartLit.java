@@ -17,9 +17,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.handler.IgnitersHandler;
-import pelep.unlittorch.packet.Packet04BurnFX;
-import pelep.unlittorch.packet.Packet06UpdatePart;
+import pelep.unlittorch.packet.Packet03BurnFX;
+import pelep.unlittorch.packet.Packet05UpdatePart;
 
 import java.util.Random;
 
@@ -146,26 +145,15 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
             else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
                 this.extinguishPart("fire.fire", 1F);
-
-                if (!ep.capabilities.isCreativeMode)
-                {
-                    ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
-                }
-
+                if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
                 return true;
             }
             else if (id == Item.gunpowder.itemID)
             {
+                if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 5);
                 int size = ist.stackSize;
                 float strength = size < 5 ? (size * 0.2F) : 1F;
-
                 this.world().newExplosion(ep, this.x(), this.y(), this.z(), strength, size > 5, true);
-
-                if (!ep.capabilities.isCreativeMode)
-                {
-                    ep.inventory.decrStackSize(ep.inventory.currentItem, 5);
-                }
-
                 return true;
             }
         }
@@ -255,7 +243,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     private void destroyPart()
     {
         if (this.world().isRemote) return;
-        Packet04BurnFX pkt = new Packet04BurnFX(this.x(), this.y(), this.z(), this.meta);
+        Packet03BurnFX pkt = new Packet03BurnFX(this.x(), this.y(), this.z(), this.meta);
         PacketDispatcher.sendPacketToAllAround(this.x(), this.y(), this.z(), 64D, this.world().provider.dimensionId, pkt.create());
         this.world().playSoundEffect(this.x() + 0.5, this.y() + 0.5, this.z() + 0.5, "fire.fire", 1F, this.world().rand.nextFloat() * 0.4F + 0.8F);
         this.tile().remPart(this);
@@ -263,20 +251,22 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
     private void renewTorches(EntityPlayer p, ItemStack ist)
     {
-        if (this.world().isRemote) return;
-
         int ia = ist.getItemDamage();
         if (this.age == ia) return;
 
         double d = (this.age + ia) / 2;
-        ist.setItemDamage(this.age = MathHelper.ceiling_double_int(d));
+        int age = MathHelper.ceiling_double_int(d);
+        ist.setItemDamage(age);
+        p.swingItem();
+
+        if (this.world().isRemote) return;
+
+        this.age = age;
+        this.world().playSoundEffect(this.x() + 0.5, this.y() + 0.5, this.z() + 0.5, "fire.fire", 1F, this.world().rand.nextFloat() * 0.4F + 0.8F);
 
         int dim = this.world().provider.dimensionId;
         int i = this.tile().jPartList().indexOf(this);
-        PacketDispatcher.sendPacketToAllInDimension(new Packet06UpdatePart(i, this.x(), this.y(), this.z(), dim, this.age).create(), dim);
-
-        this.world().playSoundEffect(this.x() + 0.5, this.y() + 0.5, this.z() + 0.5, "fire.fire", 1F, this.world().rand.nextFloat() * 0.4F + 0.8F);
-        p.swingItem();
+        PacketDispatcher.sendPacketToAllInDimension(new Packet05UpdatePart(i, this.x(), this.y(), this.z(), dim, this.age).create(), dim);
     }
 
     public void setAge(int age)

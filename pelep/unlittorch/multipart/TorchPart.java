@@ -38,7 +38,7 @@ abstract class TorchPart extends McSidedMetaPart
     protected int age;
     protected boolean eternal;
 
-    public TorchPart() {}
+    protected TorchPart() {}
 
     protected TorchPart(int md, int age, boolean eternal)
     {
@@ -53,7 +53,7 @@ abstract class TorchPart extends McSidedMetaPart
 
         pos = pos.copy().offset(side^1);
 
-        if(!world.isBlockSolidOnSide(pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side)))
+        if (!world.isBlockSolidOnSide(pos.x, pos.y, pos.z, ForgeDirection.getOrientation(side)))
         {
             if (side != 1) return null;
             Block block = Block.blocksList[world.getBlockId(pos.x, pos.y, pos.z)];

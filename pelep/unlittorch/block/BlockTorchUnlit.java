@@ -85,11 +85,7 @@ public class BlockTorchUnlit extends BlockTorch
                 else if (id == Item.flint.itemID)
                 {
                     igniteBlock(eternal, age, world, x, y, z, "fire.ignite");
-
-                    if (!p.capabilities.isCreativeMode)
-                    {
-                        p.inventory.decrStackSize(p.inventory.currentItem, 1);
-                    }
+                    if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {

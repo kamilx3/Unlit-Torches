@@ -3,7 +3,6 @@ package pelep.unlittorch.item;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -100,10 +99,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
         if (p.isInsideOfMaterial(Material.water))
         {
-            if (!world.isRemote)
-            {
-                world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
-            }
+            if (!world.isRemote) world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
 
             for (int i = slot; i < p.inventory.mainInventory.length; i++)
             {

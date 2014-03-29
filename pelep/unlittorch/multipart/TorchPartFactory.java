@@ -15,7 +15,6 @@ import net.minecraft.block.BlockFence;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet15Place;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -23,7 +22,7 @@ import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.packet.Packet05PlacePart;
+import pelep.unlittorch.packet.Packet04PlacePart;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 /**
@@ -146,7 +145,7 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         else
         {
             ep.swingItem();
-            PacketDispatcher.sendPacketToServer(new Packet05PlacePart().create());
+            PacketDispatcher.sendPacketToServer(new Packet04PlacePart().create());
         }
 
         return true;

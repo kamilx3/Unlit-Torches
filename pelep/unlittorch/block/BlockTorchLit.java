@@ -1,6 +1,5 @@
 package pelep.unlittorch.block;
 
-import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -10,7 +9,6 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
@@ -138,26 +136,15 @@ public class BlockTorchLit extends BlockTorch
             else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
                 extinguishBlock(world, x, y, z, "fire.fire", 1F);
-
-                if (!p.capabilities.isCreativeMode)
-                {
-                    p.inventory.decrStackSize(p.inventory.currentItem, 1);
-                }
-
+                if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
                 return true;
             }
             else if (id == Item.gunpowder.itemID)
             {
+                if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 5);
                 int size = ist.stackSize;
                 float strength = size < 5 ? (size * 0.2F) : 1F;
-
                 world.newExplosion(p, x, y, z, strength, size > 5, true);
-
-                if (!p.capabilities.isCreativeMode)
-                {
-                    p.inventory.decrStackSize(p.inventory.currentItem, 5);
-                }
-
                 return true;
             }
         }
@@ -199,14 +186,7 @@ public class BlockTorchLit extends BlockTorch
 
         p.swingItem();
         world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
-
-        if (!world.isRemote)
-        {
-            int dim = world.provider.dimensionId;
-            NBTTagCompound tag = new NBTTagCompound();
-            tag.setInteger("age", age);
-            PacketDispatcher.sendPacketToAllInDimension(new Packet132TileEntityData(x, y, z, 1, tag), dim);
-        }
+        world.markBlockForUpdate(x, y, z);
     }
 
     public static void igniteHeldTorch(World world, ItemStack ist, EntityPlayer p)
@@ -216,9 +196,7 @@ public class BlockTorchLit extends BlockTorch
             ItemStack torch = new ItemStack(50, 1, ist.getItemDamage());
             torch.setTagCompound(ist.getTagCompound());
             ist.stackSize--;
-
-            if (!p.inventory.addItemStackToInventory(torch))
-                p.dropPlayerItemWithRandomChoice(torch, false).delayBeforeCanPickup = 10;
+            if (!p.inventory.addItemStackToInventory(torch)) p.dropPlayerItemWithRandomChoice(torch, false).delayBeforeCanPickup = 10;
         }
         else
         {

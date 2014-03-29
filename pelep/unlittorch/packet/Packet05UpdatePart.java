@@ -12,7 +12,7 @@ import pelep.unlittorch.multipart.TorchPartLit;
 /**
  * @author pelep
  */
-public class Packet06UpdatePart extends PacketCustom
+public class Packet05UpdatePart extends PacketCustom
 {
     private int index;
     private int x;
@@ -21,9 +21,9 @@ public class Packet06UpdatePart extends PacketCustom
     private int dim;
     private int age;
 
-    Packet06UpdatePart() {}
+    Packet05UpdatePart() {}
 
-    public Packet06UpdatePart(int index, int x, int y, int z, int dim, int age)
+    public Packet05UpdatePart(int index, int x, int y, int z, int dim, int age)
     {
         this.index = index;
         this.x = x;

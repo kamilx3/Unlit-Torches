@@ -6,10 +6,9 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.packet.Packet04BurnFX;
+import pelep.unlittorch.packet.Packet03BurnFX;
 
 /**
  * @author pelep
@@ -100,16 +99,17 @@ public class TileEntityTorch extends TileEntity
 
                 return;
             }
+
+            if (this.chunk == null) this.chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
+            this.chunk.setChunkModified();
         }
 
         this.age++;
-        if (this.chunk == null) this.chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
-        this.chunk.setChunkModified();
     }
 
     private void destroyTorch()
     {
-        Packet04BurnFX pkt = new Packet04BurnFX(this.xCoord, this.yCoord, this.zCoord, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+        Packet03BurnFX pkt = new Packet03BurnFX(this.xCoord, this.yCoord, this.zCoord, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
         PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 64D, this.worldObj.provider.dimensionId, pkt.create());
         this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, "fire.fire", 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
         this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
@@ -157,7 +157,6 @@ public class TileEntityTorch extends TileEntity
         {
             case 0:
                 this.eternal = pkt.data.getBoolean("eternal");
-            case 1:
                 this.age = pkt.data.getInteger("age");
         }
     }

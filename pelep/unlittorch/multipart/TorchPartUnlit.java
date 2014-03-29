@@ -86,11 +86,7 @@ public class TorchPartUnlit extends TorchPart
                 else if (id == Item.flint.itemID)
                 {
                     this.igniteTorchPart("fire.ignite");
-
-                    if (!ep.capabilities.isCreativeMode)
-                    {
-                        ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
-                    }
+                    if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {

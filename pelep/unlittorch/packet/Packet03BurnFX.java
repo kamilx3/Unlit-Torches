@@ -8,16 +8,16 @@ import pelep.pcl.ProtocolException;
 /**
  * @author pelep
  */
-public class Packet04BurnFX extends PacketCustom
+public class Packet03BurnFX extends PacketCustom
 {
     private int x;
     private int y;
     private int z;
     private int md;
 
-    public Packet04BurnFX() {}
+    public Packet03BurnFX() {}
 
-    public Packet04BurnFX(int x, int y, int z, int md)
+    public Packet03BurnFX(int x, int y, int z, int md)
     {
         this.x = x;
         this.y = y;

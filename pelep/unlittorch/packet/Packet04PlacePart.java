@@ -9,7 +9,7 @@ import pelep.unlittorch.multipart.TorchPartFactory;
 /**
  * @author pelep
  */
-public class Packet05PlacePart extends PacketCustom
+public class Packet04PlacePart extends PacketCustom
 {
     @Override
     public void encode(ByteArrayDataOutput data)
