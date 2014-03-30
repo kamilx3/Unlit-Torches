@@ -32,7 +32,7 @@ public class ConfigClient
         torchLifespanMax = ConfigCommon.torchLifespanMax;
 
         enableDynamicLighting = config.get("LIGHTING", "EnableDynamicLighting", true, "True if dynamic lighting for lit torches should be enabled").getBoolean(true);
-        torchLightValue = getInt(0, 15, config.get("LIGHTING", "TorchLightValue", 13, "The light value of HELD lit torches and DROPPED lit torches only"));
+        torchLightValue = getInt(0, 15, config.get("LIGHTING", "TorchLightValue", 13, "The light value of HELD lit torches and DROPPED lit torches only. Max: 15"));
     }
 
     public static void desyncFromServer()

@@ -117,7 +117,7 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
             float y = (float) vec.y;
             float z = (float) vec.z;
 
-            if(block != null && !(block instanceof BlockFence) && block.onBlockActivated(world, hit.blockX, hit.blockY, hit.blockZ, ep, hit.sideHit, x, y, z))
+            if (block != null && !(block instanceof BlockFence) && block.onBlockActivated(world, hit.blockX, hit.blockY, hit.blockZ, ep, hit.sideHit, x, y, z))
             {
                 ep.swingItem();
                 PacketDispatcher.sendPacketToServer(new Packet15Place(hit.blockX, hit.blockY, hit.blockZ, hit.sideHit, ep.inventory.getCurrentItem(), x, y, z));
@@ -136,7 +136,7 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
             float pitch = part.getBlock().stepSound.getPitch();
             world.playSoundEffect(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, (volume + 1F) / 2F, pitch * 0.8F);
 
-            if(!ep.capabilities.isCreativeMode && --held.stackSize <= 0)
+            if (!ep.capabilities.isCreativeMode && --held.stackSize <= 0)
             {
                 ep.inventory.mainInventory[ep.inventory.currentItem] = null;
                 MinecraftForge.EVENT_BUS.post(new PlayerDestroyItemEvent(ep, held));

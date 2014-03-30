@@ -41,7 +41,7 @@ public class ConfigCommon
         torchRecipeYieldsUnlit = config.get("RECIPE", "OverrideTorchRecipe", true, "True if the torch recipe should yield unlit torches").getBoolean(true);
         torchRecipeYieldCount = getInt(1, 9, config.get("RECIPE", "TorchRecipeYieldCount", 4, "Number of torches the torch recipe should yield. Lower it for a challenge. Min:1 Max:9"));
 
-        torchUpdates = config.get("TORCH", "TorchUpdates", true, "Set to false to disable torches aging, dying out, etc.").getBoolean(false);
+        torchUpdates = config.get("TORCH", "TorchUpdates", true, "Set to false to disable torches aging, dying out, etc.").getBoolean(true);
         torchDropsUnlit = config.get("TORCH", "DropsUnlit", false, "True if lit torches should drop as UNLIT torches").getBoolean(false);
         torchSingleUse = config.get("TORCH", "SingleUse", true, "True if torches should break when their lifespan is over").getBoolean(true);
 
@@ -50,12 +50,18 @@ public class ConfigCommon
         torchRandomKillChance = getInt(0, 100, config.get("TORCH", "ChanceToRandomlyBurnOut", 25, "x/100 chance for a torch to burn out. Set to 0 to disable random dying out of torches"));
         torchDestroyChance = getInt(0, 100, config.get("TORCH", "ChanceToDestroy", 30, "x/100 chance that a torch is destroyed instead when it randomly burns out. Set to 0 to disable."));
 
-        igniterIdsHeld = config.get("IGNITERS", "TorchHeld", igniterIdsHeld, "Ids of blocks/items that can ignite HELD torches. Items are separated by commas. IDs and metadata by colons. Note that block and itemstack metadata are DIFFERENT. Example: 2,33:2,33:4,5").getString();
-        igniterIdsSet = config.get("IGNITERS", "TorchSet", igniterIdsSet, "Ids of blocks/items that can ignite SET torches. Items are separated by commas. IDs and metadata by colons. Example: 2,33:2,33:4,5").getString();
+        String comment = "IDs and metadata of blocks that can ignite HELD torches. If no metadata is specified, all metadata will be valid for the specified ID\n" +
+                "Syntax: id,id:metadata\n" +
+                "Example: 2,33:2,33:4,5";
+        igniterIdsHeld = config.get("IGNITERS", "TorchHeld", igniterIdsHeld, comment).getString();
+        comment = "IDs and metadata of blocks/items that can ignite SET torches. If no metadata is specified, all metadata will be valid for the specified ID\n" +
+                "Syntax: id,id:metadata\n" +
+                "Example: 2,33:2,33:4,5";
+        igniterIdsSet = config.get("IGNITERS", "TorchSet", igniterIdsSet, comment).getString();
 
-        mobVillagerTorch = config.get("MOBS", "Villager", true, "True if villagers should kill torches during day and light them up at night").getBoolean(true);
-        mobZombieTorch = config.get("MOBS", "Zombie", 5, "1 in x zombies will kill torches when close. Set to 0 to disable").getInt();
-        mobSkeletonTorch = config.get("MOBS", "Skeleton", 8, "1 in x skeletons will kill torches when in range. Set to 0 to disable").getInt();
+        mobVillagerTorch = config.get("MOBS", "Villager", true, "True if villagers should extinguish torches during day and ignite them at night").getBoolean(true);
+        mobZombieTorch = config.get("MOBS", "Zombie", 5, "1 in x zombies will extinguish torches when in range. Set to 0 to disable").getInt();
+        mobSkeletonTorch = config.get("MOBS", "Skeleton", 8, "1 in x skeletons will attempt to extinguish torches when in range. Set to 0 to disable").getInt();
 
         setChance();
     }
