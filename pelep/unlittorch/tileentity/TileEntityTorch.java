@@ -17,7 +17,7 @@ public class TileEntityTorch extends TileEntity
 {
     private boolean lit;
     private boolean eternal;
-    private int age = 0;
+    private int age;
     private Chunk chunk;
 
     public TileEntityTorch() {}

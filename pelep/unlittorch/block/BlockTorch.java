@@ -1,9 +1,6 @@
 package pelep.unlittorch.block;
 
-import static net.minecraftforge.common.ForgeDirection.EAST;
-import static net.minecraftforge.common.ForgeDirection.NORTH;
-import static net.minecraftforge.common.ForgeDirection.SOUTH;
-import static net.minecraftforge.common.ForgeDirection.WEST;
+import static net.minecraftforge.common.ForgeDirection.*;
 
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
@@ -16,6 +13,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeDirection;
+import pelep.pcl.util.vec.Coordinate;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
@@ -126,34 +125,37 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId)
     {
-        if (this.canPlaceTorch(world, x, y, z))
+        if (world.getBlockId(x, y, z) != this.blockID) return;
+
+        int md = world.getBlockMetadata(x, y, z);
+        boolean keep;
+
+        switch (md)
         {
-            int md = world.getBlockMetadata(x, y, z);
-            boolean keep = true;
+            case 1:
+                keep = world.isBlockSolidOnSide(x - 1, y, z, EAST, true);
+                break;
+            case 2:
+                keep = world.isBlockSolidOnSide(x + 1, y, z, WEST, true);
+                break;
+            case 3:
+                keep = world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true);
+                break;
+            case 4:
+                keep = world.isBlockSolidOnSide(x, y, z + 1, NORTH, true);
+                break;
+            case 5:
+                keep = canPlaceTorchOn(world, x, y - 1, z);
+                break;
+            default:
+                md = getPossibleMetadata(world, x, y, z);
+                if (keep = md != 0) world.setBlockMetadataWithNotify(x, y, z, md, 1|2);
+        }
 
-            switch (md)
-            {
-                case 1:
-                    keep = world.isBlockSolidOnSide(x - 1, y, z, EAST, true);
-                    break;
-                case 2:
-                    keep = world.isBlockSolidOnSide(x + 1, y, z, WEST, true);
-                    break;
-                case 3:
-                    keep = world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true);
-                    break;
-                case 4:
-                    keep = world.isBlockSolidOnSide(x, y, z + 1, NORTH, true);
-                    break;
-                case 5:
-                    keep = this.canPlaceTorchOn(world, x, y - 1, z);
-            }
-
-            if (!keep)
-            {
-                this.dropBlockAsItem(world, x, y, z, md, 0);
-                world.setBlockToAir(x, y, z);
-            }
+        if (!keep)
+        {
+            this.dropBlockAsItem(world, x, y, z, md, 0);
+            world.setBlockToAir(x, y, z);
         }
     }
 
@@ -172,122 +174,48 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public boolean canPlaceBlockAt(World world, int x, int y, int z)
     {
-        return world.isBlockSolidOnSide(x - 1, y, z, EAST, true) ||
-                world.isBlockSolidOnSide(x + 1, y, z, WEST, true) ||
-                world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true) ||
-                world.isBlockSolidOnSide(x, y, z + 1, NORTH, true) ||
-                this.canPlaceTorchOn(world, x, y - 1, z);
+        return getPossibleMetadata(world, x, y, z) != 0;
     }
 
     @Override
     public int onBlockPlaced(World world, int x, int y, int z, int side, float i, float j, float k, int d)
     {
-        int md = 5;
+        ForgeDirection dir = ForgeDirection.getOrientation(side);
+        Coordinate offset = new Coordinate(x, y, z).offset(dir.getOpposite());
 
-        if (side == 5 && world.isBlockSolidOnSide(x - 1, y, z, EAST, true))
+        if (side == 1 && canPlaceTorchOn(world, offset.x, offset.y, offset.z))
         {
-            md = 1;
+            return 5;
         }
-        else if (side == 4 && world.isBlockSolidOnSide(x + 1, y, z, WEST, true))
+        else if (side < 2 || !world.isBlockSolidOnSide(offset.x, offset.y, offset.z, dir, true))
         {
-            md = 2;
-        }
-        else if (side == 3 && world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true))
-        {
-            md = 3;
-        }
-        else if (side == 2 && world.isBlockSolidOnSide(x, y, z + 1, NORTH, true))
-        {
-            md = 4;
-        }
-        else if (side == 1 && this.canPlaceTorchOn(world, x, y - 1, z))
-        {
-            md = 5;
-        }
-        else
-        {
-            if (world.isBlockSolidOnSide(x - 1, y, z, EAST, true))
-            {
-                md = 1;
-            }
-            else if (world.isBlockSolidOnSide(x + 1, y, z, WEST, true))
-            {
-                md = 2;
-            }
-            else if (world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true))
-            {
-                md = 3;
-            }
-            else if (world.isBlockSolidOnSide(x, y, z + 1, NORTH, true))
-            {
-                md = 4;
-            }
-            else if (this.canPlaceTorchOn(world, x, y - 1, z))
-            {
-                md = 5;
-            }
+            return getPossibleMetadata(world, x, y, z);
         }
 
-        return md;
-    }
-
-    private boolean canPlaceTorchOn(World world, int x, int y, int z)
-    {
-        if (world.doesBlockHaveSolidTopSurface(x, y, z))
+        switch (dir)
         {
-            return true;
+            case EAST: return 1;
+            case WEST: return 2;
+            case SOUTH: return 3;
+            case NORTH: return 4;
+            default: return 0;
         }
-        else
-        {
-            int id = world.getBlockId(x, y, z);
-            return blocksList[id] != null && blocksList[id].canPlaceTorchOnTop(world, x, y, z);
-        }
-    }
-
-    private boolean canPlaceTorch(World world, int x, int y, int z)
-    {
-        if (!this.canPlaceBlockAt(world, x, y, z))
-        {
-            if (world.getBlockId(x, y, z) == this.blockID)
-            {
-                this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
-                world.setBlockToAir(x, y, z);
-            }
-
-            return false;
-        }
-
-        return true;
     }
 
     @Override
     public void onBlockAdded(World world, int x, int y, int z)
     {
-        if (world.getBlockMetadata(x, y, z) < 1)
-        {
-            if (world.isBlockSolidOnSide(x - 1, y, z, EAST, true))
-            {
-                world.setBlockMetadataWithNotify(x, y, z, 1, 3);
-            }
-            else if (world.isBlockSolidOnSide(x + 1, y, z, WEST, true))
-            {
-                world.setBlockMetadataWithNotify(x, y, z, 2, 3);
-            }
-            else if (world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true))
-            {
-                world.setBlockMetadataWithNotify(x, y, z, 3, 3);
-            }
-            else if (world.isBlockSolidOnSide(x, y, z + 1, NORTH, true))
-            {
-                world.setBlockMetadataWithNotify(x, y, z, 4, 3);
-            }
-            else if (this.canPlaceTorchOn(world, x, y - 1, z))
-            {
-                world.setBlockMetadataWithNotify(x, y, z, 5, 3);
-            }
-        }
+        int md = getPossibleMetadata(world, x, y, z);
 
-        this.canPlaceTorch(world, x, y, z);
+        if (md != 0 && world.getBlockMetadata(x, y, z) < 1)
+        {
+            world.setBlockMetadataWithNotify(x, y, z, md, 1|2);
+        }
+        else if (md == 0 && world.getBlockId(x, y, z) == this.blockID)
+        {
+            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            world.setBlockToAir(x, y, z);
+        }
     }
 
 
@@ -330,5 +258,42 @@ abstract class BlockTorch extends BlockContainer
         }
 
         return stacks;
+    }
+
+
+    //----------------------------------util----------------------------------//
+
+
+    private static int getPossibleMetadata(World world, int x, int y, int z)
+    {
+        if (canPlaceTorchOn(world, x, y - 1, z))
+        {
+            return 5;
+        }
+        else if (world.isBlockSolidOnSide(x, y, z + 1, NORTH, true))
+        {
+            return 4;
+        }
+        else if (world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true))
+        {
+            return 3;
+        }
+        else if (world.isBlockSolidOnSide(x + 1, y, z, WEST, true))
+        {
+            return 2;
+        }
+        else if (world.isBlockSolidOnSide(x - 1, y, z, EAST, true))
+        {
+            return 1;
+        }
+
+        return 0;
+    }
+
+    private static boolean canPlaceTorchOn(World world, int x, int y, int z)
+    {
+        if (world.doesBlockHaveSolidTopSurface(x, y, z)) return true;
+        int id = world.getBlockId(x, y, z);
+        return blocksList[id] != null && blocksList[id].canPlaceTorchOnTop(world, x, y, z);
     }
 }

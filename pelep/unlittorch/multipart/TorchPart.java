@@ -9,9 +9,7 @@ import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
 import codechicken.multipart.MultipartRenderer;
-import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-import codechicken.multipart.minecraft.McBlockPart;
 import codechicken.multipart.minecraft.McSidedMetaPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -26,7 +24,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
 import org.lwjgl.opengl.GL11;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.util.Arrays;
 
@@ -47,7 +44,7 @@ abstract class TorchPart extends McSidedMetaPart
         this.eternal = eternal;
     }
 
-    public static McBlockPart getPart(World world, BlockCoord pos, int side, boolean lit, int age, boolean eternal)
+    public static TorchPart getPart(World world, BlockCoord pos, int side, boolean lit, int age, boolean eternal)
     {
         if (side == 0) return null;
 
@@ -102,19 +99,6 @@ abstract class TorchPart extends McSidedMetaPart
         return super.canStay();
     }
 
-//    @Override
-//    public void onPartChanged(TMultiPart part)
-//    {
-//        if (!this.world().isRemote && this.tile().jPartList().size() == 1)
-//        {
-//            this.world().setBlock(this.x(), this.y(), this.z(), this.getBlockId(), this.meta, 1|2);
-//            TileEntityTorch te = (TileEntityTorch) this.world().getBlockTileEntity(this.x(), this.y(), this.z());
-//            te.setAge(this.age);
-//            te.setEternal(this.eternal);
-//        }
-//    }
-
-    //when can't stay
     @Override
     public void drop()
     {

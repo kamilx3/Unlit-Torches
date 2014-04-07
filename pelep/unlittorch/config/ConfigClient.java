@@ -1,16 +1,14 @@
 package pelep.unlittorch.config;
 
-import static pelep.unlittorch.config.ConfigCommon.getInt;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraftforge.common.Configuration;
+import pelep.pcl.util.UtilConfig;
 
 /**
  * @author pelep
  */
 @SideOnly(Side.CLIENT)
-public class ConfigClient
+public class ConfigClient extends UtilConfig
 {
     private static boolean torchRecipeYieldsUnlit;
     private static int torchRecipeYieldCount;
@@ -21,9 +19,10 @@ public class ConfigClient
     public static boolean enableDynamicLighting;
     public static int torchLightValue;
 
-    public static void loadConfig(Configuration config)
+    @Override
+    public void load()
     {
-        ConfigCommon.loadConfig(config);
+        new ConfigCommon().load(this.cfg);
 
         torchRecipeYieldsUnlit = ConfigCommon.torchRecipeYieldsUnlit;
         torchRecipeYieldCount = ConfigCommon.torchRecipeYieldCount;
@@ -31,8 +30,9 @@ public class ConfigClient
         torchSingleUse = ConfigCommon.torchSingleUse;
         torchLifespanMax = ConfigCommon.torchLifespanMax;
 
-        enableDynamicLighting = config.get("LIGHTING", "EnableDynamicLighting", true, "True if dynamic lighting for lit torches should be enabled").getBoolean(true);
-        torchLightValue = getInt(0, 15, config.get("LIGHTING", "TorchLightValue", 13, "The light value of HELD lit torches and DROPPED lit torches only. Max: 15"));
+        this.ctg = "LIGHTING";
+        enableDynamicLighting = this.getBoolean("EnableDynamicLighting", true, "True if dynamic lighting for lit torches should be enabled");
+        torchLightValue = this.getInt("TorchLightValue", 13, 0, 15, "The light value of HELD lit torches and DROPPED lit torches only. Max: 15");
     }
 
     public static void desyncFromServer()

@@ -1,5 +1,6 @@
 package pelep.unlittorch.packet;
 
+import static pelep.unlittorch.UnlitTorch.LOGGER;
 import static pelep.unlittorch.UnlitTorch.MOD_CHANNEL;
 
 import com.google.common.io.ByteArrayDataInput;
@@ -12,7 +13,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import pelep.pcl.ProtocolException;
-import pelep.unlittorch.handler.LogHandler;
 
 /**
  * @author pelep
@@ -45,7 +45,7 @@ public class PacketHandler implements IPacketHandler
                 if (player instanceof EntityPlayerMP)
                 {
                     ((EntityPlayerMP)player).playerNetServerHandler.kickPlayerFromServer("Protocol Exception!");
-                    LogHandler.warning("Kicking player " + ((EntityPlayer)player).username + " for causing a Protocol Exception!");
+                    LOGGER.warning("Kicking player %s for causing a Protocol Exception!", ((EntityPlayer)player).username);
                 }
             }
             catch (ReflectiveOperationException e)

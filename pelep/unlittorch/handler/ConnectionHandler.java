@@ -1,5 +1,7 @@
 package pelep.unlittorch.handler;
 
+import static pelep.unlittorch.UnlitTorch.LOGGER;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.IConnectionHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
@@ -24,7 +26,7 @@ public class ConnectionHandler implements IConnectionHandler
     @Override
     public void playerLoggedIn(Player p, NetHandler nh, INetworkManager nm)
     {
-        LogHandler.fine("Sending config packets to player %s", ((EntityPlayer)p).getEntityName());
+        LOGGER.fine("Sending config packets to player %s", ((EntityPlayer)p).getEntityName());
         PacketDispatcher.sendPacketToPlayer(new Packet00Config().create(), p);
         PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)0, ConfigCommon.igniterIdsSet).create(), p);
         PacketDispatcher.sendPacketToPlayer(new Packet01Igniters((byte)1, ConfigCommon.igniterIdsHeld).create(), p);
@@ -35,7 +37,7 @@ public class ConnectionHandler implements IConnectionHandler
     {
         if (FMLCommonHandler.instance().getSide().isClient() && Minecraft.getMinecraft().getIntegratedServer() == null)
         {
-            LogHandler.info("Unsyncing with server");
+            LOGGER.info("Desyncing from server");
             ConfigClient.desyncFromServer();
             IgnitersHandler.desyncFromServer();
         }

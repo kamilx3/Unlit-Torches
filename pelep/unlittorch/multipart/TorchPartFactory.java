@@ -8,8 +8,10 @@ import codechicken.multipart.MultiPartRegistry.IPartConverter;
 import codechicken.multipart.MultiPartRegistry.IPartFactory;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
-import codechicken.multipart.minecraft.McBlockPart;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,10 +36,10 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
     {
         MultiPartRegistry.registerConverter(this);
         MultiPartRegistry.registerParts(this, new String[]{"unlittorch:torch_lit", "unlittorch:torch_unlit",});
-        MinecraftForge.EVENT_BUS.register(this);
+        if (FMLCommonHandler.instance().getSide().isClient())
+            MinecraftForge.EVENT_BUS.register(this);
     }
 
-    //for loading
     @Override
     public TMultiPart createPart(String name, boolean client)
     {
@@ -78,6 +80,7 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         return null;
     }
 
+    @SideOnly(Side.CLIENT)
     @ForgeSubscribe
     public void playerInteract(PlayerInteractEvent e)
     {
@@ -96,7 +99,7 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         if (held == null) return false;
 
         BlockCoord pos = new BlockCoord(hit.blockX, hit.blockY, hit.blockZ).offset(hit.sideHit);
-        McBlockPart part = null;
+        TorchPart part = null;
 
         if (held.itemID == ConfigCommon.blockIdTorchLit)
         {

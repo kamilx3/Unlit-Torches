@@ -10,6 +10,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import pelep.pcl.util.UtilLogger;
 import pelep.unlittorch.handler.ConnectionHandler;
 import pelep.unlittorch.packet.PacketHandler;
 import pelep.unlittorch.proxy.ProxyCommon;
@@ -28,8 +29,9 @@ public class UnlitTorch
     public static final String MOD_VERSION_PATCH = "0";
     public static final String MOD_VERSION = MOD_VERSION_MAJOR + "." + MOD_VERSION_MINOR + "." + MOD_VERSION_PATCH;
     public static final String MOD_VERSION_MC = "1.6.4";
-    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:pcl@[2.0.0,);after:ForgeMultipart;before:bushwhacker";
+    public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:pcl@[2.1.0,);after:ForgeMultipart";
     public static final String MOD_CHANNEL = MOD_ID;
+    public static final UtilLogger LOGGER = UtilLogger.getLogger(MOD_ID);
 
     @Instance(MOD_ID)
     public static UnlitTorch instance;

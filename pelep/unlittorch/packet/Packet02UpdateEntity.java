@@ -47,7 +47,7 @@ public class Packet02UpdateEntity extends PacketCustom
         {
             Entity e = p.worldObj.getEntityByID(this.id);
 
-            if (e != null && e instanceof EntityItem)
+            if (e instanceof EntityItem)
             {
                 EntityItem ei = (EntityItem) e;
                 ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;

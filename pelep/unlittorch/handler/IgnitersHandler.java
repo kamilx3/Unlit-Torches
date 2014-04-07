@@ -18,20 +18,20 @@ public class IgnitersHandler extends ItemInfoStorageHelper
 
     public static boolean canIgniteSetTorch(int id, int md)
     {
-        return valid(id, md, ignitersSet);
+        return isItemValid(id, md, ignitersSet);
     }
 
     public static boolean canIgniteHeldTorch(int id, int md)
     {
-        return valid(id, md, ignitersHeld);
+        return isItemValid(id, md, ignitersHeld);
     }
 
     public static void setUpTorchIgniters()
     {
-        parseConfigString(ConfigCommon.igniterIdsSet, ignitersSet);
-        parseConfigString(ConfigCommon.igniterIdsHeld, ignitersHeld);
-        ConfigCommon.igniterIdsSet = getFormattedString(ignitersSet);
-        ConfigCommon.igniterIdsHeld = getFormattedString(ignitersHeld);
+        parseConfig(ConfigCommon.igniterIdsSet, ignitersSet);
+        parseConfig(ConfigCommon.igniterIdsHeld, ignitersHeld);
+        ConfigCommon.igniterIdsSet = getFormatted(ignitersSet);
+        ConfigCommon.igniterIdsHeld = getFormatted(ignitersHeld);
     }
 
     @SideOnly(Side.CLIENT)
@@ -40,18 +40,18 @@ public class IgnitersHandler extends ItemInfoStorageHelper
         switch (type)
         {
             case 0:
-                parseFormattedString(string, ignitersSet);
+                parseFormatted(string, ignitersSet);
                 break;
             case 1:
-                parseFormattedString(string, ignitersHeld);
+                parseFormatted(string, ignitersHeld);
         }
     }
 
     @SideOnly(Side.CLIENT)
     public static void desyncFromServer()
     {
-        parseFormattedString(ConfigCommon.igniterIdsSet, ignitersSet);
-        parseFormattedString(ConfigCommon.igniterIdsHeld, ignitersHeld);
+        parseFormatted(ConfigCommon.igniterIdsSet, ignitersSet);
+        parseFormatted(ConfigCommon.igniterIdsHeld, ignitersHeld);
     }
 
     public static HashMap<Integer, ArrayList<Integer>> getSetIgniters()

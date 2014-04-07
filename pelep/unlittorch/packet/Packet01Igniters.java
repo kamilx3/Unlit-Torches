@@ -22,9 +22,7 @@ public class Packet01Igniters extends PacketCustom
         this.igniters = igniters;
 
         if (this.igniters == null || this.igniters.length() < 1)
-        {
             this.igniters = "";
-        }
     }
 
     @Override
@@ -43,9 +41,7 @@ public class Packet01Igniters extends PacketCustom
         int size = data.readShort();
 
         for (int i = 0; i < size; i++)
-        {
             this.igniters += data.readChar();
-        }
     }
 
     @Override

@@ -225,7 +225,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     }
 
 
-    //----------------------------------mine----------------------------------//
+    //----------------------------------util----------------------------------//
 
 
     private static void destroyItem(World world, EntityPlayer p, int slot)

@@ -1,5 +1,7 @@
 package pelep.unlittorch.ai;
 
+import static pelep.unlittorch.ai.EntityAIHandleTorches.canEntitySeeBlock;
+
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLiving;
@@ -7,7 +9,7 @@ import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import pelep.unlittorch.ai.EntityAIHelper.TorchInfo;
+import pelep.pcl.util.vec.Coordinate;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
@@ -18,7 +20,7 @@ public class EntityAIShootTorches extends EntityAIBase
 {
     private final EntityLiving el;
     private final World world;
-    private TorchInfo torch;
+    private Coordinate torch;
 
     private int delay = 0;
     private int retry = 0;
@@ -50,7 +52,6 @@ public class EntityAIShootTorches extends EntityAIBase
         EntityArrow ea = new EntityArrow(this.world);
 
         double distx = x - this.el.posX;
-        double disty = y - this.el.posY - 2;
         double distz = z - this.el.posZ;
         double dist = MathHelper.sqrt_double(distx * distx + distz * distz);
 
@@ -60,34 +61,25 @@ public class EntityAIShootTorches extends EntityAIBase
             ea.posY = this.el.posY + this.el.getEyeHeight() - 0.10000000149011612D;
             ea.setDamage(1D + this.world.rand.nextGaussian() * 0.25D + (this.world.difficultySetting * 0.11F));
 
+            double disty = y - this.el.posY - 2;
             float yaw = (float)(Math.atan2(distz, distx) * 180D / Math.PI) - 90F;
             float pitch = (float)(-(Math.atan2(disty, dist) * 180D / Math.PI));
 
             double i = distx / dist;
-            double j = distz / dist;
-            double k = (float)dist * 0.2F;
+            double j = (float) dist * 0.2F;
+            double k = distz / dist;
 
-            ea.setLocationAndAngles(this.el.posX + i, ea.posY, this.el.posZ + j, yaw, pitch);
+            ea.setLocationAndAngles(this.el.posX + i, ea.posY, this.el.posZ + k, yaw, pitch);
             ea.yOffset = 0F;
-            ea.setThrowableHeading(distx, disty + k, distz, 1.3F, (14 - this.world.difficultySetting * 4));
+            ea.setThrowableHeading(distx, disty + j, distz, 1.3F, (14 - this.world.difficultySetting * 4));
 
             int power = EnchantmentHelper.getEnchantmentLevel(Enchantment.power.effectId, this.el.getHeldItem());
             int punch = EnchantmentHelper.getEnchantmentLevel(Enchantment.punch.effectId, this.el.getHeldItem());
 
-            if (power > 0)
-            {
-                ea.setDamage(ea.getDamage() + power * 0.5D + 0.5D);
-            }
-
-            if (punch > 0)
-            {
-                ea.setKnockbackStrength(punch);
-            }
-
+            if (power > 0) ea.setDamage(ea.getDamage() + power * 0.5D + 0.5D);
+            if (punch > 0) ea.setKnockbackStrength(punch);
             if (EnchantmentHelper.getEnchantmentLevel(Enchantment.flame.effectId, this.el.getHeldItem()) > 0)
-            {
                 ea.setFire(100);
-            }
 
             this.el.getLookHelper().setLookPosition(x, y, z, 30F, 30F);
             this.world.playSoundAtEntity(this.el, "random.bow", 1F, 1F / (this.world.rand.nextFloat() * 0.4F + 0.8F));
@@ -147,27 +139,25 @@ public class EntityAIShootTorches extends EntityAIBase
 
                         if (te.isEternal()) continue;
 
-                        TorchInfo torch = new TorchInfo(x, y, z);
+                        Coordinate coord = new Coordinate(x, y, z);
 
-                        if (EntityAIHelper.canEntitySeeTorch(this.el, torch, r + 0.5D))
+                        if (canEntitySeeBlock(this.el, coord, r + 0.5D))
                         {
                             if (this.torch == null)
                             {
-                                this.torch = torch;
+                                this.torch = coord;
                             }
                             else
                             {
                                 double x1 = this.torch.x + 0.5D;
                                 double y1 = this.torch.y + 0.5D;
                                 double z1 = this.torch.z + 0.5D;
-                                double x2 = torch.x + 0.5D;
-                                double y2 = torch.y + 0.5D;
-                                double z2 = torch.z + 0.5D;
+                                double x2 = coord.x + 0.5D;
+                                double y2 = coord.y + 0.5D;
+                                double z2 = coord.z + 0.5D;
 
                                 if (this.el.getDistanceSq(x1, y1, z1) > this.el.getDistanceSq(x2, y2, z2))
-                                {
-                                    this.torch = torch;
-                                }
+                                    this.torch = coord;
                             }
                         }
                     }

@@ -55,26 +55,26 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         double x = this.x() + 0.5D;
         double y = this.y() + 0.7D;
         double z = this.z() + 0.5D;
-        double hos = 0.2199999988079071D;
-        double dos = 0.27000001072883606D;
+        double vos = 0.2199999988079071D;
+        double hos = 0.27000001072883606D;
 
         switch (this.meta)
         {
             case 1:
-                world.spawnParticle("smoke", x - dos, y + hos, z, 0D, 0D, 0D);
-                world.spawnParticle("flame", x - dos, y + hos, z, 0D, 0D, 0D);
+                world.spawnParticle("smoke", x - hos, y + vos, z, 0D, 0D, 0D);
+                world.spawnParticle("flame", x - hos, y + vos, z, 0D, 0D, 0D);
                 break;
             case 2:
-                world.spawnParticle("smoke", x + dos, y + hos, z, 0D, 0D, 0D);
-                world.spawnParticle("flame", x + dos, y + hos, z, 0D, 0D, 0D);
+                world.spawnParticle("smoke", x + hos, y + vos, z, 0D, 0D, 0D);
+                world.spawnParticle("flame", x + hos, y + vos, z, 0D, 0D, 0D);
                 break;
             case 3:
-                world.spawnParticle("smoke", x, y + hos, z - dos, 0D, 0D, 0D);
-                world.spawnParticle("flame", x, y + hos, z - dos, 0D, 0D, 0D);
+                world.spawnParticle("smoke", x, y + vos, z - hos, 0D, 0D, 0D);
+                world.spawnParticle("flame", x, y + vos, z - hos, 0D, 0D, 0D);
                 break;
             case 4:
-                world.spawnParticle("smoke", x, y + hos, z + dos, 0D, 0D, 0D);
-                world.spawnParticle("flame", x, y + hos, z + dos, 0D, 0D, 0D);
+                world.spawnParticle("smoke", x, y + vos, z + hos, 0D, 0D, 0D);
+                world.spawnParticle("flame", x, y + vos, z + hos, 0D, 0D, 0D);
                 break;
             default:
                 world.spawnParticle("smoke", x, y, z, 0D, 0D, 0D);
@@ -221,6 +221,10 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         this.age++;
     }
 
+
+    //----------------------------------util----------------------------------//
+
+
     private void extinguishPart(String sound, float volume)
     {
         if (this.world().isRemote) return;
@@ -233,8 +237,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         this.tile().remPart(this);
         TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartUnlit(this.meta, this.age, this.eternal));
 
-        if (sound != null && !"".equals(sound))
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
+        if (!"".equals(sound)) world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 
     private void destroyPart()

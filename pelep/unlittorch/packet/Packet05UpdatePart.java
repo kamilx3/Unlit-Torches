@@ -1,5 +1,7 @@
 package pelep.unlittorch.packet;
 
+import static pelep.unlittorch.UnlitTorch.LOGGER;
+
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import com.google.common.io.ByteArrayDataInput;
@@ -75,7 +77,7 @@ public class Packet05UpdatePart extends PacketCustom
             }
             catch (IndexOutOfBoundsException e)
             {
-                //
+                LOGGER.warning("Index %d for TileMultipart at (%d,%d,%d) is out of bounds", this.index, this.x, this.y, this.z);
             }
         }
     }

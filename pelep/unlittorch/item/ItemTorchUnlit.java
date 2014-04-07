@@ -44,9 +44,7 @@ public class ItemTorchUnlit extends ItemTorch
         int id = world.getBlockId(x, y, z);
 
         if (!ep.isSneaking() && (id == Block.torchWood.blockID || IgnitersHandler.canIgniteHeldTorch(id, world.getBlockMetadata(x, y, z))))
-        {
             return true;
-        }
 
         return super.canPlaceItemBlockOnSide(world, x, y, z, side, ep, ist);
     }

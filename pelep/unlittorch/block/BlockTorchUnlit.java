@@ -38,10 +38,7 @@ public class BlockTorchUnlit extends BlockTorch
     public void onEntityCollidedWithBlock(World world, int x, int y, int z, Entity e)
     {
         if (!world.isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
-        {
-            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            igniteBlock(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
-        }
+            igniteBlock(world, x, y, z, "fire.fire");
     }
 
     @Override
@@ -68,33 +65,28 @@ public class BlockTorchUnlit extends BlockTorch
 
             if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
             {
-                TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-                igniteBlock(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+                igniteBlock(world, x, y, z, "fire.fire");
                 return true;
             }
             else if (IgnitersHandler.canIgniteSetTorch(id, d))
             {
-                TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-                int age = te.getAge();
-                boolean eternal = te.isEternal();
-
                 if (id == Item.bucketLava.itemID)
                 {
-                    igniteBlock(eternal, age, world, x, y, z, "fire.fire");
+                    igniteBlock(world, x, y, z, "fire.fire");
                 }
                 else if (id == Item.flint.itemID)
                 {
-                    igniteBlock(eternal, age, world, x, y, z, "fire.ignite");
+                    igniteBlock(world, x, y, z, "fire.ignite");
                     if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {
-                    igniteBlock(eternal, age, world, x, y, z, "fire.ignite");
+                    igniteBlock(world, x, y, z, "fire.ignite");
                     ist.damageItem(1, p);
                 }
                 else
                 {
-                    igniteBlock(eternal, age, world, x, y, z, "fire.fire");
+                    igniteBlock(world, x, y, z, "fire.fire");
 
                     if (!p.capabilities.isCreativeMode)
                     {
@@ -113,10 +105,9 @@ public class BlockTorchUnlit extends BlockTorch
             }
         }
 
-        if (canIgnite(p))
+        if (useIgniter(p))
         {
-            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            igniteBlock(te.isEternal(), te.getAge(), world, x, y, z, "fire.fire");
+            igniteBlock(world, x, y, z, "fire.fire");
             return true;
         }
 
@@ -124,19 +115,24 @@ public class BlockTorchUnlit extends BlockTorch
     }
 
 
-    //----------------------------------mine----------------------------------//
+    //----------------------------------util----------------------------------//
 
 
-    public static void igniteBlock(boolean eternal, int age, World world, int x, int y, int z, String sound)
+    public static void igniteBlock(World world, int x, int y, int z, String sound)
     {
-        world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        int age = te.getAge();
+        boolean eternal = te.isEternal();
+
+        world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
+        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
+
+        te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         te.setAge(age);
         te.setEternal(eternal);
-        world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 
-    public static boolean canIgnite(EntityPlayer ep)
+    public static boolean useIgniter(EntityPlayer ep)
     {
         int slot = -1;
 

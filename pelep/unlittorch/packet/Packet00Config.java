@@ -21,7 +21,7 @@ public class Packet00Config extends PacketCustom
     public void encode(ByteArrayDataOutput data)
     {
         byte b = 0;
-        b |= ConfigCommon.torchRecipeYieldsUnlit ? 1 << 0 : 0;
+        b |= ConfigCommon.torchRecipeYieldsUnlit ? 1 : 0;
         b |= ConfigCommon.torchUpdates ? 1 << 1 : 0;
         b |= ConfigCommon.torchSingleUse ? 1 << 2 : 0;
 
@@ -43,7 +43,7 @@ public class Packet00Config extends PacketCustom
     {
         if (!client) throw new ProtocolException("Config packet received on server side!");
 
-        ConfigCommon.torchRecipeYieldsUnlit = (this.b & (1 << 0)) == (1 << 0);
+        ConfigCommon.torchRecipeYieldsUnlit = (this.b & 1) == 1;
         ConfigCommon.torchUpdates = (this.b & (1 << 1)) == (1 << 1);
         ConfigCommon.torchSingleUse = (this.b & (1 << 2)) == (1 << 2);
         ConfigCommon.torchLifespanMax = this.torchLifespanMax;

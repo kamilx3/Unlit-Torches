@@ -62,7 +62,7 @@ public class RecipeTorch implements IRecipe
             }
             else
             {
-                this.torch = new ItemStack(50, ConfigCommon.torchRecipeYieldCount, 0);
+                this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, ConfigCommon.torchRecipeYieldCount, 0);
             }
 
             return true;

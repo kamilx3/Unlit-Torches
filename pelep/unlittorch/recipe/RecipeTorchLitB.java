@@ -66,14 +66,11 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
             }
         }
 
-        if (n == 2 && t != -1 && f != -1)
-        {
-            this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ic.getStackInSlot(t).getItemDamage());
-            this.torch.setTagCompound(ic.getStackInSlot(t).getTagCompound());
-            return true;
-        }
+        if (n != 2 || t == -1 || f == -1) return false;
 
-        return false;
+        this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ic.getStackInSlot(t).getItemDamage());
+        this.torch.setTagCompound(ic.getStackInSlot(t).getTagCompound());
+        return true;
     }
 
     @Override
@@ -137,9 +134,7 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
         ign.stackSize++;
 
         if (ign.itemID == Item.flintAndSteel.itemID && ign.attemptDamageItem(1, p.getRNG()))
-        {
             inv.setInventorySlotContents(f, null);
-        }
     }
 
     @Override

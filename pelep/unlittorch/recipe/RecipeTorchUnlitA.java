@@ -50,18 +50,15 @@ public class RecipeTorchUnlitA implements IRecipe
             }
         }
 
-        if (n == 2 && t1 != -1 && t2 != -1)
-        {
-            ItemStack ist1 = ic.getStackInSlot(t1);
-            ItemStack ist2 = ic.getStackInSlot(t2);
-            int d = getRepairedValue(ist1.getItemDamage(), ist2.getItemDamage());
-            this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d);
-            if (ist1.stackTagCompound != null || ist2.stackTagCompound != null)
-                this.torch.setTagCompound(new NBTTagCompound());
-            return true;
-        }
+        if (n != 2 || t1 == -1 || t2 == -1) return false;
 
-        return false;
+        ItemStack ist1 = ic.getStackInSlot(t1);
+        ItemStack ist2 = ic.getStackInSlot(t2);
+        int d = getRepairedValue(ist1.getItemDamage(), ist2.getItemDamage());
+        this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d);
+        if (ist1.stackTagCompound != null || ist2.stackTagCompound != null)
+            this.torch.setTagCompound(new NBTTagCompound());
+        return true;
     }
 
     public static int getRepairedValue(int d1, int d2)

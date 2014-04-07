@@ -59,15 +59,12 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
         int d1 = ist1.getItemDamage();
         int d2 = ist2.getItemDamage();
 
-        if (d1 != d2)
-        {
-            double d = (d1 + d2) / 2;
-            this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
-            this.torch.setTagCompound(d1 < d2 ? ist2.getTagCompound() : ist1.getTagCompound());
-            return true;
-        }
+        if (d1 == d2) return false;
 
-        return false;
+        double d = (d1 + d2) / 2;
+        this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
+        this.torch.setTagCompound(d1 < d2 ? ist2.getTagCompound() : ist1.getTagCompound());
+        return true;
     }
 
     @Override

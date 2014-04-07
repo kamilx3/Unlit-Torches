@@ -45,9 +45,7 @@ public class TorchPartUnlit extends TorchPart
     public void onEntityCollision(Entity e)
     {
         if (!this.world().isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
-        {
             this.igniteTorchPart("fire.fire");
-        }
     }
 
     @Override
@@ -114,7 +112,7 @@ public class TorchPartUnlit extends TorchPart
             }
         }
 
-        if (BlockTorchUnlit.canIgnite(ep))
+        if (BlockTorchUnlit.useIgniter(ep))
         {
             this.igniteTorchPart("fire.fire");
             return true;
@@ -122,6 +120,10 @@ public class TorchPartUnlit extends TorchPart
 
         return false;
     }
+
+
+    //----------------------------------util----------------------------------//
+
 
     private void igniteTorchPart(String sound)
     {
@@ -135,7 +137,6 @@ public class TorchPartUnlit extends TorchPart
         this.tile().remPart(this);
         TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartLit(this.meta, this.age, this.eternal));
 
-        if (sound != null && !"".equals(sound))
-            world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
+        if (!"".equals(sound)) world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 }

@@ -40,34 +40,33 @@ public class BlockTorchLit extends BlockTorch
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random rand)
     {
-        double fx = x + 0.5D;
-        double fy = y + 0.7D;
-        double fz = z + 0.5D;
-
-        double hos = 0.2199999988079071D;
-        double dos = 0.27000001072883606D;
+        double dx = x + 0.5D;
+        double dy = y + 0.7D;
+        double dz = z + 0.5D;
+        double vos = 0.2199999988079071D;
+        double hos = 0.27000001072883606D;
 
         switch (world.getBlockMetadata(x, y, z))
         {
             case 1:
-                world.spawnParticle("smoke", fx - dos, fy + hos, fz, 0D, 0D, 0D);
-                world.spawnParticle("flame", fx - dos, fy + hos, fz, 0D, 0D, 0D);
+                world.spawnParticle("smoke", dx - hos, dy + vos, dz, 0D, 0D, 0D);
+                world.spawnParticle("flame", dx - hos, dy + vos, dz, 0D, 0D, 0D);
                 break;
             case 2:
-                world.spawnParticle("smoke", fx + dos, fy + hos, fz, 0D, 0D, 0D);
-                world.spawnParticle("flame", fx + dos, fy + hos, fz, 0D, 0D, 0D);
+                world.spawnParticle("smoke", dx + hos, dy + vos, dz, 0D, 0D, 0D);
+                world.spawnParticle("flame", dx + hos, dy + vos, dz, 0D, 0D, 0D);
                 break;
             case 3:
-                world.spawnParticle("smoke", fx, fy + hos, fz - dos, 0D, 0D, 0D);
-                world.spawnParticle("flame", fx, fy + hos, fz - dos, 0D, 0D, 0D);
+                world.spawnParticle("smoke", dx, dy + vos, dz - hos, 0D, 0D, 0D);
+                world.spawnParticle("flame", dx, dy + vos, dz - hos, 0D, 0D, 0D);
                 break;
             case 4:
-                world.spawnParticle("smoke", fx, fy + hos, fz + dos, 0D, 0D, 0D);
-                world.spawnParticle("flame", fx, fy + hos, fz + dos, 0D, 0D, 0D);
+                world.spawnParticle("smoke", dx, dy + vos, dz + hos, 0D, 0D, 0D);
+                world.spawnParticle("flame", dx, dy + vos, dz + hos, 0D, 0D, 0D);
                 break;
             default:
-                world.spawnParticle("smoke", fx, fy, fz, 0D, 0D, 0D);
-                world.spawnParticle("flame", fx, fy, fz, 0D, 0D, 0D);
+                world.spawnParticle("smoke", dx, dy, dz, 0D, 0D, 0D);
+                world.spawnParticle("flame", dx, dy, dz, 0D, 0D, 0D);
         }
     }
 
@@ -153,7 +152,7 @@ public class BlockTorchLit extends BlockTorch
     }
 
 
-    //----------------------------------mine----------------------------------//
+    //----------------------------------util----------------------------------//
 
 
     public static void extinguishBlock(World world, int x, int y, int z, String sound, float volume)
@@ -162,7 +161,7 @@ public class BlockTorchLit extends BlockTorch
         int age = te.getAge();
         boolean eternal = te.isEternal();
 
-        world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 1 | 2);
+        world.setBlock(x, y, z, ConfigCommon.blockIdTorchUnlit, world.getBlockMetadata(x, y, z), 1|2);
         world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
 
         te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
@@ -193,7 +192,7 @@ public class BlockTorchLit extends BlockTorch
     {
         if (ist.stackSize > 1)
         {
-            ItemStack torch = new ItemStack(50, 1, ist.getItemDamage());
+            ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ist.getItemDamage());
             torch.setTagCompound(ist.getTagCompound());
             ist.stackSize--;
             if (!p.inventory.addItemStackToInventory(torch)) p.dropPlayerItemWithRandomChoice(torch, false).delayBeforeCanPickup = 10;

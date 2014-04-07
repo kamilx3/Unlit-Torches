@@ -1,10 +1,12 @@
 package pelep.unlittorch.ai;
 
+import static pelep.unlittorch.ai.EntityAIHandleTorches.canEntitySeeBlock;
+
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import pelep.unlittorch.ai.EntityAIHelper.TorchInfo;
+import pelep.pcl.util.vec.Coordinate;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.tileentity.TileEntityTorch;
@@ -16,7 +18,7 @@ public class EntityAIBreakTorches extends EntityAIBase
 {
     private final EntityLiving el;
     private final World world;
-    private TorchInfo torch;
+    private Coordinate torch;
     private int delay;
 
     public EntityAIBreakTorches(EntityLiving el)
@@ -66,27 +68,25 @@ public class EntityAIBreakTorches extends EntityAIBase
 
                         if (te.isEternal()) continue;
 
-                        TorchInfo torch = new TorchInfo(x, y, z);
+                        Coordinate coord = new Coordinate(x, y, z);
 
-                        if (EntityAIHelper.canEntitySeeTorch(this.el, torch, r + 0.5D))
+                        if (canEntitySeeBlock(this.el, coord, r + 0.5D))
                         {
                             if (this.torch == null)
                             {
-                                this.torch = torch;
+                                this.torch = coord;
                             }
                             else
                             {
                                 double x1 = this.torch.x + 0.5D;
                                 double y1 = this.torch.y + 0.5D;
                                 double z1 = this.torch.z + 0.5D;
-                                double x2 = torch.x + 0.5D;
-                                double y2 = torch.y + 0.5D;
-                                double z2 = torch.z + 0.5D;
+                                double x2 = coord.x + 0.5D;
+                                double y2 = coord.y + 0.5D;
+                                double z2 = coord.z + 0.5D;
 
                                 if (this.el.getDistanceSq(x1, y1, z1) > this.el.getDistanceSq(x2, y2, z2))
-                                {
-                                    this.torch = torch;
-                                }
+                                    this.torch = coord;
                             }
                         }
                     }

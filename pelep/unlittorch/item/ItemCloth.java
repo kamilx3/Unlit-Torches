@@ -22,6 +22,7 @@ import java.util.List;
  */
 public class ItemCloth extends Item
 {
+    @SideOnly(Side.CLIENT)
     private static Icon icon_wet;
 
     public ItemCloth()
