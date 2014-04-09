@@ -140,10 +140,9 @@ public class BlockTorchLit extends BlockTorch
             }
             else if (id == Item.gunpowder.itemID)
             {
+                float strength = ist.stackSize < 5 ? (ist.stackSize * 0.2F) : 1F;
+                world.newExplosion(p, x, y, z, strength, ist.stackSize > 5, true);
                 if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 5);
-                int size = ist.stackSize;
-                float strength = size < 5 ? (size * 0.2F) : 1F;
-                world.newExplosion(p, x, y, z, strength, size > 5, true);
                 return true;
             }
         }
