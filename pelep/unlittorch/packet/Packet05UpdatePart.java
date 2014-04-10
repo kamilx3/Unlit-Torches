@@ -1,14 +1,10 @@
 package pelep.unlittorch.packet;
 
-import static pelep.unlittorch.UnlitTorch.LOGGER;
-
-import codechicken.multipart.TMultiPart;
-import codechicken.multipart.TileMultipart;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.tileentity.TileEntity;
 import pelep.pcl.ProtocolException;
+import pelep.pcl.util.vec.Coordinate;
 import pelep.unlittorch.multipart.TorchPartLit;
 
 /**
@@ -16,21 +12,17 @@ import pelep.unlittorch.multipart.TorchPartLit;
  */
 public class Packet05UpdatePart extends PacketCustom
 {
-    private int index;
-    private int x;
-    private int y;
-    private int z;
+    private Coordinate pos;
+    private int idx;
     private int dim;
     private int age;
 
     Packet05UpdatePart() {}
 
-    public Packet05UpdatePart(int index, int x, int y, int z, int dim, int age)
+    public Packet05UpdatePart(int idx, int x, int y, int z, int dim, int age)
     {
-        this.index = index;
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.pos = new Coordinate(x, y, z);
+        this.idx = idx;
         this.dim = dim;
         this.age = age;
     }
@@ -38,10 +30,10 @@ public class Packet05UpdatePart extends PacketCustom
     @Override
     public void encode(ByteArrayDataOutput data)
     {
-        data.writeInt(this.index);
-        data.writeInt(this.x);
-        data.writeInt(this.y);
-        data.writeInt(this.z);
+        data.writeInt(this.idx);
+        data.writeInt(this.pos.x);
+        data.writeInt(this.pos.y);
+        data.writeInt(this.pos.z);
         data.writeInt(this.dim);
         data.writeInt(this.age);
     }
@@ -49,10 +41,8 @@ public class Packet05UpdatePart extends PacketCustom
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.index = data.readInt();
-        this.x = data.readInt();
-        this.y = data.readInt();
-        this.z = data.readInt();
+        this.idx = data.readInt();
+        this.pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
         this.dim = data.readInt();
         this.age = data.readInt();
     }
@@ -61,25 +51,8 @@ public class Packet05UpdatePart extends PacketCustom
     public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
-        if (p.worldObj.provider.dimensionId != this.dim || !p.worldObj.blockExists(this.x, this.y, this.z)) return;
-
-        TileEntity te = p.worldObj.getBlockTileEntity(this.x, this.y, this.z);
-
-        if (te instanceof TileMultipart)
-        {
-            try
-            {
-                TileMultipart tm = (TileMultipart) te;
-                TMultiPart part = tm.jPartList().get(this.index);
-
-                if (part != null && "unlittorch:torch_lit".equals(part.getType()))
-                    ((TorchPartLit)part).setAge(this.age);
-            }
-            catch (IndexOutOfBoundsException e)
-            {
-                LOGGER.warning("Index %d for TileMultipart at (%d,%d,%d) is out of bounds", this.index, this.x, this.y, this.z);
-            }
-        }
+        if (p.worldObj.provider.dimensionId != this.dim || !p.worldObj.blockExists(this.pos.x, this.pos.y, this.pos.z)) return;
+        TorchPartLit.updatePart(p.worldObj, this.pos, this.idx, this.age);
     }
 
     @Override

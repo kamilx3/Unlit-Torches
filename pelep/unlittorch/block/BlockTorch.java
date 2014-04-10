@@ -266,27 +266,11 @@ abstract class BlockTorch extends BlockContainer
 
     private static int getPossibleMetadata(World world, int x, int y, int z)
     {
-        if (canPlaceTorchOn(world, x, y - 1, z))
-        {
-            return 5;
-        }
-        else if (world.isBlockSolidOnSide(x, y, z + 1, NORTH, true))
-        {
-            return 4;
-        }
-        else if (world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true))
-        {
-            return 3;
-        }
-        else if (world.isBlockSolidOnSide(x + 1, y, z, WEST, true))
-        {
-            return 2;
-        }
-        else if (world.isBlockSolidOnSide(x - 1, y, z, EAST, true))
-        {
-            return 1;
-        }
-
+        if (canPlaceTorchOn(world, x, y - 1, z)) return 5;
+        if (world.isBlockSolidOnSide(x, y, z + 1, NORTH, true)) return 4;
+        if (world.isBlockSolidOnSide(x, y, z - 1, SOUTH, true)) return 3;
+        if (world.isBlockSolidOnSide(x + 1, y, z, WEST, true)) return 2;
+        if (world.isBlockSolidOnSide(x - 1, y, z, EAST, true)) return 1;
         return 0;
     }
 

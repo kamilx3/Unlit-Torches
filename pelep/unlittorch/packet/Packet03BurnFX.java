@@ -4,42 +4,37 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import pelep.pcl.ProtocolException;
+import pelep.pcl.util.vec.Coordinate;
 
 /**
  * @author pelep
  */
 public class Packet03BurnFX extends PacketCustom
 {
-    private int x;
-    private int y;
-    private int z;
+    private Coordinate pos;
     private int md;
 
     public Packet03BurnFX() {}
 
     public Packet03BurnFX(int x, int y, int z, int md)
     {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+        this.pos = new Coordinate(x, y, z);
         this.md = md;
     }
 
     @Override
     public void encode(ByteArrayDataOutput data)
     {
-        data.writeInt(this.x);
-        data.writeInt(this.y);
-        data.writeInt(this.z);
+        data.writeInt(this.pos.x);
+        data.writeInt(this.pos.y);
+        data.writeInt(this.pos.z);
         data.writeByte(this.md);
     }
 
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.x = data.readInt();
-        this.y = data.readInt();
-        this.z = data.readInt();
+        this.pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
         this.md = data.readByte();
     }
 
@@ -48,9 +43,9 @@ public class Packet03BurnFX extends PacketCustom
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
-        double dx = this.x + 0.5D;
-        double dy = this.y + 0.7D;
-        double dz = this.z + 0.5D;
+        double dx = this.pos.x + 0.5D;
+        double dy = this.pos.y + 0.7D;
+        double dz = this.pos.z + 0.5D;
 
         switch (this.md)
         {

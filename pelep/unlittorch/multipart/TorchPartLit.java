@@ -1,7 +1,10 @@
 package pelep.unlittorch.multipart;
 
+import static pelep.unlittorch.UnlitTorch.LOGGER;
+
 import codechicken.lib.vec.BlockCoord;
 import codechicken.multipart.IRandomDisplayTick;
+import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.block.Block;
@@ -11,10 +14,12 @@ import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
+import pelep.pcl.util.vec.Coordinate;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet03BurnFX;
@@ -269,11 +274,6 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         PacketDispatcher.sendPacketToAllInDimension(new Packet05UpdatePart(i, this.x(), this.y(), this.z(), dim, this.age).create(), dim);
     }
 
-    public void setAge(int age)
-    {
-        this.age = age;
-    }
-
     //replacement for world#canLightningStrikeAt(x, y, z)
     private boolean isWet()
     {
@@ -291,5 +291,26 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         }
 
         return true;
+    }
+
+    public static void updatePart(World world, Coordinate coord, int index, int age)
+    {
+        TileEntity te = world.getBlockTileEntity(coord.x, coord.y, coord.z);
+
+        if (te instanceof TileMultipart)
+        {
+            try
+            {
+                TileMultipart tm = (TileMultipart) te;
+                TMultiPart part = tm.jPartList().get(index);
+
+                if (part != null && "unlittorch:torch_lit".equals(part.getType()))
+                    ((TorchPartLit)part).age = age;
+            }
+            catch (IndexOutOfBoundsException e)
+            {
+                LOGGER.warning("Index %d for TileMultipart at (%d,%d,%d) is out of bounds", index, coord.x, coord.y, coord.z);
+            }
+        }
     }
 }

@@ -35,7 +35,7 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
     public TorchPartFactory()
     {
         MultiPartRegistry.registerConverter(this);
-        MultiPartRegistry.registerParts(this, new String[]{"unlittorch:torch_lit", "unlittorch:torch_unlit",});
+        MultiPartRegistry.registerParts(this, new String[]{"unlittorch:torch_lit", "unlittorch:torch_unlit"});
         if (FMLCommonHandler.instance().getSide().isClient())
             MinecraftForge.EVENT_BUS.register(this);
     }
@@ -92,25 +92,11 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
 
     public static boolean place(EntityPlayer ep, World world)
     {
-        MovingObjectPosition hit = RayTracer.reTrace(world, ep);
-        if (hit == null) return false;
-
         ItemStack held = ep.getHeldItem();
         if (held == null) return false;
 
-        BlockCoord pos = new BlockCoord(hit.blockX, hit.blockY, hit.blockZ).offset(hit.sideHit);
-        TorchPart part = null;
-
-        if (held.itemID == ConfigCommon.blockIdTorchLit)
-        {
-            part = TorchPart.getPart(world, pos, hit.sideHit, true, held.getItemDamage(), held.stackTagCompound != null);
-        }
-        else if (held.itemID == ConfigCommon.blockIdTorchUnlit)
-        {
-            part = TorchPart.getPart(world, pos, hit.sideHit, false, held.getItemDamage(), held.stackTagCompound != null);
-        }
-
-        if (part == null) return false;
+        MovingObjectPosition hit = RayTracer.reTrace(world, ep);
+        if (hit == null) return false;
 
         if (world.isRemote && !ep.isSneaking())
         {
@@ -127,6 +113,20 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
                 return false;
             }
         }
+
+        BlockCoord pos = new BlockCoord(hit.blockX, hit.blockY, hit.blockZ).offset(hit.sideHit);
+        TorchPart part = null;
+
+        if (held.itemID == ConfigCommon.blockIdTorchLit)
+        {
+            part = TorchPart.getPart(world, pos, hit.sideHit, true, held.getItemDamage(), held.stackTagCompound != null);
+        }
+        else if (held.itemID == ConfigCommon.blockIdTorchUnlit)
+        {
+            part = TorchPart.getPart(world, pos, hit.sideHit, false, held.getItemDamage(), held.stackTagCompound != null);
+        }
+
+        if (part == null) return false;
 
         TileMultipart tile = TileMultipart.getOrConvertTile(world, pos);
         if (tile == null || !tile.canAddPart(part)) return false;
