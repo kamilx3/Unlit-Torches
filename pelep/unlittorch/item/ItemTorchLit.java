@@ -104,11 +104,8 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             for (int i = slot; i < p.inventory.mainInventory.length; i++)
             {
                 ItemStack inv = p.inventory.mainInventory[i];
-
                 if (inv != null && inv.itemID == this.itemID)
-                {
                     inv.itemID = ConfigCommon.blockIdTorchUnlit;
-                }
             }
         }
         else
@@ -162,16 +159,12 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     public boolean onEntityItemUpdate(EntityItem ei)
     {
         if (ei.worldObj.isRemote || !ConfigCommon.torchUpdates || ei.worldObj.getTotalWorldTime() % 3 != 0)
-        {
             return false;
-        }
 
         ItemStack ist = ei.getEntityItem();
 
         if (ist.itemID != this.itemID || ist.stackTagCompound != null)
-        {
             return false;
-        }
 
         if (ei.handleWaterMovement())
         {

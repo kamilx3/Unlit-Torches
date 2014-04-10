@@ -118,8 +118,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
             if (id == this.getBlockId())
             {
-                if (ep.swingProgress == 0F) //because multipart activates the block again too quickly
-                    this.renewTorches(ep, ist);
+                this.renewTorches(ep, ist);
                 return true;
             }
             else if (id == ConfigCommon.blockIdTorchUnlit)
