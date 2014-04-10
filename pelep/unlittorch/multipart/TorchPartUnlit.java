@@ -130,13 +130,12 @@ public class TorchPartUnlit extends TorchPart
         if (this.world().isRemote) return;
 
         World world = this.world();
-        int x = this.x();
-        int y = this.y();
-        int z = this.z();
+        BlockCoord pos = new BlockCoord(this.tile());
 
         this.tile().remPart(this);
-        TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartLit(this.meta, this.age, this.eternal));
+        TileMultipart.addPart(world, pos, new TorchPartLit(this.meta, this.age, this.eternal));
 
-        if (!"".equals(sound)) world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
+        if (!"".equals(sound))
+            world.playSoundEffect(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 }

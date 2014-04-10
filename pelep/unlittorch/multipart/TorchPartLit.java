@@ -183,22 +183,22 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     {
         if (this.world().getTotalWorldTime() % 3 != 0 || this.eternal || !ConfigCommon.torchUpdates) return;
 
-        if (this.age >= ConfigCommon.torchLifespanMax)
-        {
-            if (ConfigCommon.torchSingleUse)
-            {
-                this.destroyPart();
-            }
-            else
-            {
-                this.extinguishPart("fire.fire", 1F);
-            }
-
-            return;
-        }
-
         if (!this.world().isRemote)
         {
+            if (this.age >= ConfigCommon.torchLifespanMax)
+            {
+                if (ConfigCommon.torchSingleUse)
+                {
+                    this.destroyPart();
+                }
+                else
+                {
+                    this.extinguishPart("fire.fire", 1F);
+                }
+
+                return;
+            }
+
             if (this.isWet() && this.world().rand.nextInt(10) == 0)
             {
                 this.extinguishPart("random.fizz", 0.3F);
@@ -235,14 +235,13 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         if (this.world().isRemote) return;
 
         World world = this.world();
-        int x = this.x();
-        int y = this.y();
-        int z = this.z();
+        BlockCoord pos = new BlockCoord(this.tile());
 
         this.tile().remPart(this);
-        TileMultipart.addPart(world, new BlockCoord(x, y, z), new TorchPartUnlit(this.meta, this.age, this.eternal));
+        TileMultipart.addPart(world, pos, new TorchPartUnlit(this.meta, this.age, this.eternal));
 
-        if (!"".equals(sound)) world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
+        if (!"".equals(sound))
+            world.playSoundEffect(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
     }
 
     private void destroyPart()
@@ -271,7 +270,8 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
         int dim = this.world().provider.dimensionId;
         int i = this.tile().jPartList().indexOf(this);
-        PacketDispatcher.sendPacketToAllInDimension(new Packet05UpdatePart(i, this.x(), this.y(), this.z(), dim, this.age).create(), dim);
+        Coordinate pos = new Coordinate(this.x(), this.y(), this.z());
+        PacketDispatcher.sendPacketToAllInDimension(new Packet05UpdatePart(i, pos, dim, this.age).create(), dim);
     }
 
     //replacement for world#canLightningStrikeAt(x, y, z)

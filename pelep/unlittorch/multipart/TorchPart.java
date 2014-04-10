@@ -167,7 +167,7 @@ abstract class TorchPart extends McSidedMetaPart
 
             int w = fr.getStringWidth(age) / 2;
 
-            float scale = 0.016666668F / 2F;
+            float scale = 1F / 120F;
             float viewX = ep.prevRotationPitch + (ep.rotationPitch - ep.prevRotationPitch) * frame;
             float viewY = ep.prevRotationYaw + (ep.rotationYaw - ep.prevRotationYaw) * frame;
 

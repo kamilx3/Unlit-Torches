@@ -33,7 +33,7 @@ public class RenderBlockTorch extends TileEntitySpecialRenderer
 
                 int w = fr.getStringWidth(age) / 2;
 
-                float scale = 0.016666668F;
+                float scale = 1F / 60F;
                 float viewX = ep.prevRotationPitch + (ep.rotationPitch - ep.prevRotationPitch) * ptick;
                 float viewY = ep.prevRotationYaw + (ep.rotationYaw - ep.prevRotationYaw) * ptick;
                 float ay = te.getBlockMetadata() == 5 ? 1.05F : 0.9F;

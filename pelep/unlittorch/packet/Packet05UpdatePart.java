@@ -19,9 +19,9 @@ public class Packet05UpdatePart extends PacketCustom
 
     Packet05UpdatePart() {}
 
-    public Packet05UpdatePart(int idx, int x, int y, int z, int dim, int age)
+    public Packet05UpdatePart(int idx, Coordinate pos, int dim, int age)
     {
-        this.pos = new Coordinate(x, y, z);
+        this.pos = pos;
         this.idx = idx;
         this.dim = dim;
         this.age = age;
