@@ -98,6 +98,20 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         MovingObjectPosition hit = RayTracer.reTrace(world, ep);
         if (hit == null) return false;
 
+        BlockCoord pos = new BlockCoord(hit.blockX, hit.blockY, hit.blockZ).offset(hit.sideHit);
+        TorchPart part = null;
+
+        if (held.itemID == ConfigCommon.blockIdTorchLit)
+        {
+            part = TorchPart.getPart(world, pos, hit.sideHit, true, held.getItemDamage(), held.stackTagCompound != null);
+        }
+        else if (held.itemID == ConfigCommon.blockIdTorchUnlit)
+        {
+            part = TorchPart.getPart(world, pos, hit.sideHit, false, held.getItemDamage(), held.stackTagCompound != null);
+        }
+
+        if (part == null) return false;
+
         if (world.isRemote && !ep.isSneaking())
         {
             Vector3 vec = new Vector3(hit.hitVec).add(-hit.blockX, -hit.blockY, -hit.blockZ);
@@ -113,20 +127,6 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
                 return false;
             }
         }
-
-        BlockCoord pos = new BlockCoord(hit.blockX, hit.blockY, hit.blockZ).offset(hit.sideHit);
-        TorchPart part = null;
-
-        if (held.itemID == ConfigCommon.blockIdTorchLit)
-        {
-            part = TorchPart.getPart(world, pos, hit.sideHit, true, held.getItemDamage(), held.stackTagCompound != null);
-        }
-        else if (held.itemID == ConfigCommon.blockIdTorchUnlit)
-        {
-            part = TorchPart.getPart(world, pos, hit.sideHit, false, held.getItemDamage(), held.stackTagCompound != null);
-        }
-
-        if (part == null) return false;
 
         TileMultipart tile = TileMultipart.getOrConvertTile(world, pos);
         if (tile == null || !tile.canAddPart(part)) return false;
