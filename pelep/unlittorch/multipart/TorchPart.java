@@ -159,7 +159,7 @@ abstract class TorchPart extends McSidedMetaPart
 
         EntityLivingBase ep = Minecraft.getMinecraft().thePlayer;
 
-        if (this.tile().getDistanceFrom(ep.posX, ep.posY, ep.posZ) <= 80D)
+        if (ep.getDistance(this.x() + 0.5, this.y() + 0.5, this.z() + 0.5) <= 80D)
         {
             FontRenderer fr = MultipartRenderer.getFontRenderer();
             Tessellator t = Tessellator.instance;
