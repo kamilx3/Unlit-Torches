@@ -26,9 +26,9 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     public ItemTorchLit(int id)
     {
         super(id);
-        this.setMaxStackSize(1);
-        this.setUnlocalizedName("unlittorch:torch_lit");
-        this.setTextureName("torch_on");
+        setMaxStackSize(1);
+        setUnlocalizedName("unlittorch:torch_lit");
+        setTextureName("torch_on");
     }
 
 
@@ -59,7 +59,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             {
                 return false;
             }
-            else if (world.getBlockId(x, y, z) == this.itemID)
+            else if (world.getBlockId(x, y, z) == itemID)
             {
                 return false;
             }
@@ -104,7 +104,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             for (int i = slot; i < p.inventory.mainInventory.length; i++)
             {
                 ItemStack inv = p.inventory.mainInventory[i];
-                if (inv != null && inv.itemID == this.itemID)
+                if (inv != null && inv.itemID == itemID)
                     inv.itemID = ConfigCommon.blockIdTorchUnlit;
             }
         }
@@ -163,7 +163,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
         ItemStack ist = ei.getEntityItem();
 
-        if (ist.itemID != this.itemID || ist.stackTagCompound != null)
+        if (ist.itemID != itemID || ist.stackTagCompound != null)
             return false;
 
         if (ei.handleWaterMovement())

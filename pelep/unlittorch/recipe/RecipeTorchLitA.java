@@ -62,15 +62,15 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
         if (d1 == d2) return false;
 
         double d = (d1 + d2) / 2;
-        this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
-        this.torch.setTagCompound(d1 < d2 ? ist2.getTagCompound() : ist1.getTagCompound());
+        torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, MathHelper.ceiling_double_int(d));
+        torch.setTagCompound(d1 < d2 ? ist2.getTagCompound() : ist1.getTagCompound());
         return true;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.torch.copy();
+        return torch.copy();
     }
 
     @Override
@@ -82,7 +82,7 @@ public class RecipeTorchLitA implements IRecipe, ICraftingHandler
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.torch;
+        return torch;
     }
 
     @Override

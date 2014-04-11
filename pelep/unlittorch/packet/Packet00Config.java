@@ -33,9 +33,9 @@ public class Packet00Config extends PacketCustom
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.b = data.readByte();
-        this.torchLifespanMax = data.readShort();
-        this.torchRecipeYieldCount = data.readByte();
+        b = data.readByte();
+        torchLifespanMax = data.readShort();
+        torchRecipeYieldCount = data.readByte();
     }
 
     @Override
@@ -43,11 +43,11 @@ public class Packet00Config extends PacketCustom
     {
         if (!client) throw new ProtocolException("Config packet received on server side!");
 
-        ConfigCommon.torchRecipeYieldsUnlit = (this.b & 1) == 1;
-        ConfigCommon.torchUpdates = (this.b & (1 << 1)) == (1 << 1);
-        ConfigCommon.torchSingleUse = (this.b & (1 << 2)) == (1 << 2);
-        ConfigCommon.torchLifespanMax = this.torchLifespanMax;
-        ConfigCommon.torchRecipeYieldCount = this.torchRecipeYieldCount;
+        ConfigCommon.torchRecipeYieldsUnlit = (b & 1) == 1;
+        ConfigCommon.torchUpdates = (b & (1 << 1)) == (1 << 1);
+        ConfigCommon.torchSingleUse = (b & (1 << 2)) == (1 << 2);
+        ConfigCommon.torchLifespanMax = torchLifespanMax;
+        ConfigCommon.torchRecipeYieldCount = torchRecipeYieldCount;
     }
 
     @Override

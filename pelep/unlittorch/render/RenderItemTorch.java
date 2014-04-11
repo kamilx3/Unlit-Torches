@@ -61,9 +61,9 @@ public class RenderItemTorch implements IItemRenderer
             int c1 = (255 - i) / 4 << 16 | 16128;
             int c2 = 255 - i << 16 | i << 8;
 
-            this.renderDamage(t, 2, 2, 13, 2, 0);
-            this.renderDamage(t, 2, 2, 12, 1, c1);
-            this.renderDamage(t, 2, 2, dw, 1, c2);
+            renderDamage(t, 2, 2, 13, 2, 0);
+            renderDamage(t, 2, 2, 12, 1, c1);
+            renderDamage(t, 2, 2, dw, 1, c2);
 
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glEnable(GL11.GL_DEPTH_TEST);

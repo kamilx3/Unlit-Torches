@@ -25,17 +25,17 @@ public class Packet03BurnFX extends PacketCustom
     @Override
     public void encode(ByteArrayDataOutput data)
     {
-        data.writeInt(this.pos.x);
-        data.writeInt(this.pos.y);
-        data.writeInt(this.pos.z);
-        data.writeByte(this.md);
+        data.writeInt(pos.x);
+        data.writeInt(pos.y);
+        data.writeInt(pos.z);
+        data.writeByte(md);
     }
 
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
-        this.md = data.readByte();
+        pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
+        md = data.readByte();
     }
 
     @Override
@@ -43,11 +43,11 @@ public class Packet03BurnFX extends PacketCustom
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
-        double dx = this.pos.x + 0.5D;
-        double dy = this.pos.y + 0.7D;
-        double dz = this.pos.z + 0.5D;
+        double dx = pos.x + 0.5D;
+        double dy = pos.y + 0.7D;
+        double dz = pos.z + 0.5D;
 
-        switch (this.md)
+        switch (md)
         {
             case 1:
                 p.worldObj.spawnParticle("flame", dx - 0.275D, dy + 0.225D, dz, 0D, 0D, 0D);

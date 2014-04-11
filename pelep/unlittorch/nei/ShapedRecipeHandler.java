@@ -14,11 +14,11 @@ public class ShapedRecipeHandler extends codechicken.nei.recipe.ShapedRecipeHand
     {
         if (result.itemID == ConfigCommon.blockIdTorchUnlit && ConfigCommon.torchRecipeYieldsUnlit)
         {
-            this.addTorch(false);
+            addTorch(false);
         }
         else if (result.itemID == ConfigCommon.blockIdTorchLit && !ConfigCommon.torchRecipeYieldsUnlit)
         {
-            this.addTorch(true);
+            addTorch(true);
         }
     }
 
@@ -26,7 +26,7 @@ public class ShapedRecipeHandler extends codechicken.nei.recipe.ShapedRecipeHand
     public void loadUsageRecipes(ItemStack ingr)
     {
         if (ingr.itemID == Item.stick.itemID || ingr.itemID == Item.coal.itemID)
-            this.addTorch(!ConfigCommon.torchRecipeYieldsUnlit);
+            addTorch(!ConfigCommon.torchRecipeYieldsUnlit);
     }
 
     public void addTorch(boolean lit)
@@ -34,7 +34,7 @@ public class ShapedRecipeHandler extends codechicken.nei.recipe.ShapedRecipeHand
         ItemStack[] ingra = {new ItemStack(Item.coal, 1, 0), new ItemStack(Item.stick)};
         ItemStack[] ingrb = {new ItemStack(Item.coal, 1, 1), new ItemStack(Item.stick)};
         ItemStack torch = new ItemStack(lit ? ConfigCommon.blockIdTorchLit : ConfigCommon.blockIdTorchUnlit, ConfigCommon.torchRecipeYieldCount, 0);
-        this.arecipes.add(new CachedShapedRecipe(1, 2, ingra, torch));
-        this.arecipes.add(new CachedShapedRecipe(1, 2, ingrb, torch));
+        arecipes.add(new CachedShapedRecipe(1, 2, ingra, torch));
+        arecipes.add(new CachedShapedRecipe(1, 2, ingrb, torch));
     }
 }

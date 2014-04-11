@@ -31,10 +31,10 @@ abstract class BlockTorch extends BlockContainer
     public BlockTorch(int id, boolean lit)
     {
         super(id, Material.circuits);
-        this.setTickRandomly(true);
-        this.setCreativeTab(CreativeTabs.tabDecorations);
-        this.setHardness(0F);
-        this.setStepSound(soundWoodFootstep);
+        setTickRandomly(true);
+        setCreativeTab(CreativeTabs.tabDecorations);
+        setHardness(0F);
+        setStepSound(soundWoodFootstep);
         this.lit = lit;
     }
 
@@ -67,13 +67,13 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public TileEntity createTileEntity(World world, int md)
     {
-        return new TileEntityTorch(this.lit);
+        return new TileEntityTorch(lit);
     }
 
     @Override
     public TileEntity createNewTileEntity(World world)
     {
-        return new TileEntityTorch(this.lit);
+        return new TileEntityTorch(lit);
     }
 
 
@@ -94,20 +94,20 @@ abstract class BlockTorch extends BlockContainer
         switch (world.getBlockMetadata(x, y, z))
         {
             case 1:
-                this.setBlockBounds(0F, 0.2F, 0.5F - adj, adj * 2F, 0.8F, 0.5F + adj);
+                setBlockBounds(0F, 0.2F, 0.5F - adj, adj * 2F, 0.8F, 0.5F + adj);
                 break;
             case 2:
-                this.setBlockBounds(1F - adj * 2F, 0.2F, 0.5F - adj, 1F, 0.8F, 0.5F + adj);
+                setBlockBounds(1F - adj * 2F, 0.2F, 0.5F - adj, 1F, 0.8F, 0.5F + adj);
                 break;
             case 3:
-                this.setBlockBounds(0.5F - adj, 0.2F, 0F, 0.5F + adj, 0.8F, adj * 2F);
+                setBlockBounds(0.5F - adj, 0.2F, 0F, 0.5F + adj, 0.8F, adj * 2F);
                 break;
             case 4:
-                this.setBlockBounds(0.5F - adj, 0.2F, 1F - adj * 2F, 0.5F + adj, 0.8F, 1F);
+                setBlockBounds(0.5F - adj, 0.2F, 1F - adj * 2F, 0.5F + adj, 0.8F, 1F);
                 break;
             default:
                 adj = 0.1F;
-                this.setBlockBounds(0.5F - adj, 0F, 0.5F - adj, 0.5F + adj, 0.6F, 0.5F + adj);
+                setBlockBounds(0.5F - adj, 0F, 0.5F - adj, 0.5F + adj, 0.6F, 0.5F + adj);
         }
     }
 
@@ -119,13 +119,13 @@ abstract class BlockTorch extends BlockContainer
     public void updateTick(World world, int x, int y, int z, Random rand)
     {
         super.updateTick(world, x, y, z, rand);
-        this.onBlockAdded(world, x, y, z);
+        onBlockAdded(world, x, y, z);
     }
 
     @Override
     public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId)
     {
-        if (world.getBlockId(x, y, z) != this.blockID) return;
+        if (world.getBlockId(x, y, z) != blockID) return;
 
         int md = world.getBlockMetadata(x, y, z);
         boolean keep;
@@ -154,7 +154,7 @@ abstract class BlockTorch extends BlockContainer
 
         if (!keep)
         {
-            this.dropBlockAsItem(world, x, y, z, md, 0);
+            dropBlockAsItem(world, x, y, z, md, 0);
             world.setBlockToAir(x, y, z);
         }
     }
@@ -211,9 +211,9 @@ abstract class BlockTorch extends BlockContainer
         {
             world.setBlockMetadataWithNotify(x, y, z, md, 1|2);
         }
-        else if (md == 0 && world.getBlockId(x, y, z) == this.blockID)
+        else if (md == 0 && world.getBlockId(x, y, z) == blockID)
         {
-            this.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
+            dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 0);
             world.setBlockToAir(x, y, z);
         }
     }
@@ -232,10 +232,10 @@ abstract class BlockTorch extends BlockContainer
 
         if (drop && !world.isRemote && (p == null || !p.capabilities.isCreativeMode))
         {
-            int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
+            int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : blockID;
             ItemStack ist = new ItemStack(id, 1, age);
             ist.setTagCompound(eternal ? new NBTTagCompound() : null);
-            this.dropBlockAsItem_do(world, x, y, z, ist);
+            dropBlockAsItem_do(world, x, y, z, ist);
         }
 
         return drop;
@@ -251,7 +251,7 @@ abstract class BlockTorch extends BlockContainer
         if (te != null)
         {
             TileEntityTorch tt = (TileEntityTorch) te;
-            int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.blockID;
+            int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : blockID;
             ItemStack ist = new ItemStack(id, 1, tt.getAge());
             ist.setTagCompound(tt.isEternal() ? new NBTTagCompound() : null);
             stacks.add(ist);

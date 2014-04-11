@@ -23,11 +23,11 @@ public class RenderBlockTorch extends TileEntitySpecialRenderer
     {
         if (Minecraft.isGuiEnabled() && Minecraft.getMinecraft().gameSettings.showDebugInfo)
         {
-            EntityLivingBase ep = this.tileEntityRenderer.entityLivingPlayer;
+            EntityLivingBase ep = tileEntityRenderer.entityLivingPlayer;
 
             if (te.getDistanceFrom(ep.posX, ep.posY, ep.posZ) <= 80D)
             {
-                FontRenderer fr = this.getFontRenderer();
+                FontRenderer fr = getFontRenderer();
                 Tessellator t = Tessellator.instance;
                 String age = (ConfigCommon.torchLifespanMax - ((TileEntityTorch)te).getAge()) + "";
 

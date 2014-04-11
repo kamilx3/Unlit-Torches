@@ -22,8 +22,8 @@ public class ItemTorchUnlit extends ItemTorch
     public ItemTorchUnlit(int id)
     {
         super(id);
-        this.setUnlocalizedName("unlittorch:torch_unlit");
-        this.setTextureName("unlittorch:torch_off");
+        setUnlocalizedName("unlittorch:torch_unlit");
+        setTextureName("unlittorch:torch_off");
     }
 
 

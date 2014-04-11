@@ -43,14 +43,14 @@ public class RecipeTorchRepair implements IRecipe
 
         if (c != 1 || t == 0) return false;
 
-        this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, t, 0);
+        torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, t, 0);
         return true;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.torch.copy();
+        return torch.copy();
     }
 
     @Override
@@ -62,6 +62,6 @@ public class RecipeTorchRepair implements IRecipe
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.torch;
+        return torch;
     }
 }

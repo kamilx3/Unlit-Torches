@@ -68,15 +68,15 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
 
         if (n != 2 || t == -1 || f == -1) return false;
 
-        this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ic.getStackInSlot(t).getItemDamage());
-        this.torch.setTagCompound(ic.getStackInSlot(t).getTagCompound());
+        torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ic.getStackInSlot(t).getItemDamage());
+        torch.setTagCompound(ic.getStackInSlot(t).getTagCompound());
         return true;
     }
 
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.torch.copy();
+        return torch.copy();
     }
 
     @Override
@@ -88,7 +88,7 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.torch;
+        return torch;
     }
 
     @Override

@@ -24,9 +24,9 @@ public class BlockTorchUnlit extends BlockTorch
     public BlockTorchUnlit()
     {
         super(ConfigCommon.blockIdTorchUnlit, false);
-        this.setLightValue(0F);
-        this.setUnlocalizedName("unlittorch:torch_unlit");
-        this.setTextureName("unlittorch:torch_off");
+        setLightValue(0F);
+        setUnlocalizedName("unlittorch:torch_unlit");
+        setTextureName("unlittorch:torch_off");
         instance = this;
     }
 
@@ -51,7 +51,7 @@ public class BlockTorchUnlit extends BlockTorch
             if (ist != null) return false;
 
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            ItemStack torch = new ItemStack(this.blockID, 1, te.getAge());
+            ItemStack torch = new ItemStack(blockID, 1, te.getAge());
             torch.setTagCompound(te.isEternal() ? new NBTTagCompound() : null);
             p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
             world.setBlockToAir(x, y, z);

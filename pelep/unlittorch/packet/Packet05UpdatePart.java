@@ -30,29 +30,29 @@ public class Packet05UpdatePart extends PacketCustom
     @Override
     public void encode(ByteArrayDataOutput data)
     {
-        data.writeInt(this.idx);
-        data.writeInt(this.pos.x);
-        data.writeInt(this.pos.y);
-        data.writeInt(this.pos.z);
-        data.writeInt(this.dim);
-        data.writeInt(this.age);
+        data.writeInt(idx);
+        data.writeInt(pos.x);
+        data.writeInt(pos.y);
+        data.writeInt(pos.z);
+        data.writeInt(dim);
+        data.writeInt(age);
     }
 
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.idx = data.readInt();
-        this.pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
-        this.dim = data.readInt();
-        this.age = data.readInt();
+        idx = data.readInt();
+        pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
+        dim = data.readInt();
+        age = data.readInt();
     }
 
     @Override
     public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
-        if (p.worldObj.provider.dimensionId != this.dim || !p.worldObj.blockExists(this.pos.x, this.pos.y, this.pos.z)) return;
-        TorchPartLit.updatePart(p.worldObj, this.pos, this.idx, this.age);
+        if (p.worldObj.provider.dimensionId != dim || !p.worldObj.blockExists(pos.x, pos.y, pos.z)) return;
+        TorchPartLit.updatePart(p.worldObj, pos, idx, age);
     }
 
     @Override

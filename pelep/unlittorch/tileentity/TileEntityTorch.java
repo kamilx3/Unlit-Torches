@@ -34,7 +34,7 @@ public class TileEntityTorch extends TileEntity
 
     public int getAge()
     {
-        return this.age;
+        return age;
     }
 
     public void setEternal(boolean eternal)
@@ -44,110 +44,110 @@ public class TileEntityTorch extends TileEntity
 
     public boolean isEternal()
     {
-        return this.eternal;
+        return eternal;
     }
 
     @Override
     public boolean canUpdate()
     {
-        return this.lit && !this.eternal && ConfigCommon.torchUpdates;
+        return lit && !eternal && ConfigCommon.torchUpdates;
     }
 
     @Override
     public void updateEntity()
     {
-        if (this.worldObj.getTotalWorldTime() % 3 != 0) return;
+        if (worldObj.getTotalWorldTime() % 3 != 0) return;
 
-        if (this.eternal)
+        if (eternal)
         {
-            this.worldObj.markTileEntityForDespawn(this);
+            worldObj.markTileEntityForDespawn(this);
             return;
         }
 
-        if (this.age >= ConfigCommon.torchLifespanMax)
+        if (age >= ConfigCommon.torchLifespanMax)
         {
             if (ConfigCommon.torchSingleUse)
             {
-                this.destroyTorch();
+                destroyTorch();
             }
             else
             {
-                this.extinguishTorch("fire.fire", 1F);
+                extinguishTorch("fire.fire", 1F);
             }
 
             return;
         }
 
-        if (!this.worldObj.isRemote)
+        if (!worldObj.isRemote)
         {
-            if (this.worldObj.canLightningStrikeAt(this.xCoord, this.yCoord, this.zCoord) && this.worldObj.rand.nextInt(10) == 0)
+            if (worldObj.canLightningStrikeAt(xCoord, yCoord, zCoord) && worldObj.rand.nextInt(10) == 0)
             {
-                this.extinguishTorch("random.fizz", 0.3F);
+                extinguishTorch("random.fizz", 0.3F);
                 return;
             }
 
-            if (this.age > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && this.worldObj.rand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+            if (age > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && worldObj.rand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
             {
-                if (this.worldObj.rand.nextInt(100) < ConfigCommon.torchDestroyChance)
+                if (worldObj.rand.nextInt(100) < ConfigCommon.torchDestroyChance)
                 {
-                    this.destroyTorch();
+                    destroyTorch();
                 }
                 else
                 {
-                    this.extinguishTorch("fire.fire", 1F);
+                    extinguishTorch("fire.fire", 1F);
                 }
 
                 return;
             }
 
-            if (this.chunk == null) this.chunk = this.worldObj.getChunkFromBlockCoords(this.xCoord, this.zCoord);
-            this.chunk.setChunkModified();
+            if (chunk == null) chunk = worldObj.getChunkFromBlockCoords(xCoord, zCoord);
+            chunk.setChunkModified();
         }
 
-        this.age++;
+        age++;
     }
 
     private void destroyTorch()
     {
-        Packet03BurnFX pkt = new Packet03BurnFX(this.xCoord, this.yCoord, this.zCoord, this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
-        PacketDispatcher.sendPacketToAllAround(this.xCoord, this.yCoord, this.zCoord, 64D, this.worldObj.provider.dimensionId, pkt.create());
-        this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, "fire.fire", 1F, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
-        this.worldObj.setBlockToAir(this.xCoord, this.yCoord, this.zCoord);
+        Packet03BurnFX pkt = new Packet03BurnFX(xCoord, yCoord, zCoord, worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
+        PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64D, worldObj.provider.dimensionId, pkt.create());
+        worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, "fire.fire", 1F, worldObj.rand.nextFloat() * 0.4F + 0.8F);
+        worldObj.setBlockToAir(xCoord, yCoord, zCoord);
     }
 
     private void extinguishTorch(String sound, float volume)
     {
-        int md = this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord);
-        this.worldObj.setBlock(this.xCoord, this.yCoord, this.zCoord, ConfigCommon.blockIdTorchUnlit, md, 1|2);
-        this.worldObj.playSoundEffect(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, sound, volume, this.worldObj.rand.nextFloat() * 0.4F + 0.8F);
-        ((TileEntityTorch)this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord)).setAge(this.age);
+        int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+        worldObj.setBlock(xCoord, yCoord, zCoord, ConfigCommon.blockIdTorchUnlit, md, 1|2);
+        worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, sound, volume, worldObj.rand.nextFloat() * 0.4F + 0.8F);
+        ((TileEntityTorch)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).setAge(age);
     }
 
     @Override
     public void readFromNBT(NBTTagCompound tag)
     {
         super.readFromNBT(tag);
-        this.age = tag.getInteger("age");
-        this.lit = tag.getBoolean("lit");
-        this.eternal = tag.getBoolean("eternal");
+        age = tag.getInteger("age");
+        lit = tag.getBoolean("lit");
+        eternal = tag.getBoolean("eternal");
     }
 
     @Override
     public void writeToNBT(NBTTagCompound tag)
     {
         super.writeToNBT(tag);
-        tag.setInteger("age", this.age);
-        tag.setBoolean("lit", this.lit);
-        tag.setBoolean("eternal", this.eternal);
+        tag.setInteger("age", age);
+        tag.setBoolean("lit", lit);
+        tag.setBoolean("eternal", eternal);
     }
 
     @Override
     public Packet getDescriptionPacket()
     {
         NBTTagCompound tag = new NBTTagCompound();
-        tag.setInteger("age", this.age);
-        tag.setBoolean("eternal", this.eternal);
-        return new Packet132TileEntityData(this.xCoord, this.yCoord, this.zCoord, 0, tag);
+        tag.setInteger("age", age);
+        tag.setBoolean("eternal", eternal);
+        return new Packet132TileEntityData(xCoord, yCoord, zCoord, 0, tag);
     }
 
     @Override
@@ -156,8 +156,8 @@ public class TileEntityTorch extends TileEntity
         switch (pkt.actionType)
         {
             case 0:
-                this.eternal = pkt.data.getBoolean("eternal");
-                this.age = pkt.data.getInteger("age");
+                eternal = pkt.data.getBoolean("eternal");
+                age = pkt.data.getInteger("age");
         }
     }
 }

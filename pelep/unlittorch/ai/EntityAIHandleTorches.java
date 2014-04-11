@@ -30,86 +30,86 @@ public class EntityAIHandleTorches extends EntityAIBase
     public EntityAIHandleTorches(EntityLiving el)
     {
         this.el = el;
-        this.world = el.worldObj;
-        this.torches = new PriorityQueue(4, new TorchSorter(el));
-        this.setMutexBits(1|2|4);
+        world = el.worldObj;
+        torches = new PriorityQueue(4, new TorchSorter(el));
+        setMutexBits(1|2|4);
     }
 
     @Override
     public boolean shouldExecute()
     {
-        if (this.delay > 0) this.delay--;
-        long time = this.world.getTotalWorldTime() % 24000;
-        return (this.delay == 0 || time == 13000 || time == 23500) && this.findTorches();
+        if (delay > 0) delay--;
+        long time = world.getTotalWorldTime() % 24000;
+        return (delay == 0 || time == 13000 || time == 23500) && findTorches();
     }
 
     @Override
     public void startExecuting()
     {
-        this.nextTorch();
+        nextTorch();
     }
 
     @Override
     public void updateTask()
     {
-        if (canEntitySeeBlock(this.el, this.torch, 4D))
+        if (canEntitySeeBlock(el, torch, 4D))
         {
-            if (this.isBlockValid(this.torch))
+            if (isBlockValid(torch))
             {
-                int id = this.world.getBlockId(this.torch.x, this.torch.y, this.torch.z);
+                int id = world.getBlockId(torch.x, torch.y, torch.z);
 
                 if (id == ConfigCommon.blockIdTorchLit)
                 {
-                    BlockTorchLit.extinguishBlock(this.world, this.torch.x, this.torch.y, this.torch.z, "fire.fire", 1F);
+                    BlockTorchLit.extinguishBlock(world, torch.x, torch.y, torch.z, "fire.fire", 1F);
                 }
                 else if (id == ConfigCommon.blockIdTorchUnlit)
                 {
-                    BlockTorchUnlit.igniteBlock(this.world, this.torch.x, this.torch.y, this.torch.z, "fire.fire");
+                    BlockTorchUnlit.igniteBlock(world, torch.x, torch.y, torch.z, "fire.fire");
                 }
             }
 
-            this.nextTorch();
+            nextTorch();
         }
-        else if (this.timer++ >= 200)
+        else if (timer++ >= 200)
         {
-            this.nextTorch();
+            nextTorch();
         }
     }
 
     @Override
     public boolean continueExecuting()
     {
-        return this.torch != null;
+        return torch != null;
     }
 
     @Override
     public void resetTask()
     {
-        this.delay = 300;
-        this.torch = null;
-        this.torches.clear();
+        delay = 300;
+        torch = null;
+        torches.clear();
     }
 
     private void nextTorch()
     {
-        this.timer = 0;
-        this.torch = this.poll();
-        if (this.torch != null)
-            this.el.getNavigator().tryMoveToXYZ(this.torch.x + 0.5D, this.torch.y, this.torch.z + 0.5D, 0.6D);
+        timer = 0;
+        torch = poll();
+        if (torch != null)
+            el.getNavigator().tryMoveToXYZ(torch.x + 0.5D, torch.y, torch.z + 0.5D, 0.6D);
     }
 
     private Coordinate poll()
     {
-        Coordinate torch = this.torches.poll();
-        return torch == null ? null : (this.isBlockValid(torch) ? torch : this.poll());
+        Coordinate torch = torches.poll();
+        return torch == null ? null : (isBlockValid(torch) ? torch : poll());
     }
 
     private boolean findTorches()
     {
-        this.delay = 300;
-        int x = MathHelper.floor_double(this.el.posX);
-        int y = MathHelper.floor_double(this.el.posY);
-        int z = MathHelper.floor_double(this.el.posZ);
+        delay = 300;
+        int x = MathHelper.floor_double(el.posX);
+        int y = MathHelper.floor_double(el.posY);
+        int z = MathHelper.floor_double(el.posZ);
         int r = 16;
 
         for (int i = -r; i <= r; i++)
@@ -119,27 +119,27 @@ public class EntityAIHandleTorches extends EntityAIBase
                 for (int k = -r; k <= r; k++)
                 {
                     Coordinate coord = new Coordinate(x + i, y + j, z + k);
-                    if (this.isBlockValid(coord)) this.torches.add(coord);
+                    if (isBlockValid(coord)) torches.add(coord);
                 }
             }
         }
 
-        return !this.torches.isEmpty();
+        return !torches.isEmpty();
     }
 
     private boolean isBlockValid(Coordinate coord)
     {
-        int id = this.world.getBlockId(coord.x, coord.y, coord.z);
+        int id = world.getBlockId(coord.x, coord.y, coord.z);
 
         if (id == ConfigCommon.blockIdTorchLit)
         {
-            TileEntityTorch te = (TileEntityTorch) this.world.getBlockTileEntity(coord.x, coord.y, coord.z);
-            return !te.isEternal() && this.world.isDaytime();
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(coord.x, coord.y, coord.z);
+            return !te.isEternal() && world.isDaytime();
         }
         else if (id == ConfigCommon.blockIdTorchUnlit)
         {
-            TileEntityTorch te = (TileEntityTorch) this.world.getBlockTileEntity(coord.x, coord.y, coord.z);
-            return !te.isEternal() && !this.world.isDaytime() && !this.world.canLightningStrikeAt(coord.x, coord.y, coord.z);
+            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(coord.x, coord.y, coord.z);
+            return !te.isEternal() && !world.isDaytime() && !world.canLightningStrikeAt(coord.x, coord.y, coord.z);
         }
 
         return false;
@@ -157,8 +157,8 @@ public class EntityAIHandleTorches extends EntityAIBase
         @Override
         public int compare(Coordinate t1, Coordinate t2)
         {
-            double d1 = this.el.getDistanceSq(t1.x + 0.5, t1.y + 0.5, t1.z + 0.5);
-            double d2 = this.el.getDistanceSq(t2.x + 0.5, t2.y + 0.5, t2.z + 0.5);
+            double d1 = el.getDistanceSq(t1.x + 0.5, t1.y + 0.5, t1.z + 0.5);
+            double d2 = el.getDistanceSq(t2.x + 0.5, t2.y + 0.5, t2.z + 0.5);
             return d1 < d2 ? -1 : (d1 > d2 ? 1 : 0);
         }
     }

@@ -20,22 +20,22 @@ public class Packet02UpdateEntity extends PacketCustom
 
     public Packet02UpdateEntity(Entity e)
     {
-        this.id = e.entityId;
-        this.dim = e.worldObj.provider.dimensionId;
+        id = e.entityId;
+        dim = e.worldObj.provider.dimensionId;
     }
 
     @Override
     public void encode(ByteArrayDataOutput data)
     {
-        data.writeInt(this.id);
-        data.writeInt(this.dim);
+        data.writeInt(id);
+        data.writeInt(dim);
     }
 
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.id = data.readInt();
-        this.dim = data.readInt();
+        id = data.readInt();
+        dim = data.readInt();
     }
 
     @Override
@@ -43,9 +43,9 @@ public class Packet02UpdateEntity extends PacketCustom
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
-        if (p.worldObj.provider.dimensionId == this.dim)
+        if (p.worldObj.provider.dimensionId == dim)
         {
-            Entity e = p.worldObj.getEntityByID(this.id);
+            Entity e = p.worldObj.getEntityByID(id);
 
             if (e instanceof EntityItem)
             {

@@ -55,9 +55,9 @@ public class RecipeTorchUnlitA implements IRecipe
         ItemStack ist1 = ic.getStackInSlot(t1);
         ItemStack ist2 = ic.getStackInSlot(t2);
         int d = getRepairedValue(ist1.getItemDamage(), ist2.getItemDamage());
-        this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d);
+        torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d);
         if (ist1.stackTagCompound != null || ist2.stackTagCompound != null)
-            this.torch.setTagCompound(new NBTTagCompound());
+            torch.setTagCompound(new NBTTagCompound());
         return true;
     }
 
@@ -73,7 +73,7 @@ public class RecipeTorchUnlitA implements IRecipe
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.torch.copy();
+        return torch.copy();
     }
 
     @Override
@@ -85,6 +85,6 @@ public class RecipeTorchUnlitA implements IRecipe
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.torch;
+        return torch;
     }
 }

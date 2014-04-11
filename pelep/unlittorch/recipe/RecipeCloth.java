@@ -57,7 +57,7 @@ public class RecipeCloth implements IRecipe, ICraftingHandler
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.cloth.copy();
+        return cloth.copy();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class RecipeCloth implements IRecipe, ICraftingHandler
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.cloth;
+        return cloth;
     }
 
     @Override

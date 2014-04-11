@@ -25,31 +25,31 @@ public class EntityAIBreakTorches extends EntityAIBase
     {
         this.el = el;
         this.world = el.worldObj;
-        this.setMutexBits(2);
+        setMutexBits(2);
     }
 
     @Override
     public boolean shouldExecute()
     {
-        if (this.delay > 0) this.delay--;
-        return this.delay == 0 && this.findTorch();
+        if (delay > 0) delay--;
+        return delay == 0 && findTorch();
     }
 
     @Override
     public void startExecuting()
     {
-        BlockTorchLit.extinguishBlock(this.world, this.torch.x, this.torch.y, this.torch.z, "fire.fire", 1F);
-        this.delay = 100;
-        this.el.getLookHelper().setLookPosition(this.torch.x + 0.5, this.torch.y + 0.5, this.torch.z + 0.5, 10F, this.el.getVerticalFaceSpeed());
-        this.torch = null;
+        BlockTorchLit.extinguishBlock(world, torch.x, torch.y, torch.z, "fire.fire", 1F);
+        delay = 100;
+        el.getLookHelper().setLookPosition(torch.x + 0.5, torch.y + 0.5, torch.z + 0.5, 10F, el.getVerticalFaceSpeed());
+        torch = null;
     }
 
     private boolean findTorch()
     {
-        this.delay = 20;
-        int ex = MathHelper.floor_double(this.el.posX);
-        int ey = MathHelper.floor_double(this.el.posY);
-        int ez = MathHelper.floor_double(this.el.posZ);
+        delay = 20;
+        int ex = MathHelper.floor_double(el.posX);
+        int ey = MathHelper.floor_double(el.posY);
+        int ez = MathHelper.floor_double(el.posZ);
         int r = 3;
 
         for (int i = -r; i <= r; i++)
@@ -62,31 +62,31 @@ public class EntityAIBreakTorches extends EntityAIBase
                     int y = ey + j;
                     int z = ez + k;
 
-                    if (this.world.getBlockId(x, y, z) == ConfigCommon.blockIdTorchLit)
+                    if (world.getBlockId(x, y, z) == ConfigCommon.blockIdTorchLit)
                     {
-                        TileEntityTorch te = (TileEntityTorch) this.world.getBlockTileEntity(x, y, z);
+                        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
 
                         if (te.isEternal()) continue;
 
                         Coordinate coord = new Coordinate(x, y, z);
 
-                        if (canEntitySeeBlock(this.el, coord, r + 0.5D))
+                        if (canEntitySeeBlock(el, coord, r + 0.5D))
                         {
-                            if (this.torch == null)
+                            if (torch == null)
                             {
-                                this.torch = coord;
+                                torch = coord;
                             }
                             else
                             {
-                                double x1 = this.torch.x + 0.5D;
-                                double y1 = this.torch.y + 0.5D;
-                                double z1 = this.torch.z + 0.5D;
+                                double x1 = torch.x + 0.5D;
+                                double y1 = torch.y + 0.5D;
+                                double z1 = torch.z + 0.5D;
                                 double x2 = coord.x + 0.5D;
                                 double y2 = coord.y + 0.5D;
                                 double z2 = coord.z + 0.5D;
 
-                                if (this.el.getDistanceSq(x1, y1, z1) > this.el.getDistanceSq(x2, y2, z2))
-                                    this.torch = coord;
+                                if (el.getDistanceSq(x1, y1, z1) > el.getDistanceSq(x2, y2, z2))
+                                    torch = coord;
                             }
                         }
                     }
@@ -94,6 +94,6 @@ public class EntityAIBreakTorches extends EntityAIBase
             }
         }
 
-        return this.torch != null;
+        return torch != null;
     }
 }

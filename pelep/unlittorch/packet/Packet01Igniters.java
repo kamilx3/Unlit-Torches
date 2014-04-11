@@ -28,27 +28,27 @@ public class Packet01Igniters extends PacketCustom
     @Override
     public void encode(ByteArrayDataOutput data)
     {
-        data.writeByte(this.type);
-        data.writeShort(this.igniters.length());
-        data.writeChars(this.igniters);
+        data.writeByte(type);
+        data.writeShort(igniters.length());
+        data.writeChars(igniters);
     }
 
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        this.igniters = "";
-        this.type = data.readByte();
+        igniters = "";
+        type = data.readByte();
         int size = data.readShort();
 
         for (int i = 0; i < size; i++)
-            this.igniters += data.readChar();
+            igniters += data.readChar();
     }
 
     @Override
     public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Config packet received on server side!");
-        IgnitersHandler.syncWithServer(this.type, this.igniters);
+        IgnitersHandler.syncWithServer(type, igniters);
     }
 
     @Override

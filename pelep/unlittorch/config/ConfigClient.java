@@ -22,7 +22,7 @@ public class ConfigClient extends UtilConfig
     @Override
     public void load()
     {
-        new ConfigCommon().load(this.getConfig());
+        new ConfigCommon().load(getConfig());
 
         torchRecipeYieldsUnlit = ConfigCommon.torchRecipeYieldsUnlit;
         torchRecipeYieldCount = ConfigCommon.torchRecipeYieldCount;
@@ -30,9 +30,9 @@ public class ConfigClient extends UtilConfig
         torchSingleUse = ConfigCommon.torchSingleUse;
         torchLifespanMax = ConfigCommon.torchLifespanMax;
 
-        this.setCategory("LIGHTING");
-        enableDynamicLighting = this.getBoolean("EnableDynamicLighting", true, "True if dynamic lighting for lit torches should be enabled");
-        torchLightValue = this.getInt("TorchLightValue", 13, 0, 15, "The light value of HELD lit torches and DROPPED lit torches only. Max: 15");
+        setCategory("LIGHTING");
+        enableDynamicLighting = getBoolean("EnableDynamicLighting", true, "True if dynamic lighting for lit torches should be enabled");
+        torchLightValue = getInt("TorchLightValue", 13, 0, 15, "The light value of HELD lit torches and DROPPED lit torches only. Max: 15");
     }
 
     public static void desyncFromServer()

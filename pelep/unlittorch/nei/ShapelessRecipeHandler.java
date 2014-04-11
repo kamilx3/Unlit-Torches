@@ -25,30 +25,30 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
     {
         if (result.itemID == ConfigCommon.itemIdCloth && result.getItemDamage() == 0)
         {
-            this.addCloth();
+            addCloth();
         }
         else if (result.itemID == Item.stick.itemID)
         {
-            this.addStick();
+            addStick();
         }
         else if (result.itemID == ConfigCommon.blockIdTorchLit)
         {
-            this.addTorchLit();
-            this.addTorchLit(new ItemStack(Block.torchWood));
-            this.addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
-            this.addTorchLit(new ItemStack(Item.flint));
-            this.addTorchLit(new ItemStack(Item.flintAndSteel));
-            this.addTorchLit(new ItemStack(Item.bucketLava));
+            addTorchLit();
+            addTorchLit(new ItemStack(Block.torchWood));
+            addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
+            addTorchLit(new ItemStack(Item.flint));
+            addTorchLit(new ItemStack(Item.flintAndSteel));
+            addTorchLit(new ItemStack(Item.bucketLava));
         }
         else if (result.itemID == ConfigCommon.blockIdTorchUnlit)
         {
-            this.addTorchUnlit();
-            this.addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
-            this.addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 1));
-            this.addTorchUnlit(new ItemStack(Block.cloth.blockID, 1, OreDictionary.WILDCARD_VALUE));
-            this.addTorchUnlit(new ItemStack(Block.carpet.blockID, 1, OreDictionary.WILDCARD_VALUE));
-            this.addTorchUnlit(new ItemStack(Item.bucketWater));
-            this.addTorchUnlit(new ItemStack(Item.bucketMilk));
+            addTorchUnlit();
+            addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
+            addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 1));
+            addTorchUnlit(new ItemStack(Block.cloth.blockID, 1, OreDictionary.WILDCARD_VALUE));
+            addTorchUnlit(new ItemStack(Block.carpet.blockID, 1, OreDictionary.WILDCARD_VALUE));
+            addTorchUnlit(new ItemStack(Item.bucketWater));
+            addTorchUnlit(new ItemStack(Item.bucketMilk));
         }
     }
 
@@ -57,49 +57,49 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
     {
         if (ingr.itemID == ConfigCommon.blockIdTorchLit)
         {
-            this.addTorchLit();
-            this.addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
-            this.addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
-            this.addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 1));
-            this.addTorchUnlit(new ItemStack(Block.cloth.blockID, 1, OreDictionary.WILDCARD_VALUE));
-            this.addTorchUnlit(new ItemStack(Block.carpet.blockID, 1, OreDictionary.WILDCARD_VALUE));
-            this.addTorchUnlit(new ItemStack(Item.bucketWater));
-            this.addTorchUnlit(new ItemStack(Item.bucketMilk));
+            addTorchLit();
+            addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
+            addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
+            addTorchUnlit(new ItemStack(ConfigCommon.itemIdCloth, 1, 1));
+            addTorchUnlit(new ItemStack(Block.cloth.blockID, 1, OreDictionary.WILDCARD_VALUE));
+            addTorchUnlit(new ItemStack(Block.carpet.blockID, 1, OreDictionary.WILDCARD_VALUE));
+            addTorchUnlit(new ItemStack(Item.bucketWater));
+            addTorchUnlit(new ItemStack(Item.bucketMilk));
         }
         else if (ingr.itemID == ConfigCommon.blockIdTorchUnlit)
         {
-            this.addStick();
-            this.addTorchLit(new ItemStack(Block.torchWood));
-            this.addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
-            this.addTorchLit(new ItemStack(Item.flint));
-            this.addTorchLit(new ItemStack(Item.flintAndSteel));
-            this.addTorchLit(new ItemStack(Item.bucketLava));
-            this.addTorchUnlit();
+            addStick();
+            addTorchLit(new ItemStack(Block.torchWood));
+            addTorchLit(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
+            addTorchLit(new ItemStack(Item.flint));
+            addTorchLit(new ItemStack(Item.flintAndSteel));
+            addTorchLit(new ItemStack(Item.bucketLava));
+            addTorchUnlit();
         }
         else if (ingr.itemID == Block.torchWood.blockID || ingr.itemID == Item.flint.itemID ||
                 ingr.itemID == Item.flintAndSteel.itemID || ingr.itemID == Item.bucketLava.itemID)
         {
-            this.addTorchLit(ingr.copy());
+            addTorchLit(ingr.copy());
         }
         else if (ingr.itemID == Item.shears.itemID)
         {
-            this.addCloth();
+            addCloth();
         }
         else if (ingr.itemID == Block.cloth.blockID)
         {
-            this.addCloth();
-            this.addTorchUnlit(new ItemStack(ingr.itemID, 1, OreDictionary.WILDCARD_VALUE));
+            addCloth();
+            addTorchUnlit(new ItemStack(ingr.itemID, 1, OreDictionary.WILDCARD_VALUE));
         }
         else if (ingr.itemID == Block.carpet.blockID ||
                 ingr.itemID == Item.bucketWater.itemID ||
                 ingr.itemID == Item.bucketMilk.itemID)
         {
-            this.addTorchUnlit(new ItemStack(ingr.itemID, 1, OreDictionary.WILDCARD_VALUE));
+            addTorchUnlit(new ItemStack(ingr.itemID, 1, OreDictionary.WILDCARD_VALUE));
         }
         else if (ingr.itemID == ConfigCommon.itemIdCloth)
         {
-            this.addTorchUnlit(new ItemStack(ingr.itemID, 1, 0));
-            this.addTorchUnlit(new ItemStack(ingr.itemID, 1, 1));
+            addTorchUnlit(new ItemStack(ingr.itemID, 1, 0));
+            addTorchUnlit(new ItemStack(ingr.itemID, 1, 1));
         }
     }
 
@@ -108,17 +108,17 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         List<ItemStack> ingr = new ArrayList();
         ingr.add(new ItemStack(Block.cloth, 1, OreDictionary.WILDCARD_VALUE));
         ingr.add(new ItemStack(Item.shears, 1, 0));
-        this.arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(ConfigCommon.itemIdCloth, 3, 0)));
+        arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(ConfigCommon.itemIdCloth, 3, 0)));
     }
 
     private void addStick()
     {
         List<ItemStack> ingr = new ArrayList();
+
         for (int i = 0; i < ConfigCommon.torchRecipeYieldCount; i++)
-        {
             ingr.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0));
-        }
-        this.arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(Item.stick)));
+
+        arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(Item.stick)));
     }
 
     private void addTorchLit()
@@ -127,7 +127,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         ingr.add(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 200));
         ingr.add(new ItemStack(ConfigCommon.blockIdTorchLit, 1, ConfigCommon.torchLifespanMax - 200));
         ItemStack ist = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ConfigCommon.torchLifespanMax / 2);
-        this.arecipes.add(new CachedShapelessRecipe(ingr, ist));
+        arecipes.add(new CachedShapelessRecipe(ingr, ist));
     }
 
     private void addTorchLit(ItemStack ign)
@@ -135,7 +135,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         List<ItemStack> ingr = new ArrayList();
         ingr.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0));
         ingr.add(ign);
-        this.arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0)));
+        arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0)));
     }
 
     private void addTorchUnlit()
@@ -147,7 +147,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         ingr.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d2));
         int d = RecipeTorchUnlitA.getRepairedValue(d1, d2);
         ItemStack ist = new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, d);
-        this.arecipes.add(new CachedShapelessRecipe(ingr, ist));
+        arecipes.add(new CachedShapelessRecipe(ingr, ist));
     }
 
     private void addTorchUnlit(ItemStack ext)
@@ -155,7 +155,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
         List<ItemStack> ingr = new ArrayList();
         ingr.add(new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
         ingr.add(ext);
-        this.arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0)));
+        arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0)));
     }
 
 
@@ -164,7 +164,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
     {
         if (ist == null) return super.handleItemTooltip(gui, null, tip, index);
 
-        CachedShapelessRecipe recipe = (CachedShapelessRecipe) this.arecipes.get(index);
+        CachedShapelessRecipe recipe = (CachedShapelessRecipe) arecipes.get(index);
         List<PositionedStack> ingr = recipe.getIngredients();
 
         if (ingr.size() != 2)

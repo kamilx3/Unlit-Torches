@@ -44,8 +44,8 @@ public class TorchPartUnlit extends TorchPart
     @Override
     public void onEntityCollision(Entity e)
     {
-        if (!this.world().isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
-            this.igniteTorchPart("fire.fire");
+        if (!world().isRemote && (e.isBurning() || e instanceof EntityBlaze || e instanceof EntityMagmaCube || e instanceof EntityFireball))
+            ignitePart("fire.fire");
     }
 
     @Override
@@ -55,12 +55,12 @@ public class TorchPartUnlit extends TorchPart
         {
             if (ist != null) return false;
 
-            if (!this.world().isRemote)
+            if (!world().isRemote)
             {
-                ItemStack torch = new ItemStack(this.getBlockId(), 1, this.age);
-                torch.setTagCompound(this.eternal ? new NBTTagCompound() : null);
+                ItemStack torch = new ItemStack(getBlockId(), 1, age);
+                torch.setTagCompound(eternal ? new NBTTagCompound() : null);
                 ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
-                this.tile().remPart(this);
+                tile().remPart(this);
             }
 
             return true;
@@ -72,28 +72,28 @@ public class TorchPartUnlit extends TorchPart
 
             if (id == ConfigCommon.blockIdTorchLit)
             {
-                this.igniteTorchPart("fire.fire");
+                ignitePart("fire.fire");
                 return true;
             }
             else if (IgnitersHandler.canIgniteSetTorch(id, d))
             {
                 if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
                 {
-                    this.igniteTorchPart("fire.fire");
+                    ignitePart("fire.fire");
                 }
                 else if (id == Item.flint.itemID)
                 {
-                    this.igniteTorchPart("fire.ignite");
+                    ignitePart("fire.ignite");
                     if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {
-                    this.igniteTorchPart("fire.ignite");
+                    ignitePart("fire.ignite");
                     ist.damageItem(1, ep);
                 }
                 else
                 {
-                    this.igniteTorchPart("fire.fire");
+                    ignitePart("fire.fire");
 
                     if (!ep.capabilities.isCreativeMode)
                     {
@@ -114,7 +114,7 @@ public class TorchPartUnlit extends TorchPart
 
         if (BlockTorchUnlit.useIgniter(ep))
         {
-            this.igniteTorchPart("fire.fire");
+            ignitePart("fire.fire");
             return true;
         }
 
@@ -125,15 +125,15 @@ public class TorchPartUnlit extends TorchPart
     //----------------------------------util----------------------------------//
 
 
-    private void igniteTorchPart(String sound)
+    private void ignitePart(String sound)
     {
-        if (this.world().isRemote) return;
+        if (world().isRemote) return;
 
-        World world = this.world();
-        BlockCoord pos = new BlockCoord(this.tile());
+        World world = world();
+        BlockCoord pos = new BlockCoord(tile());
 
-        this.tile().remPart(this);
-        TileMultipart.addPart(world, pos, new TorchPartLit(this.meta, this.age, this.eternal));
+        tile().remPart(this);
+        TileMultipart.addPart(world, pos, new TorchPartLit(meta, age, eternal));
 
         if (!"".equals(sound))
             world.playSoundEffect(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);

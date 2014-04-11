@@ -71,7 +71,7 @@ abstract class TorchPart extends McSidedMetaPart
     {
         float adj = 0.15F;
 
-        switch (this.meta)
+        switch (meta)
         {
             case 1:
                 return new Cuboid6(0F, 0.2F, 0.5F - adj, adj * 2F, 0.8F, 0.5F + adj);
@@ -90,10 +90,10 @@ abstract class TorchPart extends McSidedMetaPart
     @Override
     public boolean canStay()
     {
-        if (this.sideForMeta(this.meta) == 0)
+        if (sideForMeta(meta) == 0)
         {
-            Block block = Block.blocksList[this.world().getBlockId(this.x(), this.y() - 1, this.z())];
-            if (block != null && block.canPlaceTorchOnTop(this.world(), this.x(), this.y() - 1, this.z())) return true;
+            Block block = Block.blocksList[world().getBlockId(x(), y() - 1, z())];
+            if (block != null && block.canPlaceTorchOnTop(world(), x(), y() - 1, z())) return true;
         }
 
         return super.canStay();
@@ -102,19 +102,19 @@ abstract class TorchPart extends McSidedMetaPart
     @Override
     public void drop()
     {
-        int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.getBlockId();
-        ItemStack ist = new ItemStack(id, 1, this.age);
-        ist.setTagCompound(this.eternal ? new NBTTagCompound() : null);
-        TileMultipart.dropItem(ist, this.world(), Vector3.fromTileEntityCenter(this.tile()));
-        this.tile().remPart(this);
+        int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : getBlockId();
+        ItemStack ist = new ItemStack(id, 1, age);
+        ist.setTagCompound(eternal ? new NBTTagCompound() : null);
+        TileMultipart.dropItem(ist, world(), Vector3.fromTileEntityCenter(tile()));
+        tile().remPart(this);
     }
 
     @Override
     public Iterable<ItemStack> getDrops()
     {
-        int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : this.getBlockId();
-        ItemStack ist = new ItemStack(id, 1, this.age);
-        ist.setTagCompound(this.eternal ? new NBTTagCompound() : null);
+        int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : getBlockId();
+        ItemStack ist = new ItemStack(id, 1, age);
+        ist.setTagCompound(eternal ? new NBTTagCompound() : null);
         return Arrays.asList(ist);
     }
 
@@ -122,32 +122,32 @@ abstract class TorchPart extends McSidedMetaPart
     public void save(NBTTagCompound tag)
     {
         super.save(tag);
-        tag.setInteger("age", this.age);
-        tag.setBoolean("eternal", this.eternal);
+        tag.setInteger("age", age);
+        tag.setBoolean("eternal", eternal);
     }
 
     @Override
     public void load(NBTTagCompound tag)
     {
         super.load(tag);
-        this.age = tag.getInteger("age");
-        this.eternal = tag.getBoolean("eternal");
+        age = tag.getInteger("age");
+        eternal = tag.getBoolean("eternal");
     }
 
     @Override
     public void writeDesc(MCDataOutput pkt)
     {
         super.writeDesc(pkt);
-        pkt.writeInt(this.age);
-        pkt.writeBoolean(this.eternal);
+        pkt.writeInt(age);
+        pkt.writeBoolean(eternal);
     }
 
     @Override
     public void readDesc(MCDataInput pkt)
     {
         super.readDesc(pkt);
-        this.age = pkt.readInt();
-        this.eternal = pkt.readBoolean();
+        age = pkt.readInt();
+        eternal = pkt.readBoolean();
     }
 
     @SideOnly(Side.CLIENT)
@@ -159,13 +159,13 @@ abstract class TorchPart extends McSidedMetaPart
 
         EntityLivingBase ep = Minecraft.getMinecraft().thePlayer;
 
-        if (ep.getDistance(this.x() + 0.5, this.y() + 0.5, this.z() + 0.5) <= 80D)
+        if (ep.getDistance(x() + 0.5, y() + 0.5, z() + 0.5) <= 80D)
         {
             FontRenderer fr = MultipartRenderer.getFontRenderer();
             Tessellator t = Tessellator.instance;
-            String age = ConfigCommon.torchLifespanMax - this.age + "";
+            String str = ConfigCommon.torchLifespanMax - age + "";
 
-            int w = fr.getStringWidth(age) / 2;
+            int w = fr.getStringWidth(str) / 2;
 
             float scale = 1F / 120F;
             float viewX = ep.prevRotationPitch + (ep.rotationPitch - ep.prevRotationPitch) * frame;
@@ -175,7 +175,7 @@ abstract class TorchPart extends McSidedMetaPart
             float ay = 0.8F;
             float az = 0F;
 
-            switch (this.meta)
+            switch (meta)
             {
                 case 1: ax = -0.25F; break;
                 case 2: ax = 0.25F; break;
@@ -209,7 +209,7 @@ abstract class TorchPart extends McSidedMetaPart
             GL11.glEnable(GL11.GL_TEXTURE_2D);
             GL11.glDepthMask(true);
 
-            fr.drawString(age, -fr.getStringWidth(age) / 2, 0, -1);
+            fr.drawString(str, -fr.getStringWidth(str) / 2, 0, -1);
 
             GL11.glEnable(GL11.GL_LIGHTING);
             GL11.glDisable(GL11.GL_BLEND);

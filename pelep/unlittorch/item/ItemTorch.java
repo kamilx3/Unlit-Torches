@@ -23,9 +23,9 @@ abstract class ItemTorch extends ItemBlock
     public ItemTorch(int id)
     {
         super(id);
-        this.setCreativeTab(CreativeTabs.tabDecorations);
-        this.setHasSubtypes(true);
-        this.setNoRepair();
+        setCreativeTab(CreativeTabs.tabDecorations);
+        setHasSubtypes(true);
+        setNoRepair();
     }
 
     @SideOnly(Side.CLIENT)

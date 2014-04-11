@@ -41,7 +41,7 @@ public class RecipeStick implements IRecipe
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.stick.copy();
+        return stick.copy();
     }
 
     @Override
@@ -53,6 +53,6 @@ public class RecipeStick implements IRecipe
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.stick;
+        return stick;
     }
 }

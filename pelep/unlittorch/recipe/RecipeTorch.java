@@ -58,11 +58,11 @@ public class RecipeTorch implements IRecipe
         {
             if (ConfigCommon.torchRecipeYieldsUnlit)
             {
-                this.torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, ConfigCommon.torchRecipeYieldCount, 0);
+                torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, ConfigCommon.torchRecipeYieldCount, 0);
             }
             else
             {
-                this.torch = new ItemStack(ConfigCommon.blockIdTorchLit, ConfigCommon.torchRecipeYieldCount, 0);
+                torch = new ItemStack(ConfigCommon.blockIdTorchLit, ConfigCommon.torchRecipeYieldCount, 0);
             }
 
             return true;
@@ -74,7 +74,7 @@ public class RecipeTorch implements IRecipe
     @Override
     public ItemStack getCraftingResult(InventoryCrafting ic)
     {
-        return this.torch.copy();
+        return torch.copy();
     }
 
     @Override
@@ -86,6 +86,6 @@ public class RecipeTorch implements IRecipe
     @Override
     public ItemStack getRecipeOutput()
     {
-        return this.torch;
+        return torch;
     }
 }

@@ -44,19 +44,19 @@ abstract class PacketCustom
         ByteArrayDataOutput data = ByteStreams.newDataOutput();
 
         data.write(getId());
-        this.encode(data);
+        encode(data);
 
         Packet250CustomPayload pkt = new Packet250CustomPayload(MOD_CHANNEL, data.toByteArray());
-        pkt.isChunkDataPacket = this.isChunkPacket();
+        pkt.isChunkDataPacket = isChunkPacket();
 
         return pkt;
     }
 
     private int getId()
     {
-        if (!packets.inverse().containsKey(this.getClass()))
-            throw new RuntimeException("Packet " + this.getClass().getSimpleName() + " is missing a mapping!");
-        return packets.inverse().get(this.getClass());
+        if (!packets.inverse().containsKey(getClass()))
+            throw new RuntimeException("Packet " + getClass().getSimpleName() + " is missing a mapping!");
+        return packets.inverse().get(getClass());
     }
 
     abstract void encode(ByteArrayDataOutput data);

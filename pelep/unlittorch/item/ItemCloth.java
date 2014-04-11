@@ -28,12 +28,12 @@ public class ItemCloth extends Item
     public ItemCloth()
     {
         super(ConfigCommon.itemIdCloth - 256);
-        this.setCreativeTab(CreativeTabs.tabMaterials);
-        this.setHasSubtypes(true);
-        this.setMaxDamage(0);
-        this.setNoRepair();
-        this.setUnlocalizedName("unlittorch:cloth");
-        this.setTextureName("unlittorch:cloth");
+        setCreativeTab(CreativeTabs.tabMaterials);
+        setHasSubtypes(true);
+        setMaxDamage(0);
+        setNoRepair();
+        setUnlocalizedName("unlittorch:cloth");
+        setTextureName("unlittorch:cloth");
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ItemCloth extends Item
     @Override
     public void registerIcons(IconRegister ir)
     {
-        this.itemIcon = ir.registerIcon("unlittorch:cloth_dry");
+        itemIcon = ir.registerIcon("unlittorch:cloth_dry");
         icon_wet = ir.registerIcon("unlittorch:cloth_wet");
     }
 
@@ -83,7 +83,7 @@ public class ItemCloth extends Item
     {
         switch (d)
         {
-            case 0: return this.itemIcon;
+            case 0: return itemIcon;
             default: return icon_wet;
         }
     }
