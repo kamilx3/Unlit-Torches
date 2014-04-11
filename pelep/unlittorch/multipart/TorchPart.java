@@ -8,22 +8,18 @@ import codechicken.lib.data.MCDataOutput;
 import codechicken.lib.vec.BlockCoord;
 import codechicken.lib.vec.Cuboid6;
 import codechicken.lib.vec.Vector3;
-import codechicken.multipart.MultipartRenderer;
 import codechicken.multipart.TileMultipart;
 import codechicken.multipart.minecraft.McSidedMetaPart;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import org.lwjgl.opengl.GL11;
 import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.render.RenderBlockTorch;
 
 import java.util.Arrays;
 
@@ -157,64 +153,24 @@ abstract class TorchPart extends McSidedMetaPart
         if (pass != 0 || !Minecraft.isGuiEnabled() || !Minecraft.getMinecraft().gameSettings.showDebugInfo)
             return;
 
-        EntityLivingBase ep = Minecraft.getMinecraft().thePlayer;
-
-        if (ep.getDistance(x() + 0.5, y() + 0.5, z() + 0.5) <= 80D)
+        if (Minecraft.getMinecraft().thePlayer.getDistance(x() + 0.5, y() + 0.5, z() + 0.5) <= 80D)
         {
-            FontRenderer fr = MultipartRenderer.getFontRenderer();
-            Tessellator t = Tessellator.instance;
             String str = ConfigCommon.torchLifespanMax - age + "";
 
-            int w = fr.getStringWidth(str) / 2;
-
-            float scale = 1F / 120F;
-            float viewX = ep.prevRotationPitch + (ep.rotationPitch - ep.prevRotationPitch) * frame;
-            float viewY = ep.prevRotationYaw + (ep.rotationYaw - ep.prevRotationYaw) * frame;
-
-            float ax = 0F;
-            float ay = 0.8F;
-            float az = 0F;
+            float x = (float)pos.x + 0.5F;
+            float y = (float)pos.y + 0.8F;
+            float z = (float)pos.z + 0.5F;
 
             switch (meta)
             {
-                case 1: ax = -0.25F; break;
-                case 2: ax = 0.25F; break;
-                case 3: az = -0.25F; break;
-                case 4: az = 0.25F; break;
-                default: ay = 1.05F;
+                case 1: x -= 0.25F; break;
+                case 2: x += 0.25F; break;
+                case 3: z -= 0.25F; break;
+                case 4: z += 0.25F; break;
+                default: y += 0.25F;
             }
 
-            GL11.glPushMatrix();
-            GL11.glTranslatef((float)pos.x + 0.5F + ax, (float)pos.y + ay, (float)pos.z + 0.5F + az);
-            GL11.glNormal3f(0F, 1F, 0F);
-            GL11.glRotatef(-viewY, 0F, 1F, 0F);
-            GL11.glRotatef(viewX, 1F, 0F, 0F);
-            GL11.glScalef(-scale, -scale, scale);
-            GL11.glDisable(GL11.GL_LIGHTING);
-            GL11.glTranslatef(0F, 0.25F / scale, 0F);
-            GL11.glDepthMask(false);
-
-            GL11.glEnable(GL11.GL_BLEND);
-            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-            GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-            t.startDrawingQuads();
-            t.setColorRGBA_F(0F, 0F, 0F, 0.25F);
-            t.addVertex((-w - 1), -1D, 0D);
-            t.addVertex((-w - 1), 8D, 0D);
-            t.addVertex((w + 1), 8D, 0D);
-            t.addVertex((w + 1), -1D, 0D);
-            t.draw();
-
-            GL11.glEnable(GL11.GL_TEXTURE_2D);
-            GL11.glDepthMask(true);
-
-            fr.drawString(str, -fr.getStringWidth(str) / 2, 0, -1);
-
-            GL11.glEnable(GL11.GL_LIGHTING);
-            GL11.glDisable(GL11.GL_BLEND);
-            GL11.glColor4f(1F, 1F, 1F, 1F);
-            GL11.glPopMatrix();
+            RenderBlockTorch.renderAge(str, x, y, z, frame, 1F/120F);
         }
     }
 }

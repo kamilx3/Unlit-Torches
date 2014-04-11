@@ -27,49 +27,55 @@ public class RenderBlockTorch extends TileEntitySpecialRenderer
 
             if (te.getDistanceFrom(ep.posX, ep.posY, ep.posZ) <= 80D)
             {
-                FontRenderer fr = getFontRenderer();
-                Tessellator t = Tessellator.instance;
                 String age = (ConfigCommon.torchLifespanMax - ((TileEntityTorch)te).getAge()) + "";
-
-                int w = fr.getStringWidth(age) / 2;
-
-                float scale = 1F / 60F;
-                float viewX = ep.prevRotationPitch + (ep.rotationPitch - ep.prevRotationPitch) * ptick;
-                float viewY = ep.prevRotationYaw + (ep.rotationYaw - ep.prevRotationYaw) * ptick;
-                float ay = te.getBlockMetadata() == 5 ? 1.05F : 0.9F;
-
-                GL11.glPushMatrix();
-                GL11.glTranslatef((float)x + 0.5F, (float)y + ay, (float)z + 0.5F);
-                GL11.glNormal3f(0F, 1F, 0F);
-                GL11.glRotatef(-viewY, 0F, 1F, 0F);
-                GL11.glRotatef(viewX, 1F, 0F, 0F);
-                GL11.glScalef(-scale, -scale, scale);
-                GL11.glDisable(GL11.GL_LIGHTING);
-                GL11.glTranslatef(0F, 0.25F / scale, 0F);
-                GL11.glDepthMask(false);
-
-                GL11.glEnable(GL11.GL_BLEND);
-                GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-                GL11.glDisable(GL11.GL_TEXTURE_2D);
-
-                t.startDrawingQuads();
-                t.setColorRGBA_F(0F, 0F, 0F, 0.25F);
-                t.addVertex((-w - 1), -1D, 0D);
-                t.addVertex((-w - 1), 8D, 0D);
-                t.addVertex((w + 1), 8D, 0D);
-                t.addVertex((w + 1), -1D, 0D);
-                t.draw();
-
-                GL11.glEnable(GL11.GL_TEXTURE_2D);
-                GL11.glDepthMask(true);
-
-                fr.drawString(age, -fr.getStringWidth(age) / 2, 0, -1);
-
-                GL11.glEnable(GL11.GL_LIGHTING);
-                GL11.glDisable(GL11.GL_BLEND);
-                GL11.glColor4f(1F, 1F, 1F, 1F);
-                GL11.glPopMatrix();
+                x += 0.5F;
+                y += te.getBlockMetadata() == 5 ? 1.05F : 0.9F;
+                z += 0.5F;
+                renderAge(age, (float)x, (float)y, (float)z, ptick, 1F/60F);
             }
         }
+    }
+
+    public static void renderAge(String age, float x, float y, float z, float ptick, float scale)
+    {
+        Tessellator t = Tessellator.instance;
+        EntityLivingBase ep = Minecraft.getMinecraft().thePlayer;
+        FontRenderer fr = Minecraft.getMinecraft().fontRenderer;
+        int w = fr.getStringWidth(age) / 2;
+
+        float viewX = ep.prevRotationPitch + (ep.rotationPitch - ep.prevRotationPitch) * ptick;
+        float viewY = ep.prevRotationYaw + (ep.rotationYaw - ep.prevRotationYaw) * ptick;
+
+        GL11.glPushMatrix();
+        GL11.glTranslatef(x, y, z);
+        GL11.glNormal3f(0F, 1F, 0F);
+        GL11.glRotatef(-viewY, 0F, 1F, 0F);
+        GL11.glRotatef(viewX, 1F, 0F, 0F);
+        GL11.glScalef(-scale, -scale, scale);
+        GL11.glDisable(GL11.GL_LIGHTING);
+        GL11.glTranslatef(0F, 0.25F / scale, 0F);
+        GL11.glDepthMask(false);
+
+        GL11.glEnable(GL11.GL_BLEND);
+        GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+
+        t.startDrawingQuads();
+        t.setColorRGBA_F(0F, 0F, 0F, 0.25F);
+        t.addVertex((-w - 1), -1D, 0D);
+        t.addVertex((-w - 1), 8D, 0D);
+        t.addVertex((w + 1), 8D, 0D);
+        t.addVertex((w + 1), -1D, 0D);
+        t.draw();
+
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+        GL11.glDepthMask(true);
+
+        fr.drawString(age, -fr.getStringWidth(age) / 2, 0, -1);
+
+        GL11.glEnable(GL11.GL_LIGHTING);
+        GL11.glDisable(GL11.GL_BLEND);
+        GL11.glColor4f(1F, 1F, 1F, 1F);
+        GL11.glPopMatrix();
     }
 }
