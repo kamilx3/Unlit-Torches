@@ -27,7 +27,7 @@ public class RenderBlockTorch extends TileEntitySpecialRenderer
 
             if (te.getDistanceFrom(ep.posX, ep.posY, ep.posZ) <= 80D)
             {
-                String age = (ConfigCommon.torchLifespanMax - ((TileEntityTorch)te).getAge()) + "";
+                String age = (ConfigCommon.torchLifespanMax - ((TileEntityTorch)te).age) + "";
                 x += 0.5F;
                 y += te.getBlockMetadata() == 5 ? 1.05F : 0.9F;
                 z += 0.5F;

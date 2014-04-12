@@ -6,7 +6,7 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.ai.EntityAIBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import pelep.pcl.util.vec.Coordinate;
+import pelep.pcl.util.vec.Coordinates;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.tileentity.TileEntityTorch;
@@ -18,7 +18,7 @@ public class EntityAIBreakTorches extends EntityAIBase
 {
     private final EntityLiving el;
     private final World world;
-    private Coordinate torch;
+    private Coordinates torch;
     private int delay;
 
     public EntityAIBreakTorches(EntityLiving el)
@@ -66,9 +66,9 @@ public class EntityAIBreakTorches extends EntityAIBase
                     {
                         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
 
-                        if (te.isEternal()) continue;
+                        if (te.eternal) continue;
 
-                        Coordinate coord = new Coordinate(x, y, z);
+                        Coordinates coord = new Coordinates(x, y, z);
 
                         if (canEntitySeeBlock(el, coord, r + 0.5D))
                         {

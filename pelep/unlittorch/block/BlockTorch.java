@@ -14,7 +14,7 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeDirection;
-import pelep.pcl.util.vec.Coordinate;
+import pelep.pcl.util.vec.Coordinates;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
@@ -167,8 +167,8 @@ abstract class BlockTorch extends BlockContainer
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase p, ItemStack ist)
     {
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-        te.setAge(ist.getItemDamage());
-        te.setEternal(ist.stackTagCompound != null);
+        te.age = ist.getItemDamage();
+        te.eternal = ist.stackTagCompound != null;
     }
 
     @Override
@@ -181,7 +181,7 @@ abstract class BlockTorch extends BlockContainer
     public int onBlockPlaced(World world, int x, int y, int z, int side, float i, float j, float k, int d)
     {
         ForgeDirection dir = ForgeDirection.getOrientation(side);
-        Coordinate offset = new Coordinate(x, y, z).offset(dir.getOpposite());
+        Coordinates offset = new Coordinates(x, y, z).offset(dir.getOpposite());
 
         if (side == 1 && canPlaceTorchOn(world, offset.x, offset.y, offset.z))
         {
@@ -226,8 +226,8 @@ abstract class BlockTorch extends BlockContainer
     public boolean removeBlockByPlayer(World world, EntityPlayer p, int x, int y, int z)
     {
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-        int age = te.getAge();
-        boolean eternal = te.isEternal();
+        int age = te.age;
+        boolean eternal = te.eternal;
         boolean drop = world.setBlockToAir(x, y, z);
 
         if (drop && !world.isRemote && (p == null || !p.capabilities.isCreativeMode))
@@ -244,16 +244,15 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public ArrayList<ItemStack> getBlockDropped(World world, int x, int y, int z, int md, int fortune)
     {
-        ArrayList<ItemStack> stacks = new ArrayList();
-
+        ArrayList<ItemStack> stacks = new ArrayList<ItemStack>();
         TileEntity te = world.getBlockTileEntity(x, y, z);
 
         if (te != null)
         {
             TileEntityTorch tt = (TileEntityTorch) te;
             int id = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : blockID;
-            ItemStack ist = new ItemStack(id, 1, tt.getAge());
-            ist.setTagCompound(tt.isEternal() ? new NBTTagCompound() : null);
+            ItemStack ist = new ItemStack(id, 1, tt.age);
+            ist.setTagCompound(tt.eternal ? new NBTTagCompound() : null);
             stacks.add(ist);
         }
 

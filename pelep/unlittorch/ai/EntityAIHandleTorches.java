@@ -6,7 +6,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import pelep.pcl.util.vec.Coordinate;
+import pelep.pcl.util.vec.Coordinates;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.block.BlockTorchUnlit;
 import pelep.unlittorch.config.ConfigCommon;
@@ -22,8 +22,8 @@ public class EntityAIHandleTorches extends EntityAIBase
 {
     private final EntityLiving el;
     private final World world;
-    private final PriorityQueue<Coordinate> torches;
-    private Coordinate torch;
+    private final PriorityQueue<Coordinates> torches;
+    private Coordinates torch;
     private int delay;
     private int timer;
 
@@ -31,7 +31,7 @@ public class EntityAIHandleTorches extends EntityAIBase
     {
         this.el = el;
         world = el.worldObj;
-        torches = new PriorityQueue(4, new TorchSorter(el));
+        torches = new PriorityQueue<Coordinates>(4, new TorchSorter(el));
         setMutexBits(1|2|4);
     }
 
@@ -98,9 +98,9 @@ public class EntityAIHandleTorches extends EntityAIBase
             el.getNavigator().tryMoveToXYZ(torch.x + 0.5D, torch.y, torch.z + 0.5D, 0.6D);
     }
 
-    private Coordinate poll()
+    private Coordinates poll()
     {
-        Coordinate torch = torches.poll();
+        Coordinates torch = torches.poll();
         return torch == null ? null : (isBlockValid(torch) ? torch : poll());
     }
 
@@ -118,7 +118,7 @@ public class EntityAIHandleTorches extends EntityAIBase
             {
                 for (int k = -r; k <= r; k++)
                 {
-                    Coordinate coord = new Coordinate(x + i, y + j, z + k);
+                    Coordinates coord = new Coordinates(x + i, y + j, z + k);
                     if (isBlockValid(coord)) torches.add(coord);
                 }
             }
@@ -127,25 +127,25 @@ public class EntityAIHandleTorches extends EntityAIBase
         return !torches.isEmpty();
     }
 
-    private boolean isBlockValid(Coordinate coord)
+    private boolean isBlockValid(Coordinates coord)
     {
         int id = world.getBlockId(coord.x, coord.y, coord.z);
 
         if (id == ConfigCommon.blockIdTorchLit)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(coord.x, coord.y, coord.z);
-            return !te.isEternal() && world.isDaytime();
+            return !te.eternal && world.isDaytime();
         }
         else if (id == ConfigCommon.blockIdTorchUnlit)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(coord.x, coord.y, coord.z);
-            return !te.isEternal() && !world.isDaytime() && !world.canLightningStrikeAt(coord.x, coord.y, coord.z);
+            return !te.eternal && !world.isDaytime() && !world.canLightningStrikeAt(coord.x, coord.y, coord.z);
         }
 
         return false;
     }
 
-    private class TorchSorter implements Comparator<Coordinate>
+    private class TorchSorter implements Comparator<Coordinates>
     {
         private EntityLiving el;
 
@@ -155,7 +155,7 @@ public class EntityAIHandleTorches extends EntityAIBase
         }
 
         @Override
-        public int compare(Coordinate t1, Coordinate t2)
+        public int compare(Coordinates t1, Coordinates t2)
         {
             double d1 = el.getDistanceSq(t1.x + 0.5, t1.y + 0.5, t1.z + 0.5);
             double d2 = el.getDistanceSq(t2.x + 0.5, t2.y + 0.5, t2.z + 0.5);
@@ -163,7 +163,7 @@ public class EntityAIHandleTorches extends EntityAIBase
         }
     }
 
-    static boolean canEntitySeeBlock(EntityLiving el, Coordinate coord, double r)
+    static boolean canEntitySeeBlock(EntityLiving el, Coordinates coord, double r)
     {
         if (coord == null || el.getDistance(coord.x + 0.5D, coord.y + 0.5D, coord.z + 0.5D) > r) return false;
         Vec3 p1 = el.worldObj.getWorldVec3Pool().getVecFromPool(el.posX, el.posY + el.getEyeHeight(), el.posZ);

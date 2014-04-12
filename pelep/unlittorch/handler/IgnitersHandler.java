@@ -13,8 +13,8 @@ import java.util.HashMap;
  */
 public class IgnitersHandler extends ItemInfoStorageHelper
 {
-    private static final HashMap<Integer, ArrayList<Range>> ignitersSet = new HashMap();
-    private static final HashMap<Integer, ArrayList<Range>> ignitersHeld = new HashMap();
+    private static final HashMap<Integer, ArrayList<Range>> ignitersSet = new HashMap<Integer, ArrayList<Range>>();
+    private static final HashMap<Integer, ArrayList<Range>> ignitersHeld = new HashMap<Integer, ArrayList<Range>>();
 
     public static boolean canIgniteSetTorch(int id, int md)
     {

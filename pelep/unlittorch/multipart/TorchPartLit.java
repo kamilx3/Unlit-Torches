@@ -1,5 +1,6 @@
 package pelep.unlittorch.multipart;
 
+import static pelep.unlittorch.config.ConfigCommon.*;
 import static pelep.unlittorch.UnlitTorch.LOGGER;
 
 import codechicken.lib.vec.BlockCoord;
@@ -19,9 +20,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
-import pelep.pcl.util.vec.Coordinate;
+import pelep.pcl.util.vec.Coordinates;
 import pelep.unlittorch.block.BlockTorchLit;
-import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet03BurnFX;
 import pelep.unlittorch.packet.Packet05UpdatePart;
 
@@ -121,12 +121,12 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
                 renewTorches(ep, ist);
                 return true;
             }
-            else if (id == ConfigCommon.blockIdTorchUnlit)
+            else if (id == blockIdTorchUnlit)
             {
                 BlockTorchLit.igniteHeldTorch(world(), ist, ep);
                 return true;
             }
-            else if (id == ConfigCommon.itemIdCloth)
+            else if (id == itemIdCloth)
             {
                 if (ist.getItemDamage() == 0)
                 {
@@ -168,25 +168,25 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     public void onConverted()
     {
         //because multipart is weird and isn't adding this automagically
-        if (!world().isRemote && ConfigCommon.torchUpdates) world().addTileEntity(tile());
+        if (!world().isRemote && torchUpdates) world().addTileEntity(tile());
     }
 
     @Override
     public boolean doesTick()
     {
-        return ConfigCommon.torchUpdates && !eternal;
+        return torchUpdates && !eternal;
     }
 
     @Override
     public void update()
     {
-        if (world().getTotalWorldTime() % 3 != 0 || eternal || !ConfigCommon.torchUpdates) return;
+        if (world().getTotalWorldTime() % 3 != 0 || eternal || !torchUpdates) return;
 
         if (!world().isRemote)
         {
-            if (age >= ConfigCommon.torchLifespanMax)
+            if (age >= torchLifespanMax)
             {
-                if (ConfigCommon.torchSingleUse)
+                if (torchSingleUse)
                 {
                     destroyPart();
                 }
@@ -204,9 +204,9 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
                 return;
             }
 
-            if (age > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && world().rand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+            if (age > torchLifespanMin && torchRandomKillChance > 0 && world().rand.nextInt(torchRandomKillChance) == 0)
             {
-                if (world().rand.nextInt(100) < ConfigCommon.torchDestroyChance)
+                if (world().rand.nextInt(100) < torchDestroyChance)
                 {
                     destroyPart();
                 }
@@ -269,7 +269,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
         int dim = world().provider.dimensionId;
         int i = tile().jPartList().indexOf(this);
-        Coordinate pos = new Coordinate(x(), y(), z());
+        Coordinates pos = new Coordinates(x(), y(), z());
         PacketDispatcher.sendPacketToAllInDimension(new Packet05UpdatePart(i, pos, dim, age).create(), dim);
     }
 
@@ -292,7 +292,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         return true;
     }
 
-    public static void updatePart(World world, Coordinate coord, int index, int age)
+    public static void updatePart(World world, Coordinates coord, int index, int age)
     {
         TileEntity te = world.getBlockTileEntity(coord.x, coord.y, coord.z);
 

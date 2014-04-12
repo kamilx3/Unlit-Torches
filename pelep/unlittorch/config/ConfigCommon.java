@@ -32,7 +32,7 @@ public class ConfigCommon extends UtilConfig
     public static boolean mobVillagerTorch;
 
     @Override
-    public void load()
+    protected void load()
     {
         blockIdTorchLit = getBlock("IdBlockTorchLit", 551, "Block ID for the LIT torch");
         blockIdTorchUnlit = getBlock("IdBlockTorchUnlit", 550, "Block ID for the UNLIT torch");
@@ -43,7 +43,7 @@ public class ConfigCommon extends UtilConfig
         torchRecipeYieldCount = getInt("TorchRecipeYieldCount", 4, 1, 9, "Number of torches the torch recipe should yield. Lower it for a challenge. Min:1 Max:9");
 
         setCategory("TORCH");
-        torchUpdates = getBoolean("TorchUpdates", true, "Set to false to disable torches aging, dying out, etc.");
+        torchUpdates = getBoolean("TorchUpdates", true, "Set to false to make lit torches act pretty much like vanilla torches. Disables aging, randomly dying out, etc.");
         torchDropsUnlit = getBoolean("DropsUnlit", false, "True if lit torches should drop as UNLIT torches");
         torchSingleUse = getBoolean("SingleUse", true, "True if torches should break when their lifespan is over");
 

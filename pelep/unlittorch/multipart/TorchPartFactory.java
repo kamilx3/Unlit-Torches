@@ -69,12 +69,12 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         if (id == ConfigCommon.blockIdTorchLit)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
-            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge(), te.isEternal());
+            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.age, te.eternal);
         }
         else if (id == ConfigCommon.blockIdTorchUnlit)
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
-            return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.getAge(), te.isEternal());
+            return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.age, te.eternal);
         }
 
         return null;

@@ -29,6 +29,7 @@ abstract class ItemTorch extends ItemBlock
     }
 
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
     @Override
     public void addInformation(ItemStack ist, EntityPlayer p, List list, boolean adv)
     {

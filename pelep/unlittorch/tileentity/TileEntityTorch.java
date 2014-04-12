@@ -1,5 +1,7 @@
 package pelep.unlittorch.tileentity;
 
+import static pelep.unlittorch.config.ConfigCommon.*;
+
 import cpw.mods.fml.common.network.PacketDispatcher;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.INetworkManager;
@@ -7,7 +9,6 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.chunk.Chunk;
-import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet03BurnFX;
 
 /**
@@ -15,10 +16,10 @@ import pelep.unlittorch.packet.Packet03BurnFX;
  */
 public class TileEntityTorch extends TileEntity
 {
-    private boolean lit;
-    private boolean eternal;
-    private int age;
     private Chunk chunk;
+    private boolean lit;
+    public boolean eternal;
+    public int age;
 
     public TileEntityTorch() {}
 
@@ -27,30 +28,10 @@ public class TileEntityTorch extends TileEntity
         this.lit = lit;
     }
 
-    public void setAge(int age)
-    {
-        this.age = age;
-    }
-
-    public int getAge()
-    {
-        return age;
-    }
-
-    public void setEternal(boolean eternal)
-    {
-        this.eternal = eternal;
-    }
-
-    public boolean isEternal()
-    {
-        return eternal;
-    }
-
     @Override
     public boolean canUpdate()
     {
-        return lit && !eternal && ConfigCommon.torchUpdates;
+        return lit && !eternal && torchUpdates;
     }
 
     @Override
@@ -64,9 +45,9 @@ public class TileEntityTorch extends TileEntity
             return;
         }
 
-        if (age >= ConfigCommon.torchLifespanMax)
+        if (age >= torchLifespanMax)
         {
-            if (ConfigCommon.torchSingleUse)
+            if (torchSingleUse)
             {
                 destroyTorch();
             }
@@ -86,9 +67,9 @@ public class TileEntityTorch extends TileEntity
                 return;
             }
 
-            if (age > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && worldObj.rand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+            if (age > torchLifespanMin && torchRandomKillChance > 0 && worldObj.rand.nextInt(torchRandomKillChance) == 0)
             {
-                if (worldObj.rand.nextInt(100) < ConfigCommon.torchDestroyChance)
+                if (worldObj.rand.nextInt(100) < torchDestroyChance)
                 {
                     destroyTorch();
                 }
@@ -118,9 +99,9 @@ public class TileEntityTorch extends TileEntity
     private void extinguishTorch(String sound, float volume)
     {
         int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
-        worldObj.setBlock(xCoord, yCoord, zCoord, ConfigCommon.blockIdTorchUnlit, md, 1|2);
+        worldObj.setBlock(xCoord, yCoord, zCoord, blockIdTorchUnlit, md, 1|2);
         worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, sound, volume, worldObj.rand.nextFloat() * 0.4F + 0.8F);
-        ((TileEntityTorch)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).setAge(age);
+        ((TileEntityTorch)worldObj.getBlockTileEntity(xCoord, yCoord, zCoord)).age = age;
     }
 
     @Override

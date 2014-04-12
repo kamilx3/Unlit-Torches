@@ -19,7 +19,6 @@ import java.io.File;
  * @author pelep
  */
 @SideOnly(Side.CLIENT)
-@SuppressWarnings("unused")
 public class ProxyClient extends ProxyCommon
 {
     @Override

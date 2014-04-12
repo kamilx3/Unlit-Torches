@@ -18,7 +18,6 @@ import java.util.HashMap;
 /**
  * @author pelep
  */
-@SuppressWarnings("unused")
 public class NEIUnlitTorchConfig implements IConfigureNEI
 {
     @Override

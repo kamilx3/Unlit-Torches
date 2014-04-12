@@ -1,5 +1,7 @@
 package pelep.unlittorch.item;
 
+import static pelep.unlittorch.config.ConfigCommon.*;
+
 import cpw.mods.fml.common.network.PacketDispatcher;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -13,7 +15,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.pcl.IUpdatingItem;
-import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet02UpdateEntity;
 
 import java.util.List;
@@ -36,6 +37,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
 
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
     @Override
     public void getSubItems(int id, CreativeTabs ct, List list)
     {
@@ -43,7 +45,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         ist.setTagCompound(new NBTTagCompound());
         list.add(ist);
         list.add(new ItemStack(id, 1, 0));
-        list.add(new ItemStack(ConfigCommon.blockIdTorchUnlit, 1, 0));
+        list.add(new ItemStack(blockIdTorchUnlit, 1, 0));
     }
 
 
@@ -75,7 +77,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         {
             world.playSoundAtEntity(p, "random.fizz", 0.5F, itemRand.nextFloat() * 0.4F + 0.8F);
             p.swingItem();
-            ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchUnlit, ist.stackSize, ist.getItemDamage());
+            ItemStack torch = new ItemStack(blockIdTorchUnlit, ist.stackSize, ist.getItemDamage());
             torch.setTagCompound(ist.getTagCompound());
             return torch;
         }
@@ -92,7 +94,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     {
         EntityPlayer p = (EntityPlayer) e;
 
-        if (p.capabilities.isCreativeMode || !ConfigCommon.torchUpdates || world.getTotalWorldTime() % 3 != 0 || ist.stackTagCompound != null)
+        if (p.capabilities.isCreativeMode || !torchUpdates || world.getTotalWorldTime() % 3 != 0 || ist.stackTagCompound != null)
         {
             return;
         }
@@ -105,16 +107,16 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             {
                 ItemStack inv = p.inventory.mainInventory[i];
                 if (inv != null && inv.itemID == itemID)
-                    inv.itemID = ConfigCommon.blockIdTorchUnlit;
+                    inv.itemID = blockIdTorchUnlit;
             }
         }
         else
         {
             int d = ist.getItemDamage();
 
-            if (d >= ConfigCommon.torchLifespanMax)
+            if (d >= torchLifespanMax)
             {
-                if (ConfigCommon.torchSingleUse)
+                if (torchSingleUse)
                 {
                     destroyItem(world, p, slot);
                 }
@@ -126,28 +128,31 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                 return;
             }
 
-            if (!world.isRemote && d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+            if (!world.isRemote)
             {
-                if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
+                if (d > torchLifespanMin && torchRandomKillChance > 0 && itemRand.nextInt(torchRandomKillChance) == 0)
                 {
-                    destroyItem(world, p, slot);
+                    if (itemRand.nextInt(100) < torchDestroyChance)
+                    {
+                        destroyItem(world, p, slot);
+                    }
+                    else
+                    {
+                        extinguishItem(world, p, ist, "fire.fire", 1F);
+                    }
+
+                    return;
                 }
-                else
+
+                int x = MathHelper.floor_double(p.posX);
+                int y = MathHelper.floor_double(p.posY);
+                int z = MathHelper.floor_double(p.posZ);
+
+                if (world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(15) == 0) || itemRand.nextInt(25) == 0))
                 {
-                    extinguishItem(world, p, ist, "fire.fire", 1F);
+                    extinguishItem(world, p, ist, "random.fizz", 0.3F);
+                    return;
                 }
-
-                return;
-            }
-
-            int x = MathHelper.floor_double(p.posX);
-            int y = MathHelper.floor_double(p.posY);
-            int z = MathHelper.floor_double(p.posZ);
-
-            if (!world.isRemote && world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(15) == 0) || itemRand.nextInt(25) == 0))
-            {
-                extinguishItem(world, p, ist, "random.fizz", 0.3F);
-                return;
             }
 
             int add = held ? 2 : 1;
@@ -158,7 +163,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     @Override
     public boolean onEntityItemUpdate(EntityItem ei)
     {
-        if (ei.worldObj.isRemote || !ConfigCommon.torchUpdates || ei.worldObj.getTotalWorldTime() % 3 != 0)
+        if (ei.worldObj.isRemote || !torchUpdates || ei.worldObj.getTotalWorldTime() % 3 != 0)
             return false;
 
         ItemStack ist = ei.getEntityItem();
@@ -174,9 +179,9 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
         int d = ist.getItemDamage();
 
-        if (d >= ConfigCommon.torchLifespanMax)
+        if (d >= torchLifespanMax)
         {
-            if (ConfigCommon.torchSingleUse)
+            if (torchSingleUse)
             {
                 destroyEntity(ei);
             }
@@ -188,9 +193,9 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             return false;
         }
 
-        if (d > ConfigCommon.torchLifespanMin && ConfigCommon.torchRandomKillChance > 0 && itemRand.nextInt(ConfigCommon.torchRandomKillChance) == 0)
+        if (d > torchLifespanMin && torchRandomKillChance > 0 && itemRand.nextInt(torchRandomKillChance) == 0)
         {
-            if (itemRand.nextInt(100) < ConfigCommon.torchDestroyChance)
+            if (itemRand.nextInt(100) < torchDestroyChance)
             {
                 destroyEntity(ei);
             }
@@ -230,7 +235,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     private static void extinguishItem(World world, EntityPlayer p, ItemStack ist, String sound, float volume)
     {
         world.playSoundAtEntity(p, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
-        ist.itemID = ConfigCommon.blockIdTorchUnlit;
+        ist.itemID = blockIdTorchUnlit;
     }
 
     private static void destroyEntity(EntityItem ei)
@@ -242,7 +247,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     private static void extinguishEntity(EntityItem ei, String sound, float volume)
     {
         ei.worldObj.playSoundEffect(ei.posX, ei.posY, ei.posZ, sound, volume, ei.worldObj.rand.nextFloat() * 0.4F + 0.8F);
-        ei.getEntityItem().itemID = ConfigCommon.blockIdTorchUnlit;
+        ei.getEntityItem().itemID = blockIdTorchUnlit;
         PacketDispatcher.sendPacketToAllInDimension(new Packet02UpdateEntity(ei).create(), ei.worldObj.provider.dimensionId);
     }
 }

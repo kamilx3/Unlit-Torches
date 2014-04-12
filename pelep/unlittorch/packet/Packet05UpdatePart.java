@@ -4,7 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import pelep.pcl.ProtocolException;
-import pelep.pcl.util.vec.Coordinate;
+import pelep.pcl.util.vec.Coordinates;
 import pelep.unlittorch.multipart.TorchPartLit;
 
 /**
@@ -12,14 +12,14 @@ import pelep.unlittorch.multipart.TorchPartLit;
  */
 public class Packet05UpdatePart extends PacketCustom
 {
-    private Coordinate pos;
+    private Coordinates pos;
     private int idx;
     private int dim;
     private int age;
 
     Packet05UpdatePart() {}
 
-    public Packet05UpdatePart(int idx, Coordinate pos, int dim, int age)
+    public Packet05UpdatePart(int idx, Coordinates pos, int dim, int age)
     {
         this.pos = pos;
         this.idx = idx;
@@ -42,7 +42,7 @@ public class Packet05UpdatePart extends PacketCustom
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
         idx = data.readInt();
-        pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
+        pos = new Coordinates(data.readInt(), data.readInt(), data.readInt());
         dim = data.readInt();
         age = data.readInt();
     }

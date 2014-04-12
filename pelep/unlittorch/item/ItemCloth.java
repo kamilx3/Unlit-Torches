@@ -47,6 +47,7 @@ public class ItemCloth extends Item
 
 
     @SideOnly(Side.CLIENT)
+    @SuppressWarnings("unchecked")
     @Override
     public void getSubItems(int id, CreativeTabs ct, List list)
     {

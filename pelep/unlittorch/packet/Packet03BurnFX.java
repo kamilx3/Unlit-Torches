@@ -4,21 +4,21 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import net.minecraft.entity.player.EntityPlayer;
 import pelep.pcl.ProtocolException;
-import pelep.pcl.util.vec.Coordinate;
+import pelep.pcl.util.vec.Coordinates;
 
 /**
  * @author pelep
  */
 public class Packet03BurnFX extends PacketCustom
 {
-    private Coordinate pos;
+    private Coordinates pos;
     private int md;
 
     public Packet03BurnFX() {}
 
     public Packet03BurnFX(int x, int y, int z, int md)
     {
-        this.pos = new Coordinate(x, y, z);
+        this.pos = new Coordinates(x, y, z);
         this.md = md;
     }
 
@@ -34,7 +34,7 @@ public class Packet03BurnFX extends PacketCustom
     @Override
     public void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        pos = new Coordinate(data.readInt(), data.readInt(), data.readInt());
+        pos = new Coordinates(data.readInt(), data.readInt(), data.readInt());
         md = data.readByte();
     }
 

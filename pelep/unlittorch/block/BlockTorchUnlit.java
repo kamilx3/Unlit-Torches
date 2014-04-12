@@ -51,8 +51,8 @@ public class BlockTorchUnlit extends BlockTorch
             if (ist != null) return false;
 
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            ItemStack torch = new ItemStack(blockID, 1, te.getAge());
-            torch.setTagCompound(te.isEternal() ? new NBTTagCompound() : null);
+            ItemStack torch = new ItemStack(blockID, 1, te.age);
+            torch.setTagCompound(te.eternal ? new NBTTagCompound() : null);
             p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
             world.setBlockToAir(x, y, z);
 
@@ -121,15 +121,15 @@ public class BlockTorchUnlit extends BlockTorch
     public static void igniteBlock(World world, int x, int y, int z, String sound)
     {
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-        int age = te.getAge();
-        boolean eternal = te.isEternal();
+        int age = te.age;
+        boolean eternal = te.eternal;
 
         world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
         world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, sound, 1F, world.rand.nextFloat() * 0.4F + 0.8F);
 
         te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-        te.setAge(age);
-        te.setEternal(eternal);
+        te.age = age;
+        te.eternal = eternal;
     }
 
     public static boolean useIgniter(EntityPlayer ep)
