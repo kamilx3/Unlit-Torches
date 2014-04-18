@@ -22,6 +22,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import pelep.pcl.util.vec.Coordinates;
 import pelep.unlittorch.block.BlockTorchLit;
+import pelep.unlittorch.item.ItemTorchLit;
 import pelep.unlittorch.packet.Packet03BurnFX;
 import pelep.unlittorch.packet.Packet05UpdatePart;
 
@@ -180,7 +181,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public void update()
     {
-        if (world().getTotalWorldTime() % 3 != 0 || eternal || !torchUpdates) return;
+        if (world().getTotalWorldTime() % ItemTorchLit.UPDATE_INTERVAL != 0 || eternal || !torchUpdates) return;
 
         if (!world().isRemote)
         {

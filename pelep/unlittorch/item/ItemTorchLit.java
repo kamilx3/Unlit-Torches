@@ -24,6 +24,8 @@ import java.util.List;
  */
 public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 {
+    public static final int UPDATE_INTERVAL = 3;
+
     public ItemTorchLit(int id)
     {
         super(id);
@@ -94,7 +96,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     {
         EntityPlayer p = (EntityPlayer) e;
 
-        if (p.capabilities.isCreativeMode || !torchUpdates || world.getTotalWorldTime() % 3 != 0 || ist.stackTagCompound != null)
+        if (p.capabilities.isCreativeMode || !torchUpdates || world.getTotalWorldTime() % UPDATE_INTERVAL != 0 || ist.stackTagCompound != null)
         {
             return;
         }
@@ -163,7 +165,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     @Override
     public boolean onEntityItemUpdate(EntityItem ei)
     {
-        if (ei.worldObj.isRemote || !torchUpdates || ei.worldObj.getTotalWorldTime() % 3 != 0)
+        if (ei.worldObj.isRemote || !torchUpdates || ei.worldObj.getTotalWorldTime() % UPDATE_INTERVAL != 0)
             return false;
 
         ItemStack ist = ei.getEntityItem();

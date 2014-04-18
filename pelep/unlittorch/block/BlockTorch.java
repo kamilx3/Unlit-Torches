@@ -123,7 +123,7 @@ abstract class BlockTorch extends BlockContainer
     }
 
     @Override
-    public void onNeighborBlockChange(World world, int x, int y, int z, int neighborId)
+    public void onNeighborBlockChange(World world, int x, int y, int z, int oldid)
     {
         if (world.getBlockId(x, y, z) != blockID) return;
 

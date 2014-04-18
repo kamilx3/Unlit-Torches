@@ -9,6 +9,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet132TileEntityData;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.chunk.Chunk;
+import pelep.unlittorch.item.ItemTorchLit;
 import pelep.unlittorch.packet.Packet03BurnFX;
 
 /**
@@ -37,7 +38,7 @@ public class TileEntityTorch extends TileEntity
     @Override
     public void updateEntity()
     {
-        if (worldObj.getTotalWorldTime() % 3 != 0) return;
+        if (worldObj.getTotalWorldTime() % ItemTorchLit.UPDATE_INTERVAL != 0) return;
 
         if (eternal)
         {

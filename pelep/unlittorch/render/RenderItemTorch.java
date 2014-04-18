@@ -72,7 +72,7 @@ public class RenderItemTorch implements IItemRenderer
         }
     }
 
-    private void renderDamage(Tessellator t, int x, int y, int w, int h, int c)
+    private static void renderDamage(Tessellator t, int x, int y, int w, int h, int c)
     {
         t.startDrawingQuads();
         t.setColorOpaque_I(c);
