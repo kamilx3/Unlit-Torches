@@ -105,6 +105,7 @@ public class ProxyCommon
         GameRegistry.addRecipe(recipeCloth);
         GameRegistry.addRecipe(new RecipeStick());
         GameRegistry.addRecipe(new RecipeTorchRepair());
+        GameRegistry.addRecipe(new ItemStack(Block.pumpkinLantern), "p", "t", 'p', Block.pumpkin, 't', new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
         GameRegistry.addShapelessRecipe(new ItemStack(ConfigCommon.itemIdCloth, 1, 1), Item.bucketWater, new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
 
         LOGGER.info("Registering crafting handlers");
