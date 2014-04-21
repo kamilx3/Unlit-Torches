@@ -47,8 +47,8 @@ public class ConfigCommon extends UtilConfig
         torchDropsUnlit = getBoolean("DropsUnlit", false, "True if lit torches should drop as UNLIT torches");
         torchSingleUse = getBoolean("SingleUse", true, "True if torches should break when their lifespan is over");
 
-        torchLifespanMin = getInt("MinimumAge", 8000, 1, 32000, "MINIMUM lifespan of a torch (8000 = 1 MC day). Maximum of 32000 (4 MC days)");
-        torchLifespanMax = getInt("MaximumAge", 12000, 1, 32000, "MAXIMUM lifespan of a torch (12000 = 1 1/2 MC day). Maximum of 32000 (4 MC days)");
+        torchLifespanMin = getInt("MinimumAge", 1000, 1, 32000, "MINIMUM lifespan of a torch (1000 = 1 MC day). Maximum of 32000 (32 MC days)");
+        torchLifespanMax = getInt("MaximumAge", 1500, 1, 32000, "MAXIMUM lifespan of a torch (1500 = 1 1/2 MC day). Maximum of 32000 (32 MC days)");
         torchRandomKillChance = getInt("ChanceToRandomlyBurnOut", 25, 0, 100, "x/100 chance for a torch to burn out. Set to 0 to disable");
         torchDestroyChance = getInt("ChanceToDestroy", 30, 0, 100, "x/100 chance that a torch is destroyed instead when it randomly burns out. Set to 0 to disable");
 

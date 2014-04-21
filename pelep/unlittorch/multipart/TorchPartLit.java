@@ -171,7 +171,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
         if (!world().isRemote)
         {
-            if (isWet() && world().rand.nextInt(10) == 0)
+            if (isWet() && world().rand.nextInt(3) == 0)
             {
                 extinguishPart("random.fizz", 0.3F);
                 return;

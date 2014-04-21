@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 {
-    public static final int UPDATE_INTERVAL = 3;
+    public static final int UPDATE_INTERVAL = 24;
 
     public ItemTorchLit(int id)
     {
@@ -151,7 +151,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                 int y = MathHelper.floor_double(p.posY);
                 int z = MathHelper.floor_double(p.posZ);
 
-                if (world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(15) == 0) || itemRand.nextInt(25) == 0))
+                if (world.canLightningStrikeAt(x, y, z) && ((held && itemRand.nextInt(2) == 0) || itemRand.nextInt(3) == 0))
                 {
                     extinguishItem(world, p, ist, "random.fizz", 0.3F);
                     return;
@@ -214,7 +214,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         int y = MathHelper.floor_double(ei.posY);
         int z = MathHelper.floor_double(ei.posZ);
 
-        if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(30) == 0)
+        if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(3) == 0)
         {
             extinguishEntity(ei, "random.fizz", 0.3F);
             return false;
