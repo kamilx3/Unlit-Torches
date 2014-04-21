@@ -96,20 +96,21 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
     {
         EntityPlayer p = (EntityPlayer) e;
 
-        if (p.capabilities.isCreativeMode || !torchUpdates || world.getTotalWorldTime() % UPDATE_INTERVAL != 0 || ist.stackTagCompound != null)
-        {
+        if (p.capabilities.isCreativeMode || ist.stackTagCompound != null || !torchUpdates || world.getTotalWorldTime() % UPDATE_INTERVAL != 0)
             return;
-        }
 
         if (p.isInsideOfMaterial(Material.water))
         {
-            if (!world.isRemote) world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
-
-            for (int i = slot; i < p.inventory.mainInventory.length; i++)
+            if (!world.isRemote)
             {
-                ItemStack inv = p.inventory.mainInventory[i];
-                if (inv != null && inv.itemID == itemID)
-                    inv.itemID = blockIdTorchUnlit;
+                world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
+
+                for (int i = slot; i < p.inventory.mainInventory.length; i++)
+                {
+                    ItemStack inv = p.inventory.mainInventory[i];
+                    if (inv != null && inv.itemID == itemID)
+                        inv.itemID = blockIdTorchUnlit;
+                }
             }
         }
         else
@@ -230,12 +231,14 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
 
     private static void destroyItem(World world, EntityPlayer p, int slot)
     {
+        if (world.isRemote) return;
         world.playSoundAtEntity(p, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
         p.inventory.setInventorySlotContents(slot, null);
     }
 
     private static void extinguishItem(World world, EntityPlayer p, ItemStack ist, String sound, float volume)
     {
+        if (world.isRemote) return;
         world.playSoundAtEntity(p, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
         ist.itemID = blockIdTorchUnlit;
     }

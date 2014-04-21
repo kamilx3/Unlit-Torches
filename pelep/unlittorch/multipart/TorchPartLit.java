@@ -57,35 +57,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public void randomDisplayTick(Random rand)
     {
-        World world = world();
-        double x = x() + 0.5D;
-        double y = y() + 0.7D;
-        double z = z() + 0.5D;
-        double vos = 0.2199999988079071D;
-        double hos = 0.27000001072883606D;
-
-        switch (meta)
-        {
-            case 1:
-                world.spawnParticle("smoke", x - hos, y + vos, z, 0D, 0D, 0D);
-                world.spawnParticle("flame", x - hos, y + vos, z, 0D, 0D, 0D);
-                break;
-            case 2:
-                world.spawnParticle("smoke", x + hos, y + vos, z, 0D, 0D, 0D);
-                world.spawnParticle("flame", x + hos, y + vos, z, 0D, 0D, 0D);
-                break;
-            case 3:
-                world.spawnParticle("smoke", x, y + vos, z - hos, 0D, 0D, 0D);
-                world.spawnParticle("flame", x, y + vos, z - hos, 0D, 0D, 0D);
-                break;
-            case 4:
-                world.spawnParticle("smoke", x, y + vos, z + hos, 0D, 0D, 0D);
-                world.spawnParticle("flame", x, y + vos, z + hos, 0D, 0D, 0D);
-                break;
-            default:
-                world.spawnParticle("smoke", x, y, z, 0D, 0D, 0D);
-                world.spawnParticle("flame", x, y, z, 0D, 0D, 0D);
-        }
+        BlockTorchLit.displayFlame(world(), x(), y(), z(), meta);
     }
 
     @Override
@@ -181,24 +153,24 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public void update()
     {
-        if (world().getTotalWorldTime() % ItemTorchLit.UPDATE_INTERVAL != 0 || eternal || !torchUpdates) return;
+        if (eternal || !torchUpdates || world().getTotalWorldTime() % ItemTorchLit.UPDATE_INTERVAL != 0) return;
+
+        if (age >= torchLifespanMax)
+        {
+            if (torchSingleUse)
+            {
+                destroyPart();
+            }
+            else
+            {
+                extinguishPart("fire.fire", 1F);
+            }
+
+            return;
+        }
 
         if (!world().isRemote)
         {
-            if (age >= torchLifespanMax)
-            {
-                if (torchSingleUse)
-                {
-                    destroyPart();
-                }
-                else
-                {
-                    extinguishPart("fire.fire", 1F);
-                }
-
-                return;
-            }
-
             if (isWet() && world().rand.nextInt(10) == 0)
             {
                 extinguishPart("random.fizz", 0.3F);
@@ -233,13 +205,10 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     private void extinguishPart(String sound, float volume)
     {
         if (world().isRemote) return;
-
         World world = world();
         BlockCoord pos = new BlockCoord(tile());
-
         tile().remPart(this);
         TileMultipart.addPart(world, pos, new TorchPartUnlit(meta, age, eternal));
-
         if (!"".equals(sound))
             world.playSoundEffect(pos.x + 0.5, pos.y + 0.5, pos.z + 0.5, sound, volume, world.rand.nextFloat() * 0.4F + 0.8F);
     }

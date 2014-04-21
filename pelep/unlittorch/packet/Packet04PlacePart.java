@@ -25,13 +25,13 @@ public class Packet04PlacePart extends PacketCustom
     public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (client) throw new ProtocolException("Packet was received on wrong side!");
-        TorchPartFactory.place(p, p.worldObj);
+        TorchPartFactory.place(p);
     }
 
     @Override
     public void handleServer(EntityPlayer p)
     {
-        TorchPartFactory.place(p, p.worldObj);
+        TorchPartFactory.place(p);
     }
 
     @Override

@@ -38,13 +38,13 @@ public class TileEntityTorch extends TileEntity
     @Override
     public void updateEntity()
     {
-        if (worldObj.getTotalWorldTime() % ItemTorchLit.UPDATE_INTERVAL != 0) return;
-
         if (eternal)
         {
             worldObj.markTileEntityForDespawn(this);
             return;
         }
+
+        if (worldObj.getTotalWorldTime() % ItemTorchLit.UPDATE_INTERVAL != 0) return;
 
         if (age >= torchLifespanMax)
         {
@@ -91,6 +91,7 @@ public class TileEntityTorch extends TileEntity
 
     private void destroyTorch()
     {
+        if (worldObj.isRemote) return;
         Packet03BurnFX pkt = new Packet03BurnFX(xCoord, yCoord, zCoord, worldObj.getBlockMetadata(xCoord, yCoord, zCoord));
         PacketDispatcher.sendPacketToAllAround(xCoord, yCoord, zCoord, 64D, worldObj.provider.dimensionId, pkt.create());
         worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, "fire.fire", 1F, worldObj.rand.nextFloat() * 0.4F + 0.8F);
@@ -99,6 +100,7 @@ public class TileEntityTorch extends TileEntity
 
     private void extinguishTorch(String sound, float volume)
     {
+        if (worldObj.isRemote) return;
         int md = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
         worldObj.setBlock(xCoord, yCoord, zCoord, blockIdTorchUnlit, md, 1|2);
         worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, sound, volume, worldObj.rand.nextFloat() * 0.4F + 0.8F);

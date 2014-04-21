@@ -23,6 +23,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.player.PlayerDestroyItemEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.Action;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.packet.Packet04PlacePart;
 import pelep.unlittorch.tileentity.TileEntityTorch;
@@ -84,17 +85,16 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
     @ForgeSubscribe
     public void playerInteract(PlayerInteractEvent e)
     {
-        if (e.action == PlayerInteractEvent.Action.RIGHT_CLICK_BLOCK && e.entityPlayer.worldObj.isRemote)
-        {
-            if (place(e.entityPlayer, e.entityPlayer.worldObj)) e.setCanceled(true);
-        }
+        if (e.action == Action.RIGHT_CLICK_BLOCK && e.entityPlayer.worldObj.isRemote && place(e.entityPlayer))
+            e.setCanceled(true);
     }
 
-    public static boolean place(EntityPlayer ep, World world)
+    public static boolean place(EntityPlayer ep)
     {
         ItemStack held = ep.getHeldItem();
         if (held == null) return false;
 
+        World world = ep.worldObj;
         MovingObjectPosition hit = RayTracer.reTrace(world, ep);
         if (hit == null) return false;
 

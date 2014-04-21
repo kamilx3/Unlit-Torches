@@ -40,34 +40,7 @@ public class BlockTorchLit extends BlockTorch
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random rand)
     {
-        double dx = x + 0.5D;
-        double dy = y + 0.7D;
-        double dz = z + 0.5D;
-        double vos = 0.2199999988079071D;
-        double hos = 0.27000001072883606D;
-
-        switch (world.getBlockMetadata(x, y, z))
-        {
-            case 1:
-                world.spawnParticle("smoke", dx - hos, dy + vos, dz, 0D, 0D, 0D);
-                world.spawnParticle("flame", dx - hos, dy + vos, dz, 0D, 0D, 0D);
-                break;
-            case 2:
-                world.spawnParticle("smoke", dx + hos, dy + vos, dz, 0D, 0D, 0D);
-                world.spawnParticle("flame", dx + hos, dy + vos, dz, 0D, 0D, 0D);
-                break;
-            case 3:
-                world.spawnParticle("smoke", dx, dy + vos, dz - hos, 0D, 0D, 0D);
-                world.spawnParticle("flame", dx, dy + vos, dz - hos, 0D, 0D, 0D);
-                break;
-            case 4:
-                world.spawnParticle("smoke", dx, dy + vos, dz + hos, 0D, 0D, 0D);
-                world.spawnParticle("flame", dx, dy + vos, dz + hos, 0D, 0D, 0D);
-                break;
-            default:
-                world.spawnParticle("smoke", dx, dy, dz, 0D, 0D, 0D);
-                world.spawnParticle("flame", dx, dy, dz, 0D, 0D, 0D);
-        }
+        displayFlame(world, x, y, z, world.getBlockMetadata(x, y, z));
     }
 
 
@@ -202,5 +175,38 @@ public class BlockTorchLit extends BlockTorch
         }
 
         world.playSoundAtEntity(p, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
+    }
+
+    @SideOnly(Side.CLIENT)
+    public static void displayFlame(World world, double x, double y, double z, int md)
+    {
+        x += 0.5D;
+        y += 0.7D;
+        z += 0.5D;
+        double vos = 0.2199999988079071D;
+        double hos = 0.27000001072883606D;
+
+        switch (md)
+        {
+            case 1:
+                world.spawnParticle("smoke", x - hos, y + vos, z, 0D, 0D, 0D);
+                world.spawnParticle("flame", x - hos, y + vos, z, 0D, 0D, 0D);
+                break;
+            case 2:
+                world.spawnParticle("smoke", x + hos, y + vos, z, 0D, 0D, 0D);
+                world.spawnParticle("flame", x + hos, y + vos, z, 0D, 0D, 0D);
+                break;
+            case 3:
+                world.spawnParticle("smoke", x, y + vos, z - hos, 0D, 0D, 0D);
+                world.spawnParticle("flame", x, y + vos, z - hos, 0D, 0D, 0D);
+                break;
+            case 4:
+                world.spawnParticle("smoke", x, y + vos, z + hos, 0D, 0D, 0D);
+                world.spawnParticle("flame", x, y + vos, z + hos, 0D, 0D, 0D);
+                break;
+            default:
+                world.spawnParticle("smoke", x, y, z, 0D, 0D, 0D);
+                world.spawnParticle("flame", x, y, z, 0D, 0D, 0D);
+        }
     }
 }

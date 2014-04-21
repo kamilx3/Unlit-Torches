@@ -118,7 +118,6 @@ abstract class BlockTorch extends BlockContainer
     @Override
     public void updateTick(World world, int x, int y, int z, Random rand)
     {
-        super.updateTick(world, x, y, z, rand);
         onBlockAdded(world, x, y, z);
     }
 
