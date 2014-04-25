@@ -158,8 +158,8 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                 }
             }
 
-            int add = held ? 2 : 1;
-            ist.setItemDamage(d + add);
+            d += held ? 2 : 1;
+            ist.setItemDamage(d);
         }
     }
 
@@ -220,7 +220,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             return false;
         }
 
-        ist.setItemDamage(d + 1);
+        ist.setItemDamage(++d);
 
         return false;
     }

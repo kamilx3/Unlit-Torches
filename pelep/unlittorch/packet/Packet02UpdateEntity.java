@@ -16,7 +16,7 @@ public class Packet02UpdateEntity extends PacketCustom
     private int id;
     private int dim;
 
-    public Packet02UpdateEntity() {}
+    Packet02UpdateEntity() {}
 
     public Packet02UpdateEntity(Entity e)
     {
@@ -25,21 +25,21 @@ public class Packet02UpdateEntity extends PacketCustom
     }
 
     @Override
-    public void encode(ByteArrayDataOutput data)
+    void encode(ByteArrayDataOutput data)
     {
         data.writeInt(id);
         data.writeInt(dim);
     }
 
     @Override
-    public void decode(ByteArrayDataInput data) throws ProtocolException
+    void decode(ByteArrayDataInput data) throws ProtocolException
     {
         id = data.readInt();
         dim = data.readInt();
     }
 
     @Override
-    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
+    void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
@@ -56,7 +56,7 @@ public class Packet02UpdateEntity extends PacketCustom
     }
 
     @Override
-    public void handleServer(EntityPlayer p) throws ProtocolException
+    void handleServer(EntityPlayer p) throws ProtocolException
     {
         throw new ProtocolException("Packet was received on wrong side!");
     }

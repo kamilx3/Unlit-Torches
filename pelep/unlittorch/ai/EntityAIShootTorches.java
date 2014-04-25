@@ -96,15 +96,14 @@ public class EntityAIShootTorches extends EntityAIBase
     @Override
     public void updateTask()
     {
-        if (world.getBlockId(torch.x, torch.y, torch.z) != ConfigCommon.blockIdTorchLit)
-        {
-            retry = 0;
-        }
-        else if (delay-- == 0)
+        if (delay-- <= 0 && retry-- > 0)
         {
             delay = 30 + world.rand.nextInt(30);
-            retry--;
             shoot(torch.x + 0.5, torch.y + 0.5, torch.z + 0.5);
+        }
+        else if (world.getBlockId(torch.x, torch.y, torch.z) != ConfigCommon.blockIdTorchLit)
+        {
+            retry = 0;
         }
     }
 

@@ -28,7 +28,7 @@ public class Packet05UpdatePart extends PacketCustom
     }
 
     @Override
-    public void encode(ByteArrayDataOutput data)
+    void encode(ByteArrayDataOutput data)
     {
         data.writeInt(idx);
         data.writeInt(pos.x);
@@ -39,7 +39,7 @@ public class Packet05UpdatePart extends PacketCustom
     }
 
     @Override
-    public void decode(ByteArrayDataInput data) throws ProtocolException
+    void decode(ByteArrayDataInput data) throws ProtocolException
     {
         idx = data.readInt();
         pos = new Coordinates(data.readInt(), data.readInt(), data.readInt());
@@ -48,7 +48,7 @@ public class Packet05UpdatePart extends PacketCustom
     }
 
     @Override
-    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
+    void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
         if (p.worldObj.provider.dimensionId != dim || !p.worldObj.blockExists(pos.x, pos.y, pos.z)) return;
@@ -56,7 +56,7 @@ public class Packet05UpdatePart extends PacketCustom
     }
 
     @Override
-    public void handleServer(EntityPlayer p) throws ProtocolException
+    void handleServer(EntityPlayer p) throws ProtocolException
     {
         throw new ProtocolException("Packet was received on wrong side!");
     }

@@ -14,7 +14,7 @@ public class Packet01Igniters extends PacketCustom
     private byte type;
     private String igniters = "";
 
-    public Packet01Igniters() {}
+    Packet01Igniters() {}
 
     public Packet01Igniters(byte type, String igniters)
     {
@@ -26,7 +26,7 @@ public class Packet01Igniters extends PacketCustom
     }
 
     @Override
-    public void encode(ByteArrayDataOutput data)
+    void encode(ByteArrayDataOutput data)
     {
         data.writeByte(type);
         data.writeShort(igniters.length());
@@ -34,7 +34,7 @@ public class Packet01Igniters extends PacketCustom
     }
 
     @Override
-    public void decode(ByteArrayDataInput data) throws ProtocolException
+    void decode(ByteArrayDataInput data) throws ProtocolException
     {
         igniters = "";
         type = data.readByte();
@@ -45,14 +45,14 @@ public class Packet01Igniters extends PacketCustom
     }
 
     @Override
-    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
+    void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Config packet received on server side!");
         IgnitersHandler.syncWithServer(type, igniters);
     }
 
     @Override
-    public void handleServer(EntityPlayer p) throws ProtocolException
+    void handleServer(EntityPlayer p) throws ProtocolException
     {
         throw new ProtocolException("Config packet received on server side!");
     }

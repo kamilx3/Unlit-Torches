@@ -18,7 +18,7 @@ public class Packet00Config extends PacketCustom
     public Packet00Config() {}
 
     @Override
-    public void encode(ByteArrayDataOutput data)
+    void encode(ByteArrayDataOutput data)
     {
         byte b = 0;
         b |= ConfigCommon.torchRecipeYieldsUnlit ? 1 : 0;
@@ -31,7 +31,7 @@ public class Packet00Config extends PacketCustom
     }
 
     @Override
-    public void decode(ByteArrayDataInput data) throws ProtocolException
+    void decode(ByteArrayDataInput data) throws ProtocolException
     {
         b = data.readByte();
         torchLifespanMax = data.readShort();
@@ -39,7 +39,7 @@ public class Packet00Config extends PacketCustom
     }
 
     @Override
-    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
+    void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Config packet received on server side!");
 
@@ -51,7 +51,7 @@ public class Packet00Config extends PacketCustom
     }
 
     @Override
-    public void handleServer(EntityPlayer p) throws ProtocolException
+    void handleServer(EntityPlayer p) throws ProtocolException
     {
         throw new ProtocolException("Config packet received on server side!");
     }

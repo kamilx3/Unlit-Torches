@@ -14,7 +14,7 @@ public class Packet03BurnFX extends PacketCustom
     private Coordinates pos;
     private int md;
 
-    public Packet03BurnFX() {}
+    Packet03BurnFX() {}
 
     public Packet03BurnFX(int x, int y, int z, int md)
     {
@@ -23,7 +23,7 @@ public class Packet03BurnFX extends PacketCustom
     }
 
     @Override
-    public void encode(ByteArrayDataOutput data)
+    void encode(ByteArrayDataOutput data)
     {
         data.writeInt(pos.x);
         data.writeInt(pos.y);
@@ -32,14 +32,14 @@ public class Packet03BurnFX extends PacketCustom
     }
 
     @Override
-    public void decode(ByteArrayDataInput data) throws ProtocolException
+    void decode(ByteArrayDataInput data) throws ProtocolException
     {
         pos = new Coordinates(data.readInt(), data.readInt(), data.readInt());
         md = data.readByte();
     }
 
     @Override
-    public void handleClient(EntityPlayer p, boolean client) throws ProtocolException
+    void handleClient(EntityPlayer p, boolean client) throws ProtocolException
     {
         if (!client) throw new ProtocolException("Packet was received on wrong side!");
 
@@ -92,7 +92,7 @@ public class Packet03BurnFX extends PacketCustom
     }
 
     @Override
-    public void handleServer(EntityPlayer p) throws ProtocolException
+    void handleServer(EntityPlayer p) throws ProtocolException
     {
         throw new ProtocolException("Packet was received on wrong side!");
     }

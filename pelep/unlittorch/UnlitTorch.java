@@ -3,7 +3,6 @@ package pelep.unlittorch;
 import static pelep.unlittorch.UnlitTorch.*;
 
 import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -32,9 +31,6 @@ public class UnlitTorch
     public static final String MOD_DEPENDENCIES = "required-after:Forge@[9.11.1.965,);required-after:pcl@[2.1.0,);after:ForgeMultipart";
     public static final String MOD_CHANNEL = MOD_ID;
     public static final UtilLogger LOGGER = new UtilLogger(MOD_ID);
-
-    @Instance(MOD_ID)
-    public static UnlitTorch instance;
 
     @SidedProxy(clientSide = "pelep.unlittorch.proxy.ProxyClient", serverSide = "pelep.unlittorch.proxy.ProxyCommon")
     public static ProxyCommon proxy;

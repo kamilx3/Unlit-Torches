@@ -1,5 +1,6 @@
 package pelep.unlittorch.proxy;
 
+import static pelep.unlittorch.config.ConfigCommon.*;
 import static pelep.unlittorch.UnlitTorch.LOGGER;
 import static pelep.unlittorch.UnlitTorch.MOD_ID;
 
@@ -57,7 +58,9 @@ public class ProxyCommon
             @Override
             public void updateTick(World world, int x, int y, int z, Random rand)
             {
-                world.setBlock(x, y, z, ConfigCommon.blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
+                world.setBlock(x, y, z, blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
+                if (world.getBlockId(x, y, z) == blockIdTorchLit)
+                    blocksList[blockIdTorchLit].updateTick(world, x, y, z, rand);
             }
         };
         blockTorch.setHardness(0F);
@@ -92,7 +95,6 @@ public class ProxyCommon
         Overrider.removeRecipesFor(new ItemStack(Block.torchWood.blockID, 4, 0));
 
         LOGGER.info("Registering new crafting recipes");
-
         RecipeTorchLitA recipeTorchLitA = new RecipeTorchLitA();
         RecipeTorchLitB recipeTorchLitB = new RecipeTorchLitB();
         RecipeTorchUnlitB recipeTorchUnlitB = new RecipeTorchUnlitB();
@@ -105,8 +107,8 @@ public class ProxyCommon
         GameRegistry.addRecipe(recipeCloth);
         GameRegistry.addRecipe(new RecipeStick());
         GameRegistry.addRecipe(new RecipeTorchRepair());
-        GameRegistry.addRecipe(new ItemStack(Block.pumpkinLantern), "p", "t", 'p', Block.pumpkin, 't', new ItemStack(ConfigCommon.blockIdTorchLit, 1, 0));
-        GameRegistry.addShapelessRecipe(new ItemStack(ConfigCommon.itemIdCloth, 1, 1), Item.bucketWater, new ItemStack(ConfigCommon.itemIdCloth, 1, 0));
+        GameRegistry.addRecipe(new ItemStack(Block.pumpkinLantern), "p", "t", 'p', Block.pumpkin, 't', new ItemStack(blockIdTorchLit, 1, 0));
+        GameRegistry.addShapelessRecipe(new ItemStack(itemIdCloth, 1, 1), Item.bucketWater, new ItemStack(itemIdCloth, 1, 0));
 
         LOGGER.info("Registering crafting handlers");
         GameRegistry.registerCraftingHandler(recipeTorchLitA);
