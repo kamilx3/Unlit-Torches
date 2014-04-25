@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
@@ -49,13 +48,7 @@ public class BlockTorchUnlit extends BlockTorch
         if (p.isSneaking())
         {
             if (ist != null) return false;
-
-            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            ItemStack torch = new ItemStack(blockID, 1, te.age);
-            torch.setTagCompound(te.eternal ? new NBTTagCompound() : null);
-            p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
-            world.setBlockToAir(x, y, z);
-
+            grabBlock(world, x, y, z, p);
             return true;
         }
         else if (ist != null)
@@ -77,28 +70,17 @@ public class BlockTorchUnlit extends BlockTorch
                 else if (id == Item.flint.itemID)
                 {
                     igniteBlock(world, x, y, z, "fire.ignite");
-                    if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
+                    consumeItem(p.inventory.currentItem, p, 1);
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {
                     igniteBlock(world, x, y, z, "fire.ignite");
-                    ist.damageItem(1, p);
+                    damageItem(ist, p);
                 }
                 else
                 {
                     igniteBlock(world, x, y, z, "fire.fire");
-
-                    if (!p.capabilities.isCreativeMode)
-                    {
-                        if (Item.itemsList[id].isDamageable())
-                        {
-                            ist.damageItem(1, p);
-                        }
-                        else
-                        {
-                            p.inventory.decrStackSize(p.inventory.currentItem, 1);
-                        }
-                    }
+                    useItem(p.inventory.currentItem, ist, p);
                 }
 
                 return true;
@@ -120,6 +102,8 @@ public class BlockTorchUnlit extends BlockTorch
 
     public static void igniteBlock(World world, int x, int y, int z, String sound)
     {
+        if (world.isRemote) return;
+
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         int age = te.age;
         boolean eternal = te.eternal;
@@ -157,24 +141,34 @@ public class BlockTorchUnlit extends BlockTorch
 
         if (slot == -1) return false;
 
-        ItemStack ist = ep.inventory.mainInventory[slot];
-        int id = ist.itemID;
-
-        if (!ep.capabilities.isCreativeMode &&
-            id != Item.bucketLava.itemID &&
-            id != ConfigCommon.blockIdTorchLit &&
-            id != Block.torchWood.blockID)
+        if (!ep.worldObj.isRemote)
         {
-            if (Item.itemsList[id].isDamageable())
-            {
-                ist.damageItem(1, ep);
-            }
-            else
-            {
-                ep.inventory.decrStackSize(slot, 1);
-            }
+            ItemStack ist = ep.inventory.mainInventory[slot];
+            int id = ist.itemID;
+            if (id != Item.bucketLava.itemID && id != ConfigCommon.blockIdTorchLit && id != Block.torchWood.blockID)
+                useItem(slot, ist, ep);
         }
 
         return true;
+    }
+
+    public static void damageItem(ItemStack ist, EntityPlayer ep)
+    {
+        if (!ep.worldObj.isRemote) ist.damageItem(1, ep);
+    }
+
+    public static void useItem(int slot, ItemStack ist, EntityPlayer ep)
+    {
+        if (!ep.capabilities.isCreativeMode)
+        {
+            if (Item.itemsList[ist.itemID].isDamageable())
+            {
+                damageItem(ist, ep);
+            }
+            else
+            {
+                consumeItem(slot, ep, 1);
+            }
+        }
     }
 }

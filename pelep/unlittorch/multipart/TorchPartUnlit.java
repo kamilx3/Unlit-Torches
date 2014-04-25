@@ -1,5 +1,7 @@
 package pelep.unlittorch.multipart;
 
+import static pelep.unlittorch.block.BlockTorchUnlit.*;
+
 import codechicken.lib.vec.BlockCoord;
 import codechicken.multipart.TileMultipart;
 import net.minecraft.block.Block;
@@ -10,10 +12,8 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
-import pelep.unlittorch.block.BlockTorchUnlit;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
 
@@ -32,7 +32,7 @@ public class TorchPartUnlit extends TorchPart
     @Override
     public Block getBlock()
     {
-        return BlockTorchUnlit.instance;
+        return instance;
     }
 
     @Override
@@ -54,15 +54,7 @@ public class TorchPartUnlit extends TorchPart
         if (ep.isSneaking())
         {
             if (ist != null) return false;
-
-            if (!world().isRemote)
-            {
-                ItemStack torch = new ItemStack(getBlockId(), 1, age);
-                torch.setTagCompound(eternal ? new NBTTagCompound() : null);
-                ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
-                tile().remPart(this);
-            }
-
+            grabPart(ep);
             return true;
         }
         else if (ist != null)
@@ -84,35 +76,24 @@ public class TorchPartUnlit extends TorchPart
                 else if (id == Item.flint.itemID)
                 {
                     ignitePart("fire.ignite");
-                    if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                    consumeItem(ep.inventory.currentItem, ep, 1);
                 }
                 else if (id == Item.flintAndSteel.itemID)
                 {
                     ignitePart("fire.ignite");
-                    ist.damageItem(1, ep);
+                    damageItem(ist, ep);
                 }
                 else
                 {
                     ignitePart("fire.fire");
-
-                    if (!ep.capabilities.isCreativeMode)
-                    {
-                        if (Item.itemsList[id].isDamageable())
-                        {
-                            ist.damageItem(1, ep);
-                        }
-                        else
-                        {
-                            ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
-                        }
-                    }
+                    useItem(ep.inventory.currentItem, ist, ep);
                 }
 
                 return true;
             }
         }
 
-        if (BlockTorchUnlit.useIgniter(ep))
+        if (useIgniter(ep))
         {
             ignitePart("fire.fire");
             return true;

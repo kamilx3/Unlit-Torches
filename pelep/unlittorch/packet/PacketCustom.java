@@ -28,6 +28,7 @@ abstract class PacketCustom
         builder.put(3, Packet03BurnFX.class);
         builder.put(4, Packet04PlacePart.class);
         builder.put(5, Packet05UpdatePart.class);
+        builder.put(6, Packet06UpdateInv.class);
 
         packets = builder.build();
     }

@@ -1,5 +1,6 @@
 package pelep.unlittorch.multipart;
 
+import static pelep.unlittorch.block.BlockTorchLit.*;
 import static pelep.unlittorch.config.ConfigCommon.*;
 import static pelep.unlittorch.UnlitTorch.LOGGER;
 
@@ -8,23 +9,23 @@ import codechicken.multipart.IRandomDisplayTick;
 import codechicken.multipart.TMultiPart;
 import codechicken.multipart.TileMultipart;
 import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import net.minecraft.world.chunk.Chunk;
 import pelep.pcl.util.vec.Coordinates;
-import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.item.ItemTorchLit;
 import pelep.unlittorch.packet.Packet03BurnFX;
 import pelep.unlittorch.packet.Packet05UpdatePart;
+import pelep.unlittorch.packet.Packet06UpdateInv;
 
 import java.util.Random;
 
@@ -45,7 +46,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public Block getBlock()
     {
-        return BlockTorchLit.instance;
+        return instance;
     }
 
     @Override
@@ -57,7 +58,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
     @Override
     public void randomDisplayTick(Random rand)
     {
-        BlockTorchLit.displayFlame(world(), x(), y(), z(), meta);
+        displayFlame(world(), x(), y(), z(), meta);
     }
 
     @Override
@@ -74,15 +75,7 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
         if (ep.isSneaking())
         {
             if (ist != null) return false;
-
-            if (!world().isRemote)
-            {
-                ItemStack torch = new ItemStack(getBlockId(), 1, age);
-                torch.setTagCompound(eternal ? new NBTTagCompound() : null);
-                ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
-                tile().remPart(this);
-            }
-
+            grabPart(ep);
             return true;
         }
         else if (ist != null)
@@ -96,21 +89,18 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
             }
             else if (id == blockIdTorchUnlit)
             {
-                BlockTorchLit.igniteHeldTorch(world(), ist, ep);
+                igniteHeldTorch(world(), ist, ep);
                 return true;
             }
-            else if (id == itemIdCloth)
+            else if (id == itemIdCloth && ist.getItemDamage() == 0)
             {
-                if (ist.getItemDamage() == 0)
-                {
-                    extinguishPart("fire.fire", 1F);
-                    if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
-                }
-                else
-                {
-                    extinguishPart("random.fizz", 0.3F);
-                }
-
+                extinguishPart("fire.fire", 1F);
+                consumeItem(ep.inventory.currentItem, ep, 1);
+                return true;
+            }
+            else if (id == itemIdCloth && ist.getItemDamage() == 1)
+            {
+                extinguishPart("random.fizz", 0.3F);
                 return true;
             }
             else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
@@ -121,15 +111,13 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
             else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
                 extinguishPart("fire.fire", 1F);
-                if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 1);
+                consumeItem(ep.inventory.currentItem, ep, 1);
                 return true;
             }
             else if (id == Item.gunpowder.itemID)
             {
-                if (!ep.capabilities.isCreativeMode) ep.inventory.decrStackSize(ep.inventory.currentItem, 5);
-                int size = ist.stackSize;
-                float strength = size < 5 ? (size * 0.2F) : 1F;
-                world().newExplosion(ep, x(), y(), z(), strength, size > 5, true);
+                createExplosion(world(), x(), y(), z(), ep, ist.stackSize);
+                consumeItem(ep.inventory.currentItem, ep, 5);
                 return true;
             }
         }
@@ -224,23 +212,24 @@ public class TorchPartLit extends TorchPart implements IRandomDisplayTick
 
     private void renewTorches(EntityPlayer p, ItemStack ist)
     {
+        p.swingItem();
+        if (world().isRemote) return;
+
         int ia = ist.getItemDamage();
         if (age == ia) return;
 
         double d = (age + ia) / 2;
         int na = MathHelper.ceiling_double_int(d);
+
         ist.setItemDamage(na);
-        p.swingItem();
-
-        if (world().isRemote) return;
-
         age = na;
-        world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "fire.fire", 1F, world().rand.nextFloat() * 0.4F + 0.8F);
 
+        world().playSoundEffect(x() + 0.5, y() + 0.5, z() + 0.5, "fire.fire", 1F, world().rand.nextFloat() * 0.4F + 0.8F);
         int dim = world().provider.dimensionId;
         int i = tile().jPartList().indexOf(this);
         Coordinates pos = new Coordinates(x(), y(), z());
         PacketDispatcher.sendPacketToAllInDimension(new Packet05UpdatePart(i, pos, dim, age).create(), dim);
+        PacketDispatcher.sendPacketToPlayer(new Packet06UpdateInv(age).create(), (Player)p);
     }
 
     //replacement for world#canLightningStrikeAt(x, y, z)

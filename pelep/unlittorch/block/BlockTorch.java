@@ -278,4 +278,20 @@ abstract class BlockTorch extends BlockContainer
         int id = world.getBlockId(x, y, z);
         return blocksList[id] != null && blocksList[id].canPlaceTorchOnTop(world, x, y, z);
     }
+
+    protected void grabBlock(World world, int x, int y, int z, EntityPlayer ep)
+    {
+        if (world.isRemote) return;
+        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        ItemStack torch = new ItemStack(blockID, 1, te.age);
+        torch.setTagCompound(te.eternal ? new NBTTagCompound() : null);
+        ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
+        world.setBlockToAir(x, y, z);
+    }
+
+    public static void consumeItem(int slot, EntityPlayer ep, int amnt)
+    {
+        if (!ep.worldObj.isRemote && !ep.capabilities.isCreativeMode)
+            ep.inventory.decrStackSize(slot, amnt);
+    }
 }

@@ -14,6 +14,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -172,5 +173,14 @@ abstract class TorchPart extends McSidedMetaPart
 
             RenderBlockTorch.renderAge(str, x, y, z, frame, 1F/120F);
         }
+    }
+
+    protected void grabPart(EntityPlayer ep)
+    {
+        if (world().isRemote) return;
+        ItemStack torch = new ItemStack(getBlockId(), 1, age);
+        torch.setTagCompound(eternal ? new NBTTagCompound() : null);
+        ep.inventory.setInventorySlotContents(ep.inventory.currentItem, torch);
+        tile().remPart(this);
     }
 }

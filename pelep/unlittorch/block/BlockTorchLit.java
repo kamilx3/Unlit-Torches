@@ -1,5 +1,7 @@
 package pelep.unlittorch.block;
 
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -8,10 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityArrow;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
+import pelep.unlittorch.packet.Packet06UpdateInv;
 import pelep.unlittorch.tileentity.TileEntityTorch;
 
 import java.util.Random;
@@ -63,13 +65,7 @@ public class BlockTorchLit extends BlockTorch
         if (p.isSneaking())
         {
             if (ist != null) return false;
-
-            TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
-            ItemStack torch = new ItemStack(blockID, 1, te.age);
-            torch.setTagCompound(te.eternal ? new NBTTagCompound() : null);
-            p.inventory.setInventorySlotContents(p.inventory.currentItem, torch);
-            world.setBlockToAir(x, y, z);
-
+            grabBlock(world, x, y, z, p);
             return true;
         }
         else if (ist != null)
@@ -86,18 +82,15 @@ public class BlockTorchLit extends BlockTorch
                 igniteHeldTorch(world, ist, p);
                 return true;
             }
-            else if (id == ConfigCommon.itemIdCloth)
+            else if (id == ConfigCommon.itemIdCloth && ist.getItemDamage() == 0)
             {
-                if (ist.getItemDamage() == 0)
-                {
-                    extinguishBlock(world, x, y, z, "fire.fire", 1F);
-                    if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
-                }
-                else
-                {
-                    extinguishBlock(world, x, y, z, "random.fizz", 0.3F);
-                }
-
+                extinguishBlock(world, x, y, z, "fire.fire", 1F);
+                consumeItem(p.inventory.currentItem, p, 1);
+                return true;
+            }
+            else if (id == ConfigCommon.itemIdCloth && ist.getItemDamage() == 1)
+            {
+                extinguishBlock(world, x, y, z, "random.fizz", 0.3F);
                 return true;
             }
             else if (id == Item.bucketMilk.itemID || id == Item.bucketWater.itemID)
@@ -108,14 +101,13 @@ public class BlockTorchLit extends BlockTorch
             else if (id == Block.cloth.blockID || id == Block.carpet.blockID)
             {
                 extinguishBlock(world, x, y, z, "fire.fire", 1F);
-                if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 1);
+                consumeItem(p.inventory.currentItem, p, 1);
                 return true;
             }
             else if (id == Item.gunpowder.itemID)
             {
-                float strength = ist.stackSize < 5 ? (ist.stackSize * 0.2F) : 1F;
-                world.newExplosion(p, x, y, z, strength, ist.stackSize > 5, true);
-                if (!p.capabilities.isCreativeMode) p.inventory.decrStackSize(p.inventory.currentItem, 5);
+                createExplosion(world, x, y, z, p, ist.stackSize);
+                consumeItem(p.inventory.currentItem, p, 5);
                 return true;
             }
         }
@@ -129,6 +121,8 @@ public class BlockTorchLit extends BlockTorch
 
     public static void extinguishBlock(World world, int x, int y, int z, String sound, float volume)
     {
+        if (world.isRemote) return;
+
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         int age = te.age;
         boolean eternal = te.eternal;
@@ -143,6 +137,9 @@ public class BlockTorchLit extends BlockTorch
 
     private static void renewTorches(World world, EntityPlayer p, ItemStack ist, int x, int y, int z)
     {
+        p.swingItem();
+        if (world.isRemote) return;
+
         TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
         int ta = te.age;
         int ia = ist.getItemDamage();
@@ -155,19 +152,29 @@ public class BlockTorchLit extends BlockTorch
         ist.setItemDamage(age);
         te.age = age;
 
-        p.swingItem();
         world.playSoundEffect(x + 0.5, y + 0.5, z + 0.5, "fire.fire", 1F, world.rand.nextFloat() * 0.4F + 0.8F);
         world.markBlockForUpdate(x, y, z);
+        PacketDispatcher.sendPacketToPlayer(new Packet06UpdateInv(age).create(), (Player)p);
+    }
+
+    public static void createExplosion(World world, int x, int y, int z, EntityPlayer ep, int size)
+    {
+        if (world.isRemote) return;
+        float str = size < 5 ? (size * 0.2F) : 1F;
+        world.newExplosion(ep, x, y, z, str, size > 5, true);
     }
 
     public static void igniteHeldTorch(World world, ItemStack ist, EntityPlayer p)
     {
+        if (world.isRemote) return;
+
         if (ist.stackSize > 1)
         {
             ItemStack torch = new ItemStack(ConfigCommon.blockIdTorchLit, 1, ist.getItemDamage());
             torch.setTagCompound(ist.getTagCompound());
             ist.stackSize--;
-            if (!p.inventory.addItemStackToInventory(torch)) p.dropPlayerItemWithRandomChoice(torch, false).delayBeforeCanPickup = 10;
+            if (!p.inventory.addItemStackToInventory(torch))
+                p.dropPlayerItemWithRandomChoice(torch, false).delayBeforeCanPickup = 10;
         }
         else
         {
