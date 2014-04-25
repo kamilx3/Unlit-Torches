@@ -36,12 +36,14 @@ public class Packet01Igniters extends PacketCustom
     @Override
     void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        igniters = "";
+        StringBuilder sb = new StringBuilder();
         type = data.readByte();
-        int size = data.readShort();
+        int len = data.readShort();
 
-        for (int i = 0; i < size; i++)
-            igniters += data.readChar();
+        for (int i = 0; i < len; i++)
+            sb.append(data.readChar());
+
+        igniters = sb.toString();
     }
 
     @Override

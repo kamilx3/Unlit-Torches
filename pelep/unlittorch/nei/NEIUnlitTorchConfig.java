@@ -8,12 +8,11 @@ import codechicken.nei.api.API;
 import codechicken.nei.api.IConfigureNEI;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import pelep.pcl.helper.ItemInfoStorageHelper.Range;
+import pelep.pcl.util.item.ItemData;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * @author pelep
@@ -56,20 +55,17 @@ public class NEIUnlitTorchConfig implements IConfigureNEI
         API.registerUsageHandler(new ShapelessRecipeHandler());
     }
 
-    private static void addRanges(MultiItemRange mr, HashMap<Integer, ArrayList<Range>> map)
+    private static void addRanges(MultiItemRange mr, ArrayList<ItemData> items)
     {
-        for (int id : map.keySet())
+        for (ItemData item : items)
         {
-            ArrayList<Range> ranges = map.get(id);
-
-            if (ranges.isEmpty())
+            if (item.md.min == -1)
             {
-                mr.add(id);
+                mr.add(item.id);
                 continue;
             }
 
-            for (Range range : ranges)
-                mr.add(id, range.min, range.max);
+            mr.add(item.id, item.md.min, item.md.max);
         }
     }
 
