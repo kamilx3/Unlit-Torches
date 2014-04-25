@@ -1,5 +1,7 @@
 package pelep.unlittorch.handler;
 
+import static pelep.unlittorch.config.ConfigCommon.*;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
@@ -10,12 +12,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.world.BlockEvent.HarvestDropsEvent;
 import pelep.unlittorch.ai.EntityAIBreakTorches;
 import pelep.unlittorch.ai.EntityAIHandleTorches;
 import pelep.unlittorch.ai.EntityAIShootTorches;
-import pelep.unlittorch.config.ConfigCommon;
 
 /**
  * @author pelep
@@ -26,28 +28,28 @@ public class EventHandler
     private static int countSkeleton;
 
     @ForgeSubscribe
-    public void addTask(EntityJoinWorldEvent e)
+    public void modifyEntity(EntityJoinWorldEvent e)
     {
         if (!e.world.isRemote)
         {
-            if (ConfigCommon.mobVillagerTorch && e.entity instanceof EntityVillager)
+            if (mobVillagerTorch && e.entity instanceof EntityVillager)
             {
                 EntityVillager ev = (EntityVillager) e.entity;
                 ev.tasks.addTask(1, new EntityAIHandleTorches(ev));
             }
-            else if (ConfigCommon.mobSkeletonTorch > 0 && e.entity instanceof EntitySkeleton)
+            else if (mobSkeletonTorch > 0 && e.entity instanceof EntitySkeleton)
             {
                 EntitySkeleton es = (EntitySkeleton) e.entity;
 
-                if (es.getSkeletonType() == 0 && countSkeleton++ == ConfigCommon.mobSkeletonTorch)
+                if (es.getSkeletonType() == 0 && countSkeleton++ == mobSkeletonTorch)
                 {
                     es.tasks.addTask(5, new EntityAIShootTorches(es));
                     countSkeleton = 0;
                 }
             }
-            else if (ConfigCommon.mobZombieTorch > 0 && e.entity instanceof EntityZombie)
+            else if (mobZombieTorch > 0 && e.entity instanceof EntityZombie)
             {
-                if (countZombie++ == ConfigCommon.mobZombieTorch)
+                if (countZombie++ == mobZombieTorch)
                 {
                     EntityZombie ez = (EntityZombie) e.entity;
                     ez.tasks.addTask(5, new EntityAIBreakTorches(ez));
@@ -63,7 +65,7 @@ public class EventHandler
         for (ItemStack ist : e.drops)
         {
             if (ist != null && ist.itemID == Block.torchWood.blockID)
-                ist.itemID = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : ConfigCommon.blockIdTorchLit;
+                ist.itemID = torchDropsUnlit ? blockIdTorchUnlit : blockIdTorchLit;
         }
     }
 
@@ -71,8 +73,16 @@ public class EventHandler
     public void replaceTorch(ItemTossEvent e)
     {
         ItemStack ist = e.entityItem.getEntityItem();
-        if (ist != null && ist.itemID == Block.torchWood.blockID)
-            ist.itemID = ConfigCommon.torchDropsUnlit ? ConfigCommon.blockIdTorchUnlit : ConfigCommon.blockIdTorchLit;
+        if (ist.itemID == Block.torchWood.blockID && ist.stackSize == 1)
+            ist.itemID = blockIdTorchLit;
+    }
+
+    @ForgeSubscribe
+    public void replaceTorch(EntityItemPickupEvent e)
+    {
+        ItemStack ist = e.item.getEntityItem();
+        if (ist.itemID == Block.torchWood.blockID && ist.stackSize == 1)
+            ist.itemID = blockIdTorchLit;
     }
 
     @SideOnly(Side.CLIENT)

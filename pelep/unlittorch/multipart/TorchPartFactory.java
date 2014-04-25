@@ -59,7 +59,9 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
     @Override
     public boolean canConvert(int id)
     {
-        return id == ConfigCommon.blockIdTorchLit || id == ConfigCommon.blockIdTorchUnlit;
+        return id == Block.torchWood.blockID ||
+                id == ConfigCommon.blockIdTorchLit ||
+                id == ConfigCommon.blockIdTorchUnlit;
     }
 
     @Override
@@ -76,6 +78,10 @@ public class TorchPartFactory implements IPartFactory, IPartConverter
         {
             TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(pos.x, pos.y, pos.z);
             return new TorchPartUnlit(world.getBlockMetadata(pos.x, pos.y, pos.z), te.age, te.eternal);
+        }
+        else if (id == Block.torchWood.blockID)
+        {
+            return new TorchPartLit(world.getBlockMetadata(pos.x, pos.y, pos.z), 0, false);
         }
 
         return null;
