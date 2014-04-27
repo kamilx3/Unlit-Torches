@@ -54,12 +54,6 @@ abstract class BlockTorch extends BlockContainer
         return false;
     }
 
-    @Override
-    public int getRenderType()
-    {
-        return 2;
-    }
-
 
     //--------------------------------container-------------------------------//
 

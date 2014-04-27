@@ -7,6 +7,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import pelep.unlittorch.block.BlockTorchLit;
 import pelep.unlittorch.config.ConfigCommon;
@@ -33,6 +34,25 @@ public class ItemTorchUnlit extends ItemTorch
     @SideOnly(Side.CLIENT)
     @Override
     public void getSubItems(int id, CreativeTabs ct, List list) {}
+
+    @Override
+    public String getUnlocalizedName(ItemStack ist)
+    {
+        String name = ist.getItemDamage() >= ConfigCommon.torchLifespanMax ? "used" : "unlit";
+        return "tile.unlittorch:torch_" + name;
+    }
+
+
+    //---------------------------------render----------------------------------//
+
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public Icon getIconFromDamage(int d)
+    {
+        d = d >= ConfigCommon.torchLifespanMax ? 1 : 0;
+        return Block.blocksList[itemID].getIcon(d, d);
+    }
 
 
     //---------------------------------itemuse---------------------------------//

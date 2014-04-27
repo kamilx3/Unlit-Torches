@@ -1,13 +1,20 @@
 package pelep.unlittorch.render;
 
+import static pelep.unlittorch.block.BlockTorchUnlit.RENDER_ID;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Icon;
+import net.minecraft.world.IBlockAccess;
 import org.lwjgl.opengl.GL11;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.tileentity.TileEntityTorch;
@@ -16,7 +23,7 @@ import pelep.unlittorch.tileentity.TileEntityTorch;
  * @author pelep
  */
 @SideOnly(Side.CLIENT)
-public class RenderBlockTorch extends TileEntitySpecialRenderer
+public class RenderBlockTorch extends TileEntitySpecialRenderer implements ISimpleBlockRenderingHandler
 {
     @Override
     public void renderTileEntityAt(TileEntity te, double x, double y, double z, float ptick)
@@ -77,5 +84,36 @@ public class RenderBlockTorch extends TileEntitySpecialRenderer
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glColor4f(1F, 1F, 1F, 1F);
         GL11.glPopMatrix();
+    }
+
+    @Override
+    public void renderInventoryBlock(Block block, int md, int rId, RenderBlocks rb)
+    {
+    }
+
+    @Override
+    public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int rId, RenderBlocks rb)
+    {
+        TileEntityTorch te = (TileEntityTorch) world.getBlockTileEntity(x, y, z);
+        Icon icon = te.age >= ConfigCommon.torchLifespanMax ? block.getIcon(1, 1) : block.getIcon(0, 0);
+        icon = rb.getIconSafe(icon);
+
+        rb.setOverrideBlockTexture(icon);
+        rb.renderBlockTorch(block, x, y, z);
+        rb.clearOverrideBlockTexture();
+
+        return true;
+    }
+
+    @Override
+    public boolean shouldRender3DInInventory()
+    {
+        return false;
+    }
+
+    @Override
+    public int getRenderId()
+    {
+        return RENDER_ID;
     }
 }

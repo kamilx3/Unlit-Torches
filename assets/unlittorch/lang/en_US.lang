@@ -1,5 +1,6 @@
 tile.unlittorch:torch_lit.name=Torch
 tile.unlittorch:torch_unlit.name=Unlit Torch
+tile.unlittorch:torch_used.name=Used Torch
 
 item.unlittorch:cloth_dry.name=Cloth
 item.unlittorch:cloth_wet.name=Damp Cloth

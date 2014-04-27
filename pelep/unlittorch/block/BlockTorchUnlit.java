@@ -1,6 +1,10 @@
 package pelep.unlittorch.block;
 
+import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
@@ -8,6 +12,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
 import pelep.unlittorch.handler.IgnitersHandler;
@@ -19,6 +24,8 @@ import pelep.unlittorch.tileentity.TileEntityTorch;
 public class BlockTorchUnlit extends BlockTorch
 {
     public static BlockTorchUnlit instance;
+    private static Icon icon_used;
+    public static final int RENDER_ID = RenderingRegistry.getNextAvailableRenderId();
 
     public BlockTorchUnlit()
     {
@@ -27,6 +34,31 @@ public class BlockTorchUnlit extends BlockTorch
         setUnlocalizedName("unlittorch:torch_unlit");
         setTextureName("unlittorch:torch_off");
         instance = this;
+    }
+
+
+    //--------------------------------render---------------------------------//
+
+
+    @Override
+    public int getRenderType()
+    {
+        return RENDER_ID;
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public void registerIcons(IconRegister ir)
+    {
+        blockIcon = ir.registerIcon(getTextureName());
+        icon_used = ir.registerIcon("unlittorch:torch_used");
+    }
+
+    @SideOnly(Side.CLIENT)
+    @Override
+    public Icon getIcon(int side, int md)
+    {
+        return side == 1 && md == 1 ? icon_used : blockIcon;
     }
 
 

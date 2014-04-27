@@ -1,8 +1,10 @@
 package pelep.unlittorch.proxy;
 
+import static pelep.unlittorch.block.BlockTorchUnlit.RENDER_ID;
 import static pelep.unlittorch.UnlitTorch.LOGGER;
 
 import cpw.mods.fml.client.registry.ClientRegistry;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -33,10 +35,12 @@ public class ProxyClient extends ProxyCommon
     public void registerRenderers()
     {
         LOGGER.info("Registering renderers");
+        RenderBlockTorch renderBlockTorch = new RenderBlockTorch();
         RenderItemTorch renderItemTorch = new RenderItemTorch();
         MinecraftForgeClient.registerItemRenderer(ConfigCommon.blockIdTorchLit, renderItemTorch);
         MinecraftForgeClient.registerItemRenderer(ConfigCommon.blockIdTorchUnlit, renderItemTorch);
-        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTorch.class, new RenderBlockTorch());
+        RenderingRegistry.registerBlockHandler(RENDER_ID, renderBlockTorch);
+        ClientRegistry.bindTileEntitySpecialRenderer(TileEntityTorch.class, renderBlockTorch);
     }
 
     @Override

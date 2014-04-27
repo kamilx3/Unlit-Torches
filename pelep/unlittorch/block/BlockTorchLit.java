@@ -38,6 +38,12 @@ public class BlockTorchLit extends BlockTorch
     //--------------------------------rendering-------------------------------//
 
 
+    @Override
+    public int getRenderType()
+    {
+        return 2;
+    }
+
     @SideOnly(Side.CLIENT)
     @Override
     public void randomDisplayTick(World world, int x, int y, int z, Random rand)
