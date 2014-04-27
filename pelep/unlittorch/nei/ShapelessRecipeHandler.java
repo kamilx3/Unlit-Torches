@@ -14,12 +14,15 @@ import pelep.unlittorch.recipe.RecipeTorchUnlitA;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author pelep
  */
 public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessRecipeHandler
 {
+    private static Random rand = new Random();
+
     @Override
     public void loadCraftingRecipes(ItemStack result)
     {
@@ -49,6 +52,8 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
             addTorchUnlit(new ItemStack(Block.carpet.blockID, 1, OreDictionary.WILDCARD_VALUE));
             addTorchUnlit(new ItemStack(Item.bucketWater));
             addTorchUnlit(new ItemStack(Item.bucketMilk));
+            addTorchRepair(0);
+            addTorchRepair(1);
         }
     }
 
@@ -75,6 +80,8 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
             addTorchLit(new ItemStack(Item.flintAndSteel));
             addTorchLit(new ItemStack(Item.bucketLava));
             addTorchUnlit();
+            addTorchRepair(0);
+            addTorchRepair(1);
         }
         else if (ingr.itemID == Block.torchWood.blockID || ingr.itemID == Item.flint.itemID ||
                 ingr.itemID == Item.flintAndSteel.itemID || ingr.itemID == Item.bucketLava.itemID)
@@ -101,11 +108,15 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
             addTorchUnlit(new ItemStack(ingr.itemID, 1, 0));
             addTorchUnlit(new ItemStack(ingr.itemID, 1, 1));
         }
+        else if (ingr.itemID == Item.coal.itemID)
+        {
+            addTorchRepair(ingr.getItemDamage());
+        }
     }
 
     private void addCloth()
     {
-        List<ItemStack> ingr = new ArrayList();
+        List<ItemStack> ingr = new ArrayList<ItemStack>();
         ingr.add(new ItemStack(Block.cloth, 1, OreDictionary.WILDCARD_VALUE));
         ingr.add(new ItemStack(Item.shears, 1, 0));
         arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(itemIdCloth, 3, 0)));
@@ -113,7 +124,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
 
     private void addStick()
     {
-        List<ItemStack> ingr = new ArrayList();
+        List<ItemStack> ingr = new ArrayList<ItemStack>();
 
         for (int i = 0; i < torchRecipeYieldCount; i++)
             ingr.add(new ItemStack(blockIdTorchUnlit, 1, 0));
@@ -123,7 +134,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
 
     private void addTorchLit()
     {
-        List<ItemStack> ingr = new ArrayList();
+        List<ItemStack> ingr = new ArrayList<ItemStack>();
         ingr.add(new ItemStack(blockIdTorchLit, 1, 200));
         ingr.add(new ItemStack(blockIdTorchLit, 1, torchLifespanMax - 200));
         ItemStack ist = new ItemStack(blockIdTorchLit, 1, torchLifespanMax / 2);
@@ -132,7 +143,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
 
     private void addTorchLit(ItemStack ign)
     {
-        List<ItemStack> ingr = new ArrayList();
+        List<ItemStack> ingr = new ArrayList<ItemStack>();
         ingr.add(new ItemStack(blockIdTorchUnlit, 1, 0));
         ingr.add(ign);
         arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(blockIdTorchLit, 1, 0)));
@@ -140,7 +151,7 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
 
     private void addTorchUnlit()
     {
-        List<ItemStack> ingr = new ArrayList();
+        List<ItemStack> ingr = new ArrayList<ItemStack>();
         int d1 = torchLifespanMax / 2;
         int d2 = torchLifespanMax * 3 / 4;
         ingr.add(new ItemStack(blockIdTorchUnlit, 1, d1));
@@ -152,12 +163,26 @@ public class ShapelessRecipeHandler extends codechicken.nei.recipe.ShapelessReci
 
     private void addTorchUnlit(ItemStack ext)
     {
-        List<ItemStack> ingr = new ArrayList();
+        List<ItemStack> ingr = new ArrayList<ItemStack>();
         ingr.add(new ItemStack(blockIdTorchLit, 1, 0));
         ingr.add(ext);
         arecipes.add(new CachedShapelessRecipe(ingr, new ItemStack(blockIdTorchUnlit, 1, 0)));
     }
 
+    private void addTorchRepair(int md)
+    {
+        for (int i = 0; i < torchRecipeYieldCount; i++)
+        {
+            List<ItemStack> ingr = new ArrayList<ItemStack>();
+            ingr.add(new ItemStack(Item.coal.itemID, 1, md));
+            ItemStack ist = new ItemStack(blockIdTorchUnlit, i + 1, 0);
+
+            for (int j = 0; j <= i; j++)
+                ingr.add(new ItemStack(blockIdTorchUnlit, 1, rand.nextInt(torchLifespanMax)));
+
+            arecipes.add(new CachedShapelessRecipe(ingr, ist));
+        }
+    }
 
     @Override
     public List<String> handleItemTooltip(GuiRecipe gui, ItemStack ist, List<String> tip, int index)
