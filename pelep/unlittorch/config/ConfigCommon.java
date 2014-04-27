@@ -55,7 +55,7 @@ public class ConfigCommon extends UtilConfig
         String comment = "Block/Item IDs of igniters. If no metadata is specified, all metadata will be valid for the specified ID\n" +
                 "The provided example will turn wool (id:35) colored magneta, yellow, purple, blue, and brown to igniters\n" +
                 "It will also turn all dyes (id:351) into igniters\n\n" +
-                "Syntax: id,id:metadata,id:min-max\n" +
+                "Syntax: id,id:metadata\n" +
                 "Example: 35:2,35:4,35:10-12,351";
         setCategory("IGNITERS", comment);
         igniterIdsHeld = getString("TorchHeld", igniterIdsHeld, "IDs and metadata of blocks that can ignite HELD torches");
