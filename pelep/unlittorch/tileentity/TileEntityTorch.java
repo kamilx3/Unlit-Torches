@@ -62,12 +62,6 @@ public class TileEntityTorch extends TileEntity
 
         if (!worldObj.isRemote)
         {
-            if (worldObj.canLightningStrikeAt(xCoord, yCoord, zCoord) && worldObj.rand.nextInt(3) == 0)
-            {
-                extinguishTorch("random.fizz", 0.3F);
-                return;
-            }
-
             if (age > torchLifespanMin && torchRandomKillChance > 0 && worldObj.rand.nextInt(torchRandomKillChance) == 0)
             {
                 if (worldObj.rand.nextInt(100) < torchDestroyChance)
@@ -79,6 +73,12 @@ public class TileEntityTorch extends TileEntity
                     extinguishTorch("fire.fire", 1F);
                 }
 
+                return;
+            }
+
+            if (worldObj.canLightningStrikeAt(xCoord, yCoord, zCoord) && worldObj.rand.nextInt(3) == 0)
+            {
+                extinguishTorch("random.fizz", 0.3F);
                 return;
             }
 
