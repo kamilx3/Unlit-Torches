@@ -129,6 +129,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
                 }
                 else
                 {
+                    ist.setItemDamage(torchLifespanMax);
                     extinguishItem(world, p, ist, "fire.fire", 1F);
                 }
 
@@ -194,6 +195,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
             }
             else
             {
+                ist.setItemDamage(torchLifespanMax);
                 extinguishEntity(ei, "fire.fire", 1F);
             }
 

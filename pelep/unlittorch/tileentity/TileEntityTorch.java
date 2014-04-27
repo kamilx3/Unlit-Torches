@@ -54,6 +54,7 @@ public class TileEntityTorch extends TileEntity
             }
             else
             {
+                age = torchLifespanMax;
                 extinguishTorch("fire.fire", 1F);
             }
 
