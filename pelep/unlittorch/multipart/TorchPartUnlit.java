@@ -2,9 +2,13 @@ package pelep.unlittorch.multipart;
 
 import static pelep.unlittorch.block.BlockTorchUnlit.*;
 
+import codechicken.lib.lighting.LazyLightMatrix;
 import codechicken.lib.vec.BlockCoord;
+import codechicken.lib.vec.Vector3;
 import codechicken.multipart.TileMultipart;
+import codechicken.multipart.minecraft.PartMetaAccess;
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.monster.EntityBlaze;
 import net.minecraft.entity.monster.EntityMagmaCube;
@@ -12,6 +16,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFireball;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
@@ -100,6 +105,21 @@ public class TorchPartUnlit extends TorchPart
         }
 
         return false;
+    }
+
+    @Override
+    public void renderStatic(Vector3 pos, LazyLightMatrix olm, int pass)
+    {
+        if (pass != 0) return;
+
+        RenderBlocks rb = new RenderBlocks(new PartMetaAccess(this));
+        Block block = getBlock();
+        Icon icon = age >= ConfigCommon.torchLifespanMax ? block.getIcon(1, 1) : block.getIcon(0, 0);
+        icon = rb.getIconSafe(icon);
+
+        rb.setOverrideBlockTexture(icon);
+        rb.renderBlockTorch(block, x(), y(), z());
+        rb.clearOverrideBlockTexture();
     }
 
 
