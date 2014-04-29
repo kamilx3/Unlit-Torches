@@ -24,10 +24,12 @@ public class PacketHandler implements IPacketHandler
     {
         if (pkt.channel.equals(MOD_CHANNEL))
         {
+            int id = -1;
+
             try
             {
                 ByteArrayDataInput data = ByteStreams.newDataInput(pkt.data);
-                int id = data.readUnsignedByte();
+                id = data.readUnsignedByte();
                 EntityPlayer p = (EntityPlayer) player;
                 PacketCustom packet = PacketCustom.create(id);
                 packet.decode(data);
@@ -45,12 +47,12 @@ public class PacketHandler implements IPacketHandler
                 if (player instanceof EntityPlayerMP)
                 {
                     ((EntityPlayerMP)player).playerNetServerHandler.kickPlayerFromServer("Protocol Exception!");
-                    LOGGER.warning("Kicking player %s for causing a Protocol Exception!", ((EntityPlayer)player).username);
+                    LOGGER.warning("Kicking player %s for causing a ProtocolException", ((EntityPlayer)player).username);
                 }
             }
             catch (ReflectiveOperationException e)
             {
-                throw new RuntimeException("Unexpected Reflection exception during Packet construction!", e);
+                throw new RuntimeException(String.format("Errored while creating packet (%d)", id), e);
             }
         }
     }

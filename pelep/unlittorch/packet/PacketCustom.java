@@ -16,27 +16,20 @@ import pelep.pcl.ProtocolException;
  */
 abstract class PacketCustom
 {
-    private static final BiMap<Integer, Class<? extends PacketCustom>> packets;
-
-    static
-    {
-        ImmutableBiMap.Builder<Integer, Class<? extends PacketCustom>> builder = ImmutableBiMap.builder();
-
-        builder.put(0, Packet00Config.class);
-        builder.put(1, Packet01Igniters.class);
-        builder.put(2, Packet02UpdateEntity.class);
-        builder.put(3, Packet03BurnFX.class);
-        builder.put(4, Packet04PlacePart.class);
-        builder.put(5, Packet05UpdatePart.class);
-        builder.put(6, Packet06UpdateInv.class);
-
-        packets = builder.build();
-    }
+    private static final BiMap<Integer, Class<? extends PacketCustom>> packets = ImmutableBiMap.<Integer, Class<? extends PacketCustom>>builder()
+            .put(0, Packet00Config.class)
+            .put(1, Packet01Igniters.class)
+            .put(2, Packet02UpdateEntity.class)
+            .put(3, Packet03BurnFX.class)
+            .put(4, Packet04PlacePart.class)
+            .put(5, Packet05UpdatePart.class)
+            .put(6, Packet06UpdateInv.class)
+            .build();
 
     static PacketCustom create(int id) throws ProtocolException, ReflectiveOperationException
     {
         Class<? extends PacketCustom> clazz = packets.get(id);
-        if (clazz == null) throw new ProtocolException("Unknown Packet Id!");
+        if (clazz == null) throw new ProtocolException("Unknown packet Id!");
         return clazz.newInstance();
     }
 
