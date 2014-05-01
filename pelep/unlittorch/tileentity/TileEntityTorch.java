@@ -115,6 +115,8 @@ public class TileEntityTorch extends TileEntity
         age = tag.getInteger("age");
         lit = tag.getBoolean("lit");
         eternal = tag.getBoolean("eternal");
+        if (age > torchLifespanMax)
+            age = torchLifespanMax;
     }
 
     @Override
