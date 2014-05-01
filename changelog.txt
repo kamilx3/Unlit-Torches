@@ -1,0 +1,123 @@
+2.1.0 (MC 1.6.4)
+    - requires pcl2.1.0
+    - code refactor
+    - stop totally replacing vanilla torches. should fix most incompatibility issues
+        - create new lit torch block
+        - convert vanilla torches to modded ones on world random update tick instead
+        - make torch recipe result in the new torch block
+    - mark surviving vanilla torches so users know they haven't been converted yet
+    - make unlit torches ignite when right-clicked if the player has an igniter (held or in inventory)
+    - lengthen torch update interval from once per 3 ticks to once per 24 ticks
+    - render torches at max lifespan differently to make things less confusing
+    - add "eternal" torches. available only through creative mode
+    - add new torch repair recipe for unlit/used torches
+    - add jack o lantern recipe that uses modded torches
+    - add nei plugin
+    - add forge multipart compatibility
+    - fix torch age sometimes going past its max lifespan
+    - fix stick recipe. account for torch recipe yield count
+    - fix npe possibly cause by incompatibility with MCA
+    - remove pack.mcmeta
+
+2.0.0 (MC 1.6.4)
+    - updated to Minecraft 1.6.4
+    - moved lanterns and all lantern-related stuff to new stand-alone mod
+    - add new item cloth for killing lit torches
+    - add new item/block for unlit torch
+    - unlit torch items now have metadata/damage
+    - move lighting-related stuff over to pcl (hence the dependency)
+    - fix tile entities not saving properly
+    - improved villager ai
+    - change mod id to lower case
+    - buttloads of refactoring. no longer a coremod
+
+1.29.29 (MC 1.5.2,1.6.1,1.6.2)
+    - updated to work with Forge 9.10.0.837+
+    - a lot of refactoring again (code's much cleaner now)
+    - added villager trades
+    - added new villager (sells lantern-related stuff)
+    - torches and lanterns now update even when doDaylightCycle is false
+    - fixed bug where the config doesn't accept valid mobs
+    - fixed bug where blocks can't be broken while holding a lit torch/lantern
+
+1.28.28 (MC 1.5.2,1.6.1,1.6.2)
+    - updated to Minecraft 1.6.1/1.6.2
+    - a lot of refactoring (code's cleaner now)
+    - tweaked the lantern refueling recipe
+    - added new config options to disable aging of torches or lanterns
+    - added a new recipe for torches with handles
+    - added ai for skeletons to shoot down torches
+    - fixed a syncing bug
+
+1.27.27c (MC 1.5.2)
+    - fixed bug where lanterns are not able to be lit
+    - added option to add more mobs that can drop animal fat
+
+1.27.27b (MC 1.5.2)
+    - some bug fixes
+    - moved igniter and tinder id handling to post initialization
+
+1.27.27 (MC 1.5.2)
+    - no longer requires PCL
+    - added bunch of new items/blocks
+        - lantern (lit/unlit) without handle
+        - lantern (lit/unlit) with handle
+        - lantern handle
+        - lantern hooks
+        - lantern fuel
+        - animal fat
+        - bottled fat
+        - lantern oil
+        - tinderboxes
+        - empty tinderbox
+        - tinderbox
+        - tinderbox with firesteel
+    - dynamic lighting (for torches and lanterns only)
+        - player light
+        - playermp light
+        - mob light
+        - item light
+    - new mob behavior
+        - pigs sometimes drop animal fat on death
+        - villager priests/librarians spawn with lanterns
+        - villagers with lanterns turn lanterns off during day and on during night
+    - some items now have a chance of generating in dungeon, mineshaft, blacksmith, and stronghold chests
+    - lit torches burn out faster when held
+    - torches are single-use only by default
+    - added new config options
+        - new option to set lantern igniter ids
+        - new option to set tinder ids
+        - igniter ids for set and held torches have been separated
+        - igniter ids now support metadata
+    - refactored a LOT of code as well as fixed bugs
+
+1.26.26b (MC 1.5.1,1.5.2)
+    - fixed bug with handling lifespans (8000 is now the equivalent of 1 MC day, not 24000)
+    - lifespans now have a limit of 32000 (4 MC days)
+
+1.26.26 (MC 1.5.1,1.5.2)
+    - updated to Minecraft 1.5.2
+    - now a coremod
+    - requires PCL 1.2.3
+    - added torch lifespan
+    - completely eliminated the need to set ids (lit and unlit torches now only use the vanilla id)
+    - fixed bug with client-server syncing
+
+1.25.25 (MC 1.4.7)
+    - removed the need to set item ids
+    - fixed an issue with lit torches in inventory disappearing when loading existing worlds unmodified by unlittorch
+
+    IF YOU ARE UPDATING FROM 1.24.24 to 1.25.25, READ THE FOLLOWING:
+    Because of the changes made with the item id handling, lit and unlit torches in inventory will disappear once you load a world after updating. Also, torches that are dropped in the world may cause crashes.
+    If you want to keep your torches and not crash, do the following:
+
+    1. Load your world BEFORE updating
+    2. Take ALL your torches; lit and unlit
+    3. PLACE them in the world. Do NOT throw them down. Place them down AS A BLOCK.
+    4. Save your world and update to the new version
+
+    Things should be fine by then. Take the torches back and do whatever you want with them.
+
+1.24.24 (MC 1.4.7)
+    - fixed a sort of kind of maybe not really an issue with compatibility
+    - improved the recipe for a stick from unlit torches
