@@ -11,7 +11,7 @@ import pelep.unlittorch.config.ConfigCommon;
  */
 public class Packet00Config extends PacketCustom
 {
-    private byte b;
+    private byte booleans;
     private short torchLifespanMax;
     private int torchRecipeYieldCount;
 
@@ -33,7 +33,7 @@ public class Packet00Config extends PacketCustom
     @Override
     void decode(ByteArrayDataInput data) throws ProtocolException
     {
-        b = data.readByte();
+        booleans = data.readByte();
         torchLifespanMax = data.readShort();
         torchRecipeYieldCount = data.readByte();
     }
@@ -43,9 +43,9 @@ public class Packet00Config extends PacketCustom
     {
         if (!client) throw new ProtocolException("Config packet received on server side!");
 
-        ConfigCommon.torchRecipeYieldsUnlit = (b & 1) == 1;
-        ConfigCommon.torchUpdates = (b & (1 << 1)) == (1 << 1);
-        ConfigCommon.torchSingleUse = (b & (1 << 2)) == (1 << 2);
+        ConfigCommon.torchRecipeYieldsUnlit = (booleans & 1) != 0;
+        ConfigCommon.torchUpdates = (booleans & (1 << 1)) != 0;
+        ConfigCommon.torchSingleUse = (booleans & (1 << 2)) != 0;
         ConfigCommon.torchLifespanMax = torchLifespanMax;
         ConfigCommon.torchRecipeYieldCount = torchRecipeYieldCount;
     }
