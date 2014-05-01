@@ -20,6 +20,7 @@
     - remove pack.mcmeta
 
 2.0.0 (MC 1.6.4)
+    - requires pcl2.0.0
     - updated to Minecraft 1.6.4
     - moved lanterns and all lantern-related stuff to new stand-alone mod
     - add new item cloth for killing lit torches
