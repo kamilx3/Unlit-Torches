@@ -52,22 +52,21 @@ public class ProxyCommon
     {
         LOGGER.info("Modifying block torch");
         Block.blocksList[Block.torchWood.blockID] = null;
-        //make vanilla torches turn into modded ones. technically, without actually replacing it
-        BlockTorch blockTorch = new BlockTorch(Block.torchWood.blockID)
+        Block blockTorch = new BlockTorch(Block.torchWood.blockID)
         {
             @Override
             public void updateTick(World world, int x, int y, int z, Random rand)
             {
-                world.setBlock(x, y, z, blockIdTorchLit, world.getBlockMetadata(x, y, z), 1|2);
+                world.setBlock(x, y, z, blockIdTorchLit, world.getBlockMetadata(x, y, z), 2);
                 if (world.getBlockId(x, y, z) == blockIdTorchLit)
                     blocksList[blockIdTorchLit].updateTick(world, x, y, z, rand);
             }
-        };
-        blockTorch.setHardness(0F);
-        blockTorch.setLightValue(0.9375F);
-        blockTorch.setStepSound(Block.soundWoodFootstep);
-        blockTorch.setUnlocalizedName("torch");
-        blockTorch.setTextureName("torch_on");
+        }
+        .setLightValue(0.9375F)
+        .setHardness(0F)
+        .setStepSound(Block.soundWoodFootstep)
+        .setTextureName("torch_on")
+        .setUnlocalizedName("torch");
         LOGGER.fine("Block %d modified!", 50);
 
         Overrider.replaceBlock(blockTorch, "torchWood", "field_72069_aq");
