@@ -38,8 +38,10 @@ public class ConfigCommon extends UtilConfig
         itemIdCloth = getItem("IdCloth", 4201, "Item ID for cloth");
 
         setCategory("RECIPE");
-        torchRecipeYieldsUnlit = getBoolean("OverrideTorchRecipe", true, "True if the torch recipe should yield unlit torches");
-        torchRecipeYieldCount = getInt("TorchRecipeYieldCount", 4, 1, 9, "Number of torches the torch recipe should yield. Lower it for a challenge. Min:1 Max:9");
+        torchRecipeYieldsUnlit = getBoolean("OverrideTorchRecipe", true, "If true, the torch recipe will yield unlit torches. If false, it will yield ONE lit torch");
+        String comment = "Number of torches the torch recipe should yield. Lower it for a challenge. Min:1 Max:9\n" +
+                "If OverrideTorchRecipe is false, this will automatically be set to 1\n";
+        torchRecipeYieldCount = getInt("TorchRecipeYieldCount", 4, 1, 9, comment);
 
         setCategory("TORCH");
         torchUpdates = getBoolean("TorchUpdates", true, "Set to false to make lit torches act pretty much like vanilla torches. Disables aging, randomly dying out, etc.");
@@ -51,7 +53,7 @@ public class ConfigCommon extends UtilConfig
         torchRandomKillChance = getInt("ChanceToRandomlyBurnOut", 25, 0, 100, "x/100 chance for a torch to burn out. Set to 0 to disable");
         torchDestroyChance = getInt("ChanceToDestroy", 30, 0, 100, "x/100 chance that a torch is destroyed instead when it randomly burns out. Set to 0 to disable");
 
-        String comment = "Block/Item IDs of igniters. If no metadata is specified, all metadata will be valid for the specified ID\n" +
+        comment = "Block/Item IDs of igniters. If no metadata is specified, all metadata will be valid for the specified ID\n" +
                 "The provided example will turn wool (id:35) colored magneta, yellow, purple, blue, and brown to igniters\n" +
                 "It will also turn all dyes (id:351) into igniters\n\n" +
                 "Syntax: id,id:metadata\n" +
@@ -65,16 +67,14 @@ public class ConfigCommon extends UtilConfig
         mobZombieTorch = getInt("Zombie", 5, "1 in x zombies will extinguish torches when in range. Set to 0 to disable");
         mobSkeletonTorch = getInt("Skeleton", 8, "1 in x skeletons will attempt to extinguish torches when in range. Set to 0 to disable");
 
-        setChance();
-    }
-
-    private static void setChance()
-    {
         if (torchRandomKillChance > 0)
         {
             double dif = torchLifespanMax - torchLifespanMin;
             double prcnt = torchRandomKillChance / 100D;
             torchRandomKillChance = (int)(dif - (dif * prcnt));
         }
+
+        if (!torchRecipeYieldsUnlit)
+            torchRecipeYieldCount = 1;
     }
 }
