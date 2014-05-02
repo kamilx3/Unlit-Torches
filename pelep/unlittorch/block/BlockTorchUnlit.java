@@ -88,33 +88,27 @@ public class BlockTorchUnlit extends BlockTorch
             int id = ist.itemID;
             int d = ist.getItemDamage();
 
-            if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
+            if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
             {
                 igniteBlock(world, x, y, z, "fire.fire");
                 return true;
             }
+            else if (id == Item.flint.itemID)
+            {
+                consumeItem(p.inventory.currentItem, p, 1);
+                igniteBlock(world, x, y, z, "fire.ignite");
+                return true;
+            }
+            else if (id == Item.flintAndSteel.itemID)
+            {
+                damageItem(ist, p);
+                igniteBlock(world, x, y, z, "fire.ignite");
+                return true;
+            }
             else if (IgnitersHandler.canIgniteSetTorch(id, d))
             {
-                if (id == Item.bucketLava.itemID)
-                {
-                    igniteBlock(world, x, y, z, "fire.fire");
-                }
-                else if (id == Item.flint.itemID)
-                {
-                    igniteBlock(world, x, y, z, "fire.ignite");
-                    consumeItem(p.inventory.currentItem, p, 1);
-                }
-                else if (id == Item.flintAndSteel.itemID)
-                {
-                    igniteBlock(world, x, y, z, "fire.ignite");
-                    damageItem(ist, p);
-                }
-                else
-                {
-                    igniteBlock(world, x, y, z, "fire.fire");
-                    useItem(p.inventory.currentItem, ist, p);
-                }
-
+                useItem(p.inventory.currentItem, ist, p);
+                igniteBlock(world, x, y, z, "fire.fire");
                 return true;
             }
         }

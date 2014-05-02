@@ -1,6 +1,5 @@
 package pelep.unlittorch.config;
 
-import net.minecraft.item.Item;
 import pelep.pcl.util.UtilConfig;
 
 /**
@@ -25,7 +24,7 @@ public class ConfigCommon extends UtilConfig
     public static int torchDestroyChance;
 
     public static String igniterIdsHeld = "";
-    public static String igniterIdsSet = (Item.flint.itemID + "," + Item.flintAndSteel.itemID + "," + Item.bucketLava.itemID);
+    public static String igniterIdsSet = "";
 
     public static int mobZombieTorch;
     public static int mobSkeletonTorch;

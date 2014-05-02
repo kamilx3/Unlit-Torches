@@ -10,7 +10,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.world.World;
 import pelep.unlittorch.config.ConfigCommon;
-import pelep.unlittorch.handler.IgnitersHandler;
 
 /**
  * @author pelep
@@ -46,19 +45,14 @@ public class RecipeTorchLitB implements IRecipe, ICraftingHandler
                 }
                 else if (f == -1)
                 {
-                    if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID)
+                    if (id == ConfigCommon.blockIdTorchLit ||
+                        id == Block.torchWood.blockID ||
+                        id == Item.flint.itemID ||
+                        id == Item.flintAndSteel.itemID ||
+                        id == Item.bucketLava.itemID)
                     {
                         f = i;
                         continue;
-                    }
-                    else if (id == Item.flint.itemID || id == Item.flintAndSteel.itemID || id == Item.bucketLava.itemID)
-                    {
-                        //from the set torch list to check itemstack md not block md
-                        if (IgnitersHandler.canIgniteSetTorch(id, ist.getItemDamage()))
-                        {
-                            f = i;
-                            continue;
-                        }
                     }
                 }
 

@@ -67,33 +67,27 @@ public class TorchPartUnlit extends TorchPart
             int id = ist.itemID;
             int d = ist.getItemDamage();
 
-            if (id == ConfigCommon.blockIdTorchLit)
+            if (id == ConfigCommon.blockIdTorchLit || id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
             {
                 ignitePart("fire.fire");
                 return true;
             }
+            else if (id == Item.flint.itemID)
+            {
+                ignitePart("fire.ignite");
+                consumeItem(ep.inventory.currentItem, ep, 1);
+                return true;
+            }
+            else if (id == Item.flintAndSteel.itemID)
+            {
+                ignitePart("fire.ignite");
+                damageItem(ist, ep);
+                return true;
+            }
             else if (IgnitersHandler.canIgniteSetTorch(id, d))
             {
-                if (id == Block.torchWood.blockID || id == Item.bucketLava.itemID)
-                {
-                    ignitePart("fire.fire");
-                }
-                else if (id == Item.flint.itemID)
-                {
-                    ignitePart("fire.ignite");
-                    consumeItem(ep.inventory.currentItem, ep, 1);
-                }
-                else if (id == Item.flintAndSteel.itemID)
-                {
-                    ignitePart("fire.ignite");
-                    damageItem(ist, ep);
-                }
-                else
-                {
-                    ignitePart("fire.fire");
-                    useItem(ep.inventory.currentItem, ist, ep);
-                }
-
+                ignitePart("fire.fire");
+                useItem(ep.inventory.currentItem, ist, ep);
                 return true;
             }
         }
