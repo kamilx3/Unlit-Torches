@@ -103,18 +103,15 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         if (p.capabilities.isCreativeMode || ist.stackTagCompound != null || !torchUpdates || world.getTotalWorldTime() % UPDATE_INTERVAL != 0)
             return;
 
-        if (p.isInsideOfMaterial(Material.water))
+        if (!world.isRemote && p.isInsideOfMaterial(Material.water))
         {
-            if (!world.isRemote)
-            {
-                world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
+            world.playSoundAtEntity(p, "random.fizz", 0.8F, 1F);
 
-                for (int i = slot; i < p.inventory.mainInventory.length; i++)
-                {
-                    ItemStack inv = p.inventory.mainInventory[i];
-                    if (inv != null && inv.itemID == itemID)
-                        inv.itemID = blockIdTorchUnlit;
-                }
+            for (int i = slot; i < p.inventory.mainInventory.length; i++)
+            {
+                ItemStack inv = p.inventory.mainInventory[i];
+                if (inv != null && inv.itemID == itemID)
+                    inv.itemID = blockIdTorchUnlit;
             }
         }
         else
@@ -220,7 +217,7 @@ public class ItemTorchLit extends ItemTorch implements IUpdatingItem
         int y = MathHelper.floor_double(ei.posY);
         int z = MathHelper.floor_double(ei.posZ);
 
-        if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(3) == 0)
+        if (ei.worldObj.canLightningStrikeAt(x, y, z) && itemRand.nextInt(2) == 0)
         {
             extinguishEntity(ei, "random.fizz", 0.3F);
             return false;

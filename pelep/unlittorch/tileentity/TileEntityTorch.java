@@ -77,7 +77,7 @@ public class TileEntityTorch extends TileEntity
                 return;
             }
 
-            if (worldObj.canLightningStrikeAt(xCoord, yCoord, zCoord) && worldObj.rand.nextInt(3) == 0)
+            if (worldObj.canLightningStrikeAt(xCoord, yCoord, zCoord) && worldObj.rand.nextInt(2) == 0)
             {
                 extinguishTorch("random.fizz", 0.3F);
                 return;
